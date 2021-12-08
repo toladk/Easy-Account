@@ -1,0 +1,540 @@
+<nz-steps [nzCurrent]="current">
+    <nz-step nzTitle="BVN Validation"></nz-step>
+    <nz-step nzTitle="Verify"></nz-step>
+    <nz-step nzTitle="Customer Information"></nz-step>
+    <nz-step nzTitle="Official"></nz-step>
+    <nz-step nzTitle="Finish"></nz-step>
+</nz-steps>
+
+<div class="steps-content" style="padding-bottom: 80px" *ngIf="index == 'First-content'">
+    <h3 class="az-content-title" style="margin-top: -5%;">BVN Validation</h3>
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0"></label>
+            </div>
+            <!-- col -->
+            <!-- <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                <div class="alert alert-danger" [hidden]="!error">
+                    {{error}}
+                </div>
+                <div class="alert alert-success" [hidden]="!success">
+                    {{success}}
+                </div>
+            </div> -->
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Customer BVN</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-6">
+                <input type="text" maxlength="11" [pattern]="numberPattern" #offBvn="ngModel" class="form-control" name="BVN" [(ngModel)]="form.BVN" placeholder="E.g 22143872449">
+                <div *ngIf="offBvn.errors" style="color: orangered;">
+                    <div *ngIf="offBvn.errors.pattern">
+                        Enter number only.
+                    </div>
+                </div>
+            </div>
+            <!-- col -->
+            <div class="col-md-2">
+                <button nz-button nzType="primary" (click)="onGo()" *ngIf="!disabled && current == 0">
+            <span>Validate</span>
+          </button>
+                <button *ngIf="disabled && current == 0" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+            </div>
+            <!-- col -->
+
+
+        </div>
+        <!-- row -->
+    </div>
+</div>
+
+<div class="steps-content" *ngIf="index == 'Second-content'">
+    <h3 class="az-content-title" style="margin-top: -5%;">Customer Basic Information</h3>
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">First Name</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="firstname" [(ngModel)]="form.firstname" disabled placeholder="First Name">
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Middle Name</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="middlename" [(ngModel)]="form.middlename" disabled placeholder="Middle Name">
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Last Name</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="lastname" [(ngModel)]="form.lastname" disabled placeholder="Last Name">
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Date Of birth</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-8">
+                <input type="date" class="form-control" name="dob" [(ngModel)]="form.dob" disabled placeholder="Date Of Birt">
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Contact Number</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-8">
+                <input type="text" maxlength="11" [pattern]="numberPattern" #offPhone="ngModel" class="form-control" name="phone" [(ngModel)]="form.phone" placeholder="Phone">
+                <div *ngIf="offPhone.errors" style="color: orangered;">
+                    <div *ngIf="offPhone.errors.pattern">
+                        Enter number only.
+                    </div>
+                </div>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+    </div>
+</div>
+
+<div class="steps-content" *ngIf="index == 'third-content'">
+
+    <h3 class="az-content-title" style="margin-top: -5%;">Customer Registration</h3>
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+        <form>
+            <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Gender</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" (change)="onCheckValidation()" name="Gender" [(ngModel)]="form.Gender" required>
+                  <option label="SELECT">SELECT</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Marital Status</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" (change)="onCheckValidation()" name="MaritalStatus" [(ngModel)]="form.MaritalStatus" required>
+                <option label="SELECT">SELECT</option>
+                <option value="SINGL">Single</option>
+                <option value="MRIED">Married</option>
+                <option value="DVRCD">Divorced</option>
+              </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Salutation</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" name="Salutation" (change)="onCheckValidation()" [(ngModel)]="form.Salutation" required>
+                  <option label="SELECT">SELECT</option>
+                  <option value="MR." *ngIf="form.Gender == 'M'">MR.</option>
+                  <option value="MS." *ngIf="form.Gender == 'F'">MS.</option>
+                  <option value="MRS." *ngIf="form.Gender == 'F'">MRS.</option>
+                  <option value="DR.">DR.</option>
+                  <option value="CHIEF.">CHIEF.</option>
+                  <option value="PROF.">PROF.</option>
+                  <option value="SAN.">SAN.</option>
+                  <option value="M/S.">M/S.</option>
+                  <option value="HON.">HON.</option>
+                  <option value="SIR." *ngIf="form.Gender == 'M'">SIR.</option>
+                  <option value="ELDER.">ELDER.</option>
+                  <option value="Other.">Other.</option>
+                </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Email</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <input type="email" name="Email" [class.is-invalid]="emailRef.invalid && emailRef.touched" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #emailRef="ngModel" (change)="onCheckValidation()" [(ngModel)]="form.Email" required class="form-control" placeholder="Enter customer email">
+                        <div *ngIf="(emailRef.invalid && emailRef.touched) || emailRef.dirty">
+                            <small class="text-danger" *ngIf="emailRef.errors?.required">Email address is required</small>
+                            <small class="text-danger" *ngIf="emailRef.errors?.pattern">Email address is invalid</small>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Introducer Code</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <input type="text" name="IntroducerCode" [(ngModel)]="form.IntroducerCode" required class="form-control" placeholder="Enter Valid Staff ID">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <!-- <div class="row row-xs align-items-center mg-b-20">
+              <div class="col-md-4">
+                <label class="form-label mg-b-0">Marital Status</label>
+              </div>
+              <div class="col-md-8 mg-t-5 mg-md-t-0">
+                <select class="form-control select2-no-search" (change)="onCheckValidation()" name="MaritalStatus" [(ngModel)]="form.MaritalStatus" required>
+                  <option label="SELECT">SELECT</option>
+                  <option value="SINGL">SINGLE</option>
+                  <option value="MRIED">MARRIED</option>
+                  <option value="DVRCD">DIVORCE</option>
+                  <option value="WIDWER">WIDWER</option>
+                  <option value="WIDOW">WIDOW</option>
+                  <option value="LSEPT">LSEPT</option>
+                  <option value="LVEIN">LVEIN</option>
+                  <option value="ENGGD">ENGGD</option>
+                  <option value="UNMRD">UNMRD</option>
+                  <option value="SEPRT">SEPRT</option>
+                  <option value="OTHER">OTHER</option>
+                </select>
+              </div>
+            </div> -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Address</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <textarea name="Address" (change)="onCheckValidation()" [(ngModel)]="form.Address" required class="form-control" row="4" placeholder="Enter customer address"></textarea>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">State</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <nz-select style="width: 100%; text-align: left;" nzShowSearch nzAllowClear nzPlaceHolder="Select State" class="selectsol" name="State" [(ngModel)]="form.State">
+                            <nz-option *ngFor="let list of allStateList" nzLabel="{{ list.statename }}" nzValue="{{ list.statecode }}"></nz-option>
+                        </nz-select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">City</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <nz-select style="width: 100%; text-align: left;" nzShowSearch nzAllowClear nzPlaceHolder="Select City" class="selectsol" name="City" [(ngModel)]="form.City">
+                            <nz-option *ngFor="let list of allCityList" nzLabel="{{ list.lganame }}" nzValue="{{ list.lgacode }}"></nz-option>
+                        </nz-select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Relationship Manager</label>
+                    </div>
+                    <!-- col -->
+
+                    <div class="col-md-8  mg-t-5 mg-md-t-0">
+                        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+                            <input type="text" nz-input (change)="onCheckValidation()" name="Manager" [(ngModel)]="form.Manager" required class="form-control" placeholder="Enter a valid RM code or leave it empty" />
+                        </nz-input-group>
+                        <ng-template #suffixButton>
+                            <button nz-button nzType="danger" (click)="onGoParentCif()" *ngIf="!disabled2 && !showsDetails3" nzSize="large" nzSearch>Validate</button>
+                            <button nz-button nzType="primary" *ngIf="!disabled2 && showsDetails3" nzSize="large" nzSearch>Confirmed</button>
+                            <button nz-button nzType="danger" *ngIf="disabled2" nzSize="large" disabled nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                        </ng-template>
+                    </div>
+
+                </div>
+                <!-- row -->
+
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-t-20">Is Staff</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+
+                        <div class="row mg-t-10">
+                            <div class="col-md-4 mg-t-20">
+                                <label class="rdiobox">
+                      <input name="rdio" type="radio" checked (click)="onStaff('reject')">
+                      <span>NO</span>
+                    </label>
+                            </div>
+                            <!-- col-3 -->
+                            <div class="col-md-4 mg-t-20">
+                                <label class="rdiobox">
+                      <input name="rdio" type="radio" (click)="onStaff('approve')">
+                      <span>YES</span>
+                    </label>
+                            </div>
+                            <!-- col-3 -->
+                        </div>
+                        <!-- row -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+
+
+                <div class="row row-xs align-items-center mg-b-20" *ngIf="isStaff">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Staff ID</label>
+                    </div>
+                    <!-- col -->
+
+                    <div class="col-md-8  mg-t-5 mg-md-t-0">
+                        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton2">
+                            <input type="text" nz-input (change)="onCheckValidation2()" name="employeeId" [(ngModel)]="form.employeeId" required class="form-control" placeholder="Enter a valid staff Id" />
+                        </nz-input-group>
+                        <ng-template #suffixButton2>
+                            <button nz-button nzType="danger" (click)="checkUserADDetails()" *ngIf="!disabled3 && !showsDetails4" nzSize="large" nzSearch>Validate</button>
+                            <button nz-button nzType="primary" *ngIf="!disabled3 && showsDetails4" nzSize="large" nzSearch>Confirmed</button>
+                            <button nz-button nzType="danger" *ngIf="disabled3" nzSize="large" disabled nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <!-- <div class="row row-xs align-items-center mg-b-20" *ngIf="isStaff">
+              <div class="col-md-4">
+                <label class="form-label mg-b-0">Staff ID</label>
+              </div>
+              <div class="col-md-8 mg-t-5 mg-md-t-0">
+                <input type="text" name="employeeId" [(ngModel)]="form.employeeId" class="form-control" placeholder="Enter Staff ID">
+              </div>
+            </div> -->
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="steps-content" *ngIf="index == 'fourth-content'">
+
+    <h5 class="az-content-title" style="margin-top: -5%;">Account Information</h5>
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Sol ID</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                <nz-select style="width: 100%; text-align: left;" nzPlaceHolder="Select Sol" nzShowSearch nzServerSearch class="selectsol" name="SolId" [(ngModel)]="form.SolId" required>
+                    <nz-option *ngFor="let list2 of sols" nzLabel="{{ list2.solid }} - {{ list2.description }}" nzValue="{{ list2.solid }}"></nz-option>
+                </nz-select>
+
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Scheme Type</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-6 mg-t-5 mg-md-t-0">
+                <select class="form-control select2-no-search" (change)="onSelectSchemeTypes($event)" name="SchemeType" [(ngModel)]="form.SchemeType" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Scheme Type</option>
+          <option *ngFor="let list of shemeTypes" value="{{ list.schemeType }}">{{ list.description }}</option>
+        </select>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Scheme Code</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-6 mg-t-5 mg-md-t-0">
+                <select class="form-control select2-no-search" name="SchemeCode" (change)="onSelectSchemeCode($event)" [(ngModel)]="form.SchemeCode" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Scheme Code</option>
+          <option *ngFor="let list of shemecodes" value="{{ list.schemecode }}">{{ list.schemecode }} - {{ list.description }}</option>
+          <option *ngIf="!shemecodes">
+              <span class="sr-only">Loading...</span>
+          </option>
+        </select>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Gl SubHead Code</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-6 mg-t-5 mg-md-t-0">
+                <select class="form-control select2-no-search" name="GlSubHeadCode" [(ngModel)]="form.GlSubHeadCode" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Scheme Type</option>
+          <option *ngFor="let list of glheadcodes" value="{{ list.glsubheadcode }}">{{ list.glsubheadcode }}</option>
+          <option *ngIf="!glheadcodes">
+            <span class="sr-only">Loading...</span>
+        </option>
+        </select>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <!--      <h6 class="az-content-title" style="margin-top: 1%;">Upload File</h6>-->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0" value="">Image File</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-6 mg-t-5 mg-md-t-0">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="ImageFile" accept="image/x-png,image/gif,image/jpeg" (change)="onFileSelect($event)" #UploadFileInput>
+                    <label class="custom-file-label" for="customFile">{{fileInputLabel || 'Choose File'}}</label>
+                </div>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0" value="">Signature File</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-6 mg-t-5 mg-md-t-0">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile2" name="SignatureFile" accept="image/x-png,image/gif,image/jpeg" (change)="onFileSelect2($event)" #UploadFileInput>
+                    <label class="custom-file-label" for="customFile">{{fileInputLabel2 || 'Choose File'}}</label>
+                </div>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+    </div>
+</div>
+
+<div class="steps-content" *ngIf="index == 'fifth-content'">
+    <div class="" *ngIf="doneResult">
+        <nz-result nzStatus="success" nzTitle="New Customer Successfully Created!" nzSubTitle="">
+            <div nz-result-extra>
+                <button nz-button nzType="primary" (click)="close()">View Queue</button>
+                <button nz-button (click)="again()">Close</button>
+            </div>
+        </nz-result>
+    </div>
+
+    <div class="" *ngIf="doneResult2">
+        <nz-result nzStatus="401" nzTitle="Failed" nzSubTitle="Operation not successful.">
+
+            <div nz-result-content>
+                <div class="desc">
+                    <h4 nz-title>Details:</h4>
+                    <p nz-paragraph style="color: crimson;"><a>Failed</a> </p>
+                </div>
+            </div>
+
+            <div nz-result-extra>
+                <button nz-button nzType="primary" (click)="close()">Back Home</button>
+                <button nz-button nzType="danger" (click)="pre()">Previous</button>
+            </div>
+        </nz-result>
+    </div>
+</div>
+
+<div style="float: right" class="mt-4">
+    <button nz-button style="margin-right: 8px;" (click)="close()">Close</button>
+    <button nz-button nzType="default" (click)="pre()" *ngIf="current == 2">
+            <span>Previous</span>
+          </button>
+
+    <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active" *ngIf="current == 1">
+            <span>Next</span>
+          </button>
+
+    <button nz-button nzType="default" (click)="pre()" *ngIf="current == 3">
+            <span>Previous</span>
+          </button>
+
+    <button *ngIf="!disabled && current == 3 && !disableSubmitBotton" nz-button nzType="primary" [disabled]="form.Manager === ''" (click)="onSubmit()" routerLinkActive="router-link-active">
+            <span>Submit</span>
+          </button>
+
+    <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active" *ngIf="current == 2">
+            <span>Next</span>
+          </button>
+
+    <button nz-button nzType="primary" (click)="notValidForm()" routerLinkActive="router-link-active" *ngIf="disableSubmitBotton && current == 3">
+            <span>Not Ready</span>
+          </button>
+
+    <button *ngIf="disabled && current == 3" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+
+    <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active" *ngIf="current == 5">
+            <span>Next</span>
+          </button>
+</div>

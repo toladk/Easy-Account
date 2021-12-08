@@ -1,0 +1,1240 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Corporate Account</h2>
+            <p class="mg-b-0">All Transaction.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+            </div>
+            <div class="date">
+                <div class="float-right"><button class="btn btn-primary btn-with-icon btn-block" (click)="corporateOpen()"><i class="typcn typcn-plus"></i>Create Corporate CIF</button></div>
+            </div>
+
+            <div class="date">
+                <div class="float-right"><button class="btn btn-success btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Create Account</button></div>
+            </div>
+
+        </div>
+    </div>
+    <!-- az-content-body-title -->
+
+    <div class="nav-wrapper">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" [routerLink]="['/corporate', 'pending']" routerLinkActive="active" class="nav-link">Pending</a>
+            <a href="javascript::void(0)" [routerLink]="['/corporate', 'approved']" routerLinkActive="active" class="nav-link">Approved</a>
+            <a href="javascript::void(0)" [routerLink]="['/corporate', 'rejected']" routerLinkActive="active" class="nav-link">Rejected</a>
+        </nav>
+    </div>
+</div>
+
+<div class="az-content-body">
+    <div class="steps-content" *ngIf="indextab == 'First-content'">
+        <ngx-ui-loader [loaderId]="'loader-02'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <div class="pd-10 pd-t-20 bg-gray-100">
+            <div class="row pd-b-10">
+                <div class="col-md-4">
+                    <div class="az-content-label pt-3">Total Pending Transactions: {{ 1 }} / {{ this.individualAccountCount }}</div>
+                </div>
+
+                <div class="float-right col-md-8 mt-1">
+
+                </div>
+            </div>
+
+            <nz-table #fixedTable [nzData]="individualAccount" [nzScroll]="{ x: '700px', y: '440px' }" [nzLoading]="loading">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px">#</th>
+                        <th nzLeft>Request Type</th>
+                        <th nzLeft>Customer Name</th>
+                        <th>Requested By</th>
+                        <th nzRight>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="item">
+                    <tr *ngFor="let data of fixedTable.data; let r= index">
+                        <td nzWidth="60px">{{ r+1 }}</td>
+                        <td nzLeft>{{data.request_type}}</td>
+                        <td *ngIf="data.name !== ''">{{data.corporate_name}}</td>
+                        <td *ngIf="data.name == ''"> - </td>
+                        <th *ngIf="data.requested_by !== ''">{{data.requested_by}}</th>
+                        <th *ngIf="data.requested_by == ''"> - </th>
+                        <td nzRight>
+                            <div class="btn-icon-list az-content-label az-content-label-sm mg-b-10">
+                                <button class="btn btn-info btn-icon" type="button" (click)="viewOpen(data.id)"><i class="typcn typcn-eye"></i></button>
+                                <!-- <button class="btn btn-success btn-icon" type="button" (click)="action('approve', data.id, data.request_type)"><i class="typcn typcn-thumbs-up"></i></button>
+              <button class="btn btn-danger btn-icon" type="button" (click)="action('reject',  data.id, data.request_type)"><i class="typcn typcn-thumbs-down"></i></button> -->
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="indextab == 'Second-content'">
+        <div class="pd-10 pd-t-20 bg-gray-100">
+            <div class="row pd-b-10">
+                <div class="col-md-4">
+                    <div class="az-content-label pt-3">Total Approved Transactions: {{ 1 }} / {{ this.accountOpeningsCount }}</div>
+                </div>
+
+                <div class="float-right col-md-8 mt-1">
+
+                </div>
+            </div>
+
+            <nz-table #fixedTable [nzData]="accountOpenings" [nzScroll]="{ x: '700px', y: '490px' }" [nzLoading]="loading">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px">S/N</th>
+                        <th nzLeft>Request Type</th>
+                        <th nzLeft>Customer Name</th>
+                        <th>Customer ID</th>
+                        <th nzRight>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="item">
+                    <tr *ngFor="let data of fixedTable.data; let r= index">
+                        <td nzWidth="60px">{{ r+1 }}</td>
+                        <td nzLeft>{{data.request_type}}</td>
+                        <td *ngIf="data.name !== ''">{{data.name}}</td>
+                        <td nzLeft *ngIf="data.name == ''"> - </td>
+                        <th *ngIf="data.customer_id !== ''">{{data.customer_id}}</th>
+                        <th *ngIf="data.customer_id == ''"> - </th>
+                        <td nzRight>
+                            <div class="btn-icon-list az-content-label az-content-label-sm mg-b-10">
+                                <button class="btn btn-success btn-icon" type="button" (click)="viewOpen(data.id)"><i class="typcn typcn-eye"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="indextab == 'third-content'">
+        <div class="pd-10 pd-t-20 bg-gray-100">
+            <div class="row pd-b-10">
+                <div class="col-md-4">
+                    <div class="az-content-label pt-3">Total Rejected Transactions: {{ 1 }} / {{ this.RejectedInquiryCount }}</div>
+                </div>
+
+                <div class="float-right col-md-8 mt-1">
+
+                </div>
+            </div>
+
+            <nz-table #fixedTable [nzData]="RejectedInquiry" [nzScroll]="{ x: '700px', y: '490px' }" [nzLoading]="loading">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px">S/N</th>
+                        <th nzLeft>Request Type</th>
+                        <th nzLeft>Customer Name</th>
+                        <th>Customer ID</th>
+                        <th nzRight>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="item">
+                    <tr *ngFor="let data of fixedTable.data; let r= index">
+                        <td nzWidth="60px">{{ r+1 }}</td>
+                        <td nzLeft>{{data.request_type}}</td>
+                        <td *ngIf="data.name !== ''">{{data.name}}</td>
+                        <td nzLeft *ngIf="data.name == ''"> - </td>
+                        <th *ngIf="data.customer_id !== ''">{{data.customer_id}}</th>
+                        <th *ngIf="data.customer_id == ''"> - </th>
+                        <td nzRight>
+                            <div class="btn-icon-list az-content-label az-content-label-sm mg-b-10">
+                                <button class="btn btn-dark btn-icon" type="button" (click)="viewOpen(data.id)"><i class="typcn typcn-eye"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </div>
+
+</div>
+
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzFooter]="footerTpl2" [nzClosable]="false" [nzOffsetX]="childrenVisible ? 180 : 0" [nzWidth]="640" [nzVisible]="viewVisible" nzTitle="Corporate Account Profile" (nzOnClose)="viewClose()">
+
+    <ng-container *nzDrawerContent>
+        <ngx-ui-loader [loaderId]="'loader-01'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <!-- <p class="title" style=" margin-bottom: 24px;"><b>User Profile</b></p> -->
+        <nz-descriptions [nzColumn]="2" nzTitle="Customer Personal Information" *ngIf="inquiryAccountOp">
+            <nz-descriptions-item nzTitle="Corporate Name" [nzSpan]="1">{{ inquiryAccountOp.corporate_name }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="key contact person name" [nzSpan]="1">{{ inquiryAccountOp.key_contact_person_name }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Email" [nzSpan]="1">{{ inquiryAccountOp.email }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Address" [nzSpan]="1">{{ inquiryAccountOp.address }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Registration Number" [nzSpan]="1">{{ inquiryAccountOp.registration_number }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Date of incorporation" [nzSpan]="1">{{ inquiryAccountOp.date_of_incorporation }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Customer Id" [nzSpan]="1">{{ inquiryAccountOp.customer_id }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="State" [nzSpan]="1">{{ inquiryAccountOp.state }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="City" [nzSpan]="1">{{ inquiryAccountOp.city }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Phone Number" [nzSpan]="1">{{ inquiryAccountOp.phone_number }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Comment" [nzSpan]="1">{{ inquiryAccountOp.comment }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="App Id" [nzSpan]="1">{{ inquiryAccountOp.app_id }}</nz-descriptions-item>
+        </nz-descriptions>
+        <nz-divider></nz-divider>
+        <nz-descriptions [nzColumn]="2" nzTitle="Account Details" *ngIf="inquiryAccountOp">
+            <nz-descriptions-item nzTitle="Account Number" [nzSpan]="1">{{ inquiryAccountOp.account_number }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Limit Amount" [nzSpan]="1">{{ inquiryAccountOp.limit_amount }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Currency" [nzSpan]="1">{{ inquiryAccountOp.currency }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Primary RM" [nzSpan]="1">{{ inquiryAccountOp.primary_rm_id }}</nz-descriptions-item>
+
+            <nz-descriptions-item nzTitle="Scheme Code" [nzSpan]="1">{{ inquiryAccountOp.scheme_code }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Scheme Type" [nzSpan]="1">{{ inquiryAccountOp.scheme_type }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sector Code" [nzSpan]="2">{{ inquiryAccountOp.sector_code }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="sub_sector Code" [nzSpan]="1">{{ inquiryAccountOp.sub_sector }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Segment" [nzSpan]="2">{{ inquiryAccountOp.segment }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sub Segment" [nzSpan]="1">{{ inquiryAccountOp.sub_segment }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sub Segment" [nzSpan]="1">{{ inquiryAccountOp.sub_segment }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sol Id" [nzSpan]="1">{{ inquiryAccountOp.sol_id }}</nz-descriptions-item>
+        </nz-descriptions>
+
+        <nz-descriptions [nzColumn]="2" nzTitle="Document Informations" *ngIf="inquiryAccountOp">
+            <nz-descriptions-item nzTitle="Document Code" [nzSpan]="1">{{ inquiryAccountOp.document_code }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Document Type Code" [nzSpan]="1">{{ inquiryAccountOp.document_type_code }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Place_of Issue" [nzSpan]="1">{{ inquiryAccountOp.place_of_issue }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Country of Issue" [nzSpan]="1">{{ inquiryAccountOp.country_of_issue }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Expiry Date" [nzSpan]="1">{{ inquiryAccountOp.expiry_date }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Reference Number" [nzSpan]="1">{{ inquiryAccountOp.reference_number }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Limit Amount" [nzSpan]="2">{{ inquiryAccountOp.limit_amount }}</nz-descriptions-item>
+        </nz-descriptions>
+
+        <nz-divider></nz-divider>
+        <nz-descriptions [nzColumn]="2" nzTitle="Internal" *ngIf="inquiryAccountOp">
+            <nz-descriptions-item nzTitle="Introducer Code" [nzSpan]="1">{{ inquiryAccountOp.introducer_code }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Request Type" [nzSpan]="1">{{ inquiryAccountOp.request_type }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Requested By" [nzSpan]="1">{{ inquiryAccountOp.requested_by }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Approved By" [nzSpan]="1">{{ inquiryAccountOp.approved_by }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Gl Sub Head Code" [nzSpan]="1">{{ inquiryAccountOp.gl_sub_head_code }}</nz-descriptions-item>
+        </nz-descriptions>
+    </ng-container>
+
+    <ng-template #footerTpl2>
+        <div style="float: right">
+            <button class="btn btn-dark pd-x-30 mg-r-5" (click)="viewClose()">Close</button>
+            <button class="btn btn-warning pd-x-30 mg-r-5" *ngIf="indextab == 'First-content'" (click)="openChildren()">Decision</button>
+            <button class="btn btn-warning pd-x-30 mg-r-5" *ngIf="indextab == 'third-content'">Update</button>
+            <!-- <button nz-button style="margin-right: 8px;" (click)="viewClose()">Cancel</button>
+      <button nz-button nzType="primary" (click)="openChildren()">Decision</button> -->
+        </div>
+    </ng-template>
+
+    <nz-drawer [nzClosable]="false" [nzWidth]="640" [nzFooter]="footerTpl3" [nzVisible]="childrenVisible" nzTitle="Decision" (nzOnClose)="closeChildren()">
+        <div class="pd-30 pd-sm-40 bg-gray-200">
+            <ngx-ui-loader [loaderId]="'loader-05'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+            <div class="alert alert-solid-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Kindly select action for your Decision!</strong> <br> and give reason for your action.
+            </div>
+            <!-- alert -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-t-20">Action</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+
+                    <div class="row mg-t-10">
+                        <div class="col-md-4 mg-t-20">
+                            <label class="rdiobox">
+                          <input name="rdio" type="radio" checked (click)="onAction('approve')">
+                          <span>Approve</span>
+                        </label>
+                        </div>
+                        <!-- col-3 -->
+                        <div class="col-md-4 mg-t-20">
+                            <label class="rdiobox">
+                          <input name="rdio" type="radio" (click)="onAction('reject')">
+                          <span>Reject</span>
+                        </label>
+                        </div>
+                        <!-- col-3 -->
+                    </div>
+                    <!-- row -->
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4 mg-t-20">
+                    <label class="form-label mg-b-0">Reason</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-20 mg-md-t-0">
+                    <textarea rows="3" class="form-control mg-t-20" placeholder="Give Reason" name="comment" [(ngModel)]="approval.comment" required></textarea>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+        </div>
+        <ng-template #footerTpl3>
+            <div style="float: right">
+                <button class="btn btn-dark pd-x-30 mg-r-5" (click)="closeChildren()">Cancel</button>
+                <button class="btn btn-success pd-x-30 mg-r-5" (click)="submitApproval()">Submit</button>
+            </div>
+        </ng-template>
+    </nz-drawer>
+</nz-drawer>
+
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="820" [nzVisible]="corporatevisible" nzTitle="Corporate Customer Creation Form" [nzFooter]="footerTpl4" (nzOnClose)="corporateClose()">
+
+    <!-- <nz-steps [nzCurrent]="current">
+  <nz-step nzTitle="BVN Validation"></nz-step>
+  <nz-step nzTitle="Verify"></nz-step>
+  <nz-step nzTitle="Customer Information"></nz-step>
+  <nz-step nzTitle="Finish"></nz-step>
+  </nz-steps> -->
+
+    <div class="steps-content" style="padding-bottom: 80px" *ngIf="index == 'First-content'">
+        <ngx-ui-loader [loaderId]="'loader-03'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <h5 class="az-content-title">Corporate Account Form</h5>
+        <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0"></label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                    <div class="alert alert-danger" [hidden]="!error">
+                        {{error}}
+                    </div>
+                    <div class="alert alert-success" [hidden]="!success">
+                        {{success}}
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <form [formGroup]="corpForm">
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Corporate Name</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="corporateName" placeholder="Corporate Name">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Date Of Incorporation</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" formControlName="dateOfIncorporation">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Key Contact PersonName</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="keyContactPersonName" placeholder="key Contact PersonName">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sector</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" formControlName="sector" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Sector</option>
+          <option *ngFor="let secto of SectorsCode" value="{{ secto.sectorcode }}">{{ secto.description }}</option>
+          <!-- <option *ngIf="!SectorsCode">Loading...</option> -->
+        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sub Sector</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" formControlName="subSector" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Sub-Sector</option>
+          <option *ngFor="let subsecto of SubSectorsCode" value="{{ subsecto.subsectorcode }}">{{ subsecto.description }}</option>
+          <!-- <option *ngIf="!SubSectorsCode">Loading...</option> -->
+        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Registration Number</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="registrationNumber" placeholder="Registration Number">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Tax Id</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="taxId" placeholder="Tax Id">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Segment</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" formControlName="segment" required>
+          <option label="Choose one" value="">Select Segment</option>
+          <option *ngFor="let segment of SegmentsCode" value="{{ segment.sectorcode }}">{{ segment.description }}</option>
+          <!-- <option *ngIf="!SegmentsCode">Loading...</option> -->
+        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sub Segment</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" formControlName="subSegment" required>
+          <option label="Choose one" value="">Select Segment</option>
+          <option *ngFor="let SubSegments of SubSegmentsCode" value="{{ SubSegments.subsectorcode }}">{{ SubSegments.description }}</option>
+          <!-- <option *ngIf="!SubSegmentsCode">Loading...</option> -->
+        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Address</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="address" placeholder="Address">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Phome Number</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Address">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">State</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" formControlName="state" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select State</option>
+          <option *ngFor="let States of StatesCode" value="{{ States.statecode }}">{{ States.statename }}</option>
+          <!-- <option *ngIf="!StatesCode">Loading...</option> -->
+        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">City</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" formControlName="city" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select State</option>
+          <option *ngFor="let Cities of CitiesCode" value="{{ Cities.lgacode }}">{{ Cities.lganame }}</option>
+          <!-- <option *ngIf="!CitiesCode">Loading...</option> -->
+        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Email</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" formControlName="email" placeholder="Email">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Primary Rm Id</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" formControlName="primaryRmId" placeholder="Primary Rm Id">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'Second-content'">
+        <nz-result *ngIf="responsecode == 0" nzStatus="success" nzTitle="New Customer Successfully Created!" nzSubTitle="">
+            <div nz-result-extra>
+                <button nz-button nzType="primary" (click)="close()">View Queue</button>
+                <button nz-button (click)="again()">Close</button>
+            </div>
+        </nz-result>
+
+        <nz-result *ngIf="!isSuccess" nzStatus="401" nzTitle="Failed" nzSubTitle="Operration not successful.">
+
+            <div nz-result-content>
+                <div class="desc">
+                    <h4 nz-title>Details:</h4>
+                    <p nz-paragraph style="color: crimson;"><a>{{ resMessage }}</a> </p>
+                </div>
+            </div>
+
+            <div nz-result-extra>
+                <button nz-button nzType="primary" (click)="close()">Back Home</button>
+                <button nz-button nzType="danger" (click)="pre()">Previous</button>
+            </div>
+        </nz-result>
+    </div>
+    <ng-template #footerTpl4>
+        <div style="float: right">
+            <button nz-button style="margin-right: 8px;" (click)="corporateClose()">Close</button>
+
+            <button nz-button nzType="default" (click)="pre()" *ngIf="current == 1">
+        <span>Previous</span>
+      </button>
+
+            <button nz-button nzType="primary" (click)="onCreateCustomerCorporate()" routerLinkActive="router-link-active">
+          <span>Submit</span>
+        </button>
+            <button *ngIf="disabled2 && index == 'First-content'" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+
+        </div>
+    </ng-template>
+</nz-drawer>
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible" nzTitle="Create Corporate AccountS" [nzFooter]="footerTpl" (nzOnClose)="close()">
+
+    <nz-steps [nzCurrent]="current">
+        <nz-step nzTitle="Validation"></nz-step>
+        <nz-step nzTitle="Account"></nz-step>
+        <nz-step nzTitle="Identification"></nz-step>
+        <nz-step nzTitle="Signatories"></nz-step>
+        <nz-step nzTitle="Finish"></nz-step>
+    </nz-steps>
+
+    <div class="steps-content" style="padding-bottom: 80px" *ngIf="index == 'First-content'">
+        <ngx-ui-loader [loaderId]="'loader-04'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <h5 class="az-content-title" style="margin-top:5%;">Customer ID Verification</h5>
+        <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0"></label>
+                </div>
+                <!-- col -->
+                <div class="col-md-4 mg-t-5 mg-md-t-0">
+
+                    <div class="alert alert-danger" [hidden]="!error">
+                        {{error}}
+                    </div>
+                    <div class="alert alert-success" [hidden]="error">
+                        {{success}}
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Customer ID</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="cifId" (change)="onCheckValidation()" [(ngModel)]="form.cifId" placeholder="E.g R3365621">
+                </div>
+                <!-- col -->
+                <div class="col-md-2">
+                    <button nz-button nzType="primary" (click)="onGo()" *ngIf="!disabled && current == 0">
+          <span>Validate</span>
+        </button>
+                    <button *ngIf="disabled && current == 0" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div *ngIf="BvnDetails">
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Corporate Name</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <b>{{ BvnDetails.corporatename }}</b>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">keycontact Person</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <b>{{ BvnDetails.keycontactperson }}</b>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Phone Number</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <b>{{ BvnDetails.phone }}</b>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Date of Incorporation</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <b>{{ BvnDetails.dateofincorporation }}</b>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Registration Number</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <b>{{ BvnDetails.registrationnumber }}</b>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </div>
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'Second-content'">
+        <ngx-ui-loader [loaderId]="'loader-04'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+
+        <h5 class="az-content-title" style="margin-top:5%;">Account Information</h5>
+
+        <form>
+            <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Coporate Name</label>
+                    </div>
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <input type="text" name="corporateName" (change)="onCheckValidation()" [(ngModel)]="form.corporateName" required class="form-control" placeholder="Enter account name">
+                    </div>
+                </div>
+
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Date Of Incorporation</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" name="dateOfIncorporation" [(ngModel)]="form.dateOfIncorporation">
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Key Contact PersonName</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="keyContactPersonName" [(ngModel)]="form.keyContactPersonName" placeholder="key Contact PersonName">
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Registration Number</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="registrationNumber" [(ngModel)]="form.registrationNumber" placeholder="Registration Number">
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Email</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" name="email" [(ngModel)]="form.email" placeholder="Email">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <!--
+      <div class="row row-xs align-items-center mg-b-20">
+        <div class="col-md-4">
+          <label class="form-label mg-b-0">Sector</label>
+        </div>
+        <div class="col-md-8">
+          <select class="form-control select2-no-search" name="sector" [(ngModel)]="form.sector" required>
+            <option label="Choose one" value="">Select Sector</option>
+            <option *ngFor="let secto of SectorsCode" value="{{ secto.sectorcode }}">{{ secto.description }}</option>
+            <option *ngIf="!SectorsCode">Loading...</option>
+          </select>
+        </div>
+      </div> -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sub Sector</label>
+                    </div>
+
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" name="subSector" [(ngModel)]="form.subSector" required>
+            <option label="Choose one" value="">Select Sub-Sector</option>
+            <option *ngFor="let subsec of SubSectorsCode" value="{{ subsec.subsectorcode }}">{{ subsec.description }}</option>
+            <option *ngIf="!SubSectorsCode">Loading...</option>
+          </select>
+                    </div>
+                </div>
+
+                <!-- <div class="row row-xs align-items-center mg-b-20">
+        <div class="col-md-4">
+          <label class="form-label mg-b-0">Segment</label>
+        </div>
+        <div class="col-md-8">
+          <select class="form-control select2-no-search" name="taxId" [(ngModel)]="from.segment" required>
+            <option label="Choose one" value="">Select Segment</option>
+            <option *ngFor="let segment of SegmentsCode" value="{{ segment.sectorcode }}">{{ segment.description }}</option>
+            <option *ngIf="!SegmentsCode">Loading...</option>
+          </select>
+        </div>
+      </div> -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sub Segment</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" name="subSegment" [(ngModel)]="form.subSegment" required>
+            <option label="Choose one" value="">Select Segment</option>
+            <option *ngFor="let SubSeg of SubSegmentsCode" value="{{ SubSeg.subsectorcode }}">{{ SubSeg.description }}</option>
+            <option *ngIf="!SubSegmentsCode">Loading...</option>
+          </select>
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Currency</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" name="currency" [(ngModel)]="form.currency" required>
+            <option label="Choose one" value="">Select Currency</option>
+            <option value="NGN">Naira</option>
+            <option value="GDP">Pounds</option>
+            <option value="EUR">Euro</option>
+            <option value="USD">Dollar</option>
+          </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Address</label>
+                    </div>
+                    <div class="col-md-8">
+                        <textarea rows="4" class="form-control" name="address" [(ngModel)]="form.address" placeholder="Address">
+
+          </textarea>
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Phone Number</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="phoneNumber" [(ngModel)]="form.phoneNumber" placeholder="Address">
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">State</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" name="state" (change)="callvalidCodesCities()" [(ngModel)]="form.state" required>
+            <option label="Choose one" value="">Select State</option>
+            <option *ngFor="let States of StatesCode" value="{{ States.statecode }}">{{ States.statename }}</option>
+            <option *ngIf="!StatesCode">Loading...</option>
+          </select>
+                    </div>
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">City</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8">
+                        <select class="form-control select2-no-search" name="city" [(ngModel)]="form.city" required>
+            <option label="Choose one" value="">Select State</option>
+            <option *ngFor="let Cities of CitiesCode" value="{{ Cities.statecode }}">{{ Cities.statename }}</option>
+            <option *ngIf="!CitiesCode">Loading...</option>
+          </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">RM Code</label>
+                    </div>
+                    <!-- col -->
+
+                    <div class="col-md-8  mg-t-5 mg-md-t-0">
+                        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+                            <input type="text" nz-input (change)="onCheckValidation()" name="primaryRmId" [(ngModel)]="form.primaryRmId" required class="form-control" placeholder="Enter a valid RM code or leave it empty" />
+                        </nz-input-group>
+                        <ng-template #suffixButton>
+                            <button nz-button nzType="danger" (click)="onGoParentCif()" *ngIf="!disabled2 && !showsDetails3" nzSize="large" nzSearch>Validate</button>
+                            <button nz-button nzType="primary" *ngIf="!disabled2 && showsDetails3" nzSize="large" nzSearch>Confirmed</button>
+                            <button nz-button nzType="danger" *ngIf="disabled2" nzSize="large" disabled nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                        </ng-template>
+                    </div>
+
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sol ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" (change)="onCheckValidation()" name="solId" [(ngModel)]="form.solId" required>
+            <!-- [(ngModel)]="form.two_factor" -->
+            <option label="Choose one" value="">Select Sol Id</option>
+            <option *ngFor="let sol of sols" value="{{ sol.solid }}">{{ sol.solid }} - {{ sol.description }}</option>
+          </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Scheme Type</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" (change)="onSelectSchemeTypes($event)" name="schemeType" [(ngModel)]="form.schemeType" required>
+            <!-- [(ngModel)]="form.two_factor" -->
+            <option label="Choose one" value="">Select Scheme Type</option>
+            <option *ngFor="let list of shemeTypes" value="{{ list.schemeType }}">{{ list.schemeType }} - {{ list.description }}</option>
+          </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Scheme Code</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" name="schemeCode" (change)="onSelectSchemeCode($event)" [(ngModel)]="form.schemeCode" required>
+            <!-- [(ngModel)]="form.two_factor" -->
+            <option label="Choose one" value="">Select Scheme Code</option>
+            <option *ngFor="let list of shemecodes" value="{{ list.schemecode }}">{{ list.schemecode }} - {{ list.description }}</option>
+            <option *ngIf="!shemecodes">
+                <span class="sr-only">Loading...</span>
+            </option>
+          </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Gl SubHead Code</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" (change)="onCheckValidation()" name="glSubHeadCode" [(ngModel)]="form.glSubHeadCode" required>
+            <!-- [(ngModel)]="form.two_factor" -->
+            <option label="Choose one" value="">Select Scheme Type</option>
+            <option *ngFor="let list of glheadcodes" value="{{ list.glsubheadcode }}">{{ list.glsubheadcode }}</option>
+            <option *ngIf="!glheadcodes">
+              <span class="sr-only">Loading...</span>
+          </option>
+          </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </div>
+        </form>
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'third-content'">
+        <ngx-ui-loader [loaderId]="'loader-04'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <h5 class="az-content-title" style="margin-top:5%;">Customer Identification</h5>
+        <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Document Type</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <select class="form-control select2-no-search" (change)="callDocumentCodes($event)" name="documentTypeCode" [(ngModel)]="form.documentTypeCode" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Document Type</option>
+          <option *ngFor="let list of allDocumentTypes" value="{{ list.documentTypeCode }}">{{ list.documentTypeDescription }}</option>
+          <option *ngIf="!allDocumentTypes">
+        </select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Document Code</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <select class="form-control select2-no-search" name="documentCode" [(ngModel)]="form.documentCode" required>
+          <!-- [(ngModel)]="form.two_factor" -->
+          <option label="Choose one" value="">Select Document Code</option>
+          <option *ngFor="let list of allDocumentCodes" value="{{ list.documentcode }}">{{ list.documentcodedescription }}</option>
+          <option *ngIf="!allDocumentCodes">
+              <span class="sr-only">Loading...</span>
+          </option>
+        </select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Place Of Issue</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8">
+                    <select class="form-control select2-no-search" name="placeOfIssue" [(ngModel)]="form.placeOfIssue" required>
+          <option label="Choose one" value="">Select State</option>
+          <option *ngFor="let Cities of CitiesCode" value="{{ Cities.statecode }}">{{ Cities.statename }}</option>
+          <option *ngIf="!CitiesCode">Loading...</option>
+        </select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Reference Number</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="referenceNumber" [(ngModel)]="form.referenceNumber" placeholder="Reference Number">
+                </div>
+            </div>
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Issue Date</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="date" class="form-control" name="documentIssueDate" [(ngModel)]="form.documentIssueDate">
+                </div>
+            </div>
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Expiry Date</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="date" class="form-control" name="expiryDate" [(ngModel)]="form.expiryDate">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'Fourth-content'">
+        <ngx-ui-loader [loaderId]="'loader-04'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <h5 class="az-content-title" style="margin-top:5%;">Signatories</h5>
+        <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0"></label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+
+                    <div class="alert alert-danger" [hidden]="!error2">
+                        {{error2}}
+                    </div>
+                    <div class="alert alert-success" [hidden]="!success2">
+                        {{success2}}
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0" value="">Signatories</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                        <nz-form-item *ngFor="let control of listOfControl; let i = index">
+
+                            <nz-tag *ngIf="control.verification == 'Not Verified'" nzColor="#cd201f" nzSize="200"><span>{{control.verification}}</span></nz-tag> &nbsp;
+                            <nz-tag *ngIf="control.verification == 'Verified'" nzColor="#87d068"><span>{{control.verification}}</span></nz-tag> &nbsp;<br>
+
+                            <nz-form-control nzErrorTip="Please input customer ID name or delete this field.">
+
+                                <!-- <input class="passenger-input" nz-input nzSpan="2" placeholder="Customer ID" (change)="onCheckValidation()" [attr.id]="control.id"
+                [formControlName]="control.controlInstance" /> -->
+
+                                <!-- <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton5">
+                  <input class="passenger-input" nz-input nzSpan="2" placeholder="BVN Validation" (change)="onCheckValidation()" [attr.id]="control.id" [formControlName]="control.bvn" />
+                </nz-input-group>
+                <ng-template #suffixButton5>
+                  <button nz-button nzType="danger" *ngIf="control.bvnAction == false && index == 'third-content' && control.bvnVerification == 'Not Verified'" (click)="verityBVNField(control.id, control.bvn)" nzSize="large" nzSearch>Validate BVN</button>
+                  <button nz-button nzType="primary" *ngIf="control.bvnAction == false && index == 'third-content' && control.bvnVerification == 'Verified'" nzSize="large" nzSearch>Confirmed</button>
+                  <button nz-button nzType="danger"  *ngIf="control.bvnAction == true && index == 'third-content'"  nzSize="large" disabled nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                </ng-template> <br> -->
+
+                                <nz-select ngModel="Choose Relationship" class="passenger-input" [attr.id]="control.id" [formControlName]="control.bvn">
+                                    <nz-option nzValue="Y" nzLabel="YES"></nz-option>
+                                    <nz-option nzValue="N" nzLabel="NO"></nz-option>
+                                </nz-select>
+
+                                <!-- <input  class="passenger-input" nz-input nzSpan="2"  placeholder="Customer BVN" [attr.id]="control.id" [formControlName]="control.bvn"> -->
+
+
+                                <nz-select ngModel="Choose Relationship" class="passenger-input" [attr.id]="control.id" [formControlName]="control.relationship">
+                                    <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                                    <nz-option nzValue="ADM" nzLabel="ADMINISTRATOR"></nz-option>
+                                    <nz-option nzValue="ASSOC" nzLabel="ENTERPRISE BANK ASSOCIATES"></nz-option>
+                                    <nz-option nzValue="AUN" nzLabel="AUNT"></nz-option>
+                                    <nz-option nzValue="BIL" nzLabel="BROTHER IN LAW"></nz-option>
+                                    <nz-option nzValue="BRO" nzLabel="BROTHER"></nz-option>
+                                    <nz-option nzValue="COD" nzLabel="CO-DIRECTOR"></nz-option>
+                                    <nz-option nzValue="COP" nzLabel="CO-PARTNERS"></nz-option>
+                                    <nz-option nzValue="COU" nzLabel="COUSIN"></nz-option>
+                                    <nz-option nzValue="COW" nzLabel="CO-WORKER"></nz-option>
+                                    <nz-option nzValue="DAU" nzLabel="DAUGHTER"></nz-option>
+                                    <nz-option nzValue="DIL" nzLabel="DAUGHTER IN LAW"></nz-option>
+                                    <nz-option nzValue="DIS" nzLabel="DISTRIBUTOR"></nz-option>
+                                    <nz-option nzValue="EMP" nzLabel="EMPLOYEE"></nz-option>
+                                    <nz-option nzValue="EMR" nzLabel="EMPLOYER"></nz-option>
+                                    <nz-option nzValue="EXE" nzLabel="EXECUTOR"></nz-option>
+                                    <nz-option nzValue="FAT" nzLabel="FATHER"></nz-option>
+                                    <nz-option nzValue="FIA" nzLabel="FIANCEE"></nz-option>
+                                    <nz-option nzValue="FIL" nzLabel="FATHER IN LAW"></nz-option>
+                                    <nz-option nzValue="FIN" nzLabel="FIANCE"></nz-option>
+                                    <nz-option nzValue="FRD" nzLabel="FRIEND"></nz-option>
+                                    <nz-option nzValue="GDF" nzLabel="GRANDFATHER"></nz-option>
+                                    <nz-option nzValue="GDM" nzLabel="GRANDMOTHER"></nz-option>
+                                    <nz-option nzValue="GFM" nzLabel="GRAND FATHER (MATERNAL)"></nz-option>
+                                    <nz-option nzValue="GFP" nzLabel="GRAND FATHER (PATERNAL)"></nz-option>
+                                    <nz-option nzValue="GMM" nzLabel="GRAND MOTHER (MATERNAL)"></nz-option>
+                                    <nz-option nzValue="GMP" nzLabel="GRAND MOTHER (PATERNAL)"></nz-option>
+                                    <nz-option nzValue="GRASO" nzLabel="GRAND SON"></nz-option>
+                                    <nz-option nzValue="GRD" nzLabel="GUARDIAN"></nz-option>
+                                    <nz-option nzValue="GUA" nzLabel="GUARANTOR'"></nz-option>
+                                    <nz-option nzValue="HOL" nzLabel="HOLDING CO"></nz-option>
+                                    <nz-option nzValue="HUS" nzLabel="HUSBAND"></nz-option>
+                                    <nz-option nzValue="LEG" nzLabel="LEGAL GUARDIAN"></nz-option>
+                                    <nz-option nzValue="MIG" nzLabel="MIGRATION DATA WITH."></nz-option>
+                                    <nz-option nzValue="MIL" nzLabel="MOTHER IN LAW"></nz-option>
+                                    <nz-option nzValue="MNDT" nzLabel="MANDATE HOLDER"></nz-option>
+                                    <nz-option nzValue="MOT" nzLabel="MOTHER"></nz-option>
+                                    <nz-option nzValue="NEE" nzLabel="NIECE"></nz-option>
+                                    <nz-option nzValue="NEP" nzLabel="NEPHEW"></nz-option>
+                                    <nz-option nzValue="NGU" nzLabel="NATURAL GUARDIAN"></nz-option>
+                                    <nz-option nzValue="OTH" nzLabel="OTHERS"></nz-option>
+                                    <nz-option nzValue="POA" nzLabel="POWER OF ATTORNEY HOLDER"></nz-option>
+                                    <nz-option nzValue="RELPA" nzLabel="RELATED PARTY CODE"></nz-option>
+                                    <nz-option nzValue="SEL" nzLabel="SELF"></nz-option>
+                                    <nz-option nzValue="SIL" nzLabel="SON IN LAW"></nz-option>
+                                    <nz-option nzValue="SIS" nzLabel="SISTER"></nz-option>
+                                    <nz-option nzValue="SON" nzLabel="SON"></nz-option>
+                                    <nz-option nzValue="SPO" nzLabel="SPOSPOUSE"></nz-option>
+                                    <nz-option nzValue="SSL" nzLabel="SISTER IN LAW"></nz-option>
+                                    <nz-option nzValue="SUB" nzLabel="SUBSIDIARY"></nz-option>
+                                    <nz-option nzValue="SUP" nzLabel="SUPPLIER"></nz-option>
+                                    <nz-option nzValue="UNC" nzLabel="UNCLE"></nz-option>
+                                    <nz-option nzValue="OTHER" nzLabel="OTHER"></nz-option>
+                                </nz-select>
+
+                                <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+                                    <input class="passenger-input" nz-input nzSpan="2" placeholder="Customer ID" (change)="onCheckValidation()" [attr.id]="control.id" [formControlName]="control.controlInstance" />
+                                </nz-input-group>
+                                <ng-template #suffixButton>
+                                    <button nz-button nzType="danger" *ngIf="control.action == false && index == 'Fourth-content' && control.verification == 'Not Verified'" (click)="verityField(control.id, control.controlInstance, control.relationship, control.bvn)" nzSize="large" nzSearch>Validate CIF</button>
+                                    <button nz-button nzType="primary" *ngIf="control.action == false && index == 'Fourth-content' && control.verification == 'Verified'" nzSize="large" nzSearch>Confirmed</button>
+                                    <button nz-button nzType="danger" *ngIf="control.action == true && index == 'Fourth-content'" nzSize="large" disabled nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                                </ng-template> <br>
+
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-control>
+                                <button nz-button nzType="dashed" class="add-button" (click)="addField($event)">
+                <i nz-icon nzType="plus"></i>
+                Add field
+              </button> &nbsp;
+
+                                <button nz-button nzType="dashed" class="add-button" (click)="removeField(control, $event)">
+                <i nz-icon nzType="minus"></i>
+                Remove field
+              </button>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <!--          <nz-form-item>-->
+                        <!--            <nz-form-control>-->
+                        <!--              <button nz-button nzType="primary">Submit</button>-->
+                        <!--            </nz-form-control>-->
+                        <!--          </nz-form-item>-->
+                    </form>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'fifth-content'">
+        <ngx-ui-loader [loaderId]="'loader-04'" [fgsColor]="'#02A51D'"></ngx-ui-loader>
+        <nz-result *ngIf="errorResponse === true" nzStatus="success" nzTitle="New Joint Account Creation Request Submitted Successfully!" nzSubTitle="">
+            <div nz-result-extra>
+                <button nz-button nzType="primary" [routerLink]="['/account-opening-authorization']">View Queue</button>
+                <button nz-button (click)="again()">Close</button>
+            </div>
+        </nz-result>
+
+        <nz-result *ngIf="responsecode !== 3 &&    errorResponse !== true" nzStatus="warning" nzTitle="Operation not successfull" nzSubTitle="something on-usual went wrong.">
+            <div nz-result-extra>
+                <button nz-button nzType="default" (click)="pre()" *ngIf="current >= 1">
+        <span>Go Back</span>
+      </button>
+                <button nz-button (click)="again()">Close</button>
+            </div>
+        </nz-result>
+
+        <nz-result *ngIf="responsecode === 3" nzStatus="warning" nzTitle="Operation not successfull" nzSubTitle="{{resMessage}}.">
+            <div nz-result-extra>
+                <button nz-button nzType="default" (click)="pre()" *ngIf="current >= 1">
+        <span>Go Back</span>
+      </button>
+                <button nz-button (click)="again()">Close</button>
+            </div>
+        </nz-result>
+    </div>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button class="btn btn-dark pd-x-30 mg-r-5" (click)="close()">Close</button>
+            <button class="btn btn-warning pd-x-30 mg-r-5" (click)="pre()" *ngIf="current != 0">Previous</button>
+            <button class="btn btn-az-primary pd-x-30 mg-r-5" (click)="next()">Next</button>
+            <button class="btn btn-success pd-x-30 mg-r-5" (click)="submitCorporateAccount()" *ngIf="index == 'Fourth-content'">Submit Now</button>
+            <!-- <button class="btn btn-success pd-x-30 mg-r-5">Update Now</button>
+    <button class="btn btn-success pd-x-30 mg-r-5" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Loading...
+    </button> -->
+        </div>
+    </ng-template>
+</nz-drawer>

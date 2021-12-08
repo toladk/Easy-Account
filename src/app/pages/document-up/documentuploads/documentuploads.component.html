@@ -1,0 +1,76 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Upload Document</h2>
+            <!-- <p class="mg-b-0 mt-2">Multiple Upload.</p> -->
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <div class="float-right">
+                    <!-- <button class="btn btn-dark btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Create Single Account</button> -->
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="row">
+
+        <div class="card col-md-12">
+            <h4 class="text-center mt-5">Multiple File Upload</h4>
+
+            <div class="col-md-12 col-lg-12 pl-0 pr-0">
+                <form nz-form [formGroup]="uploadForm">
+                    <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                        <div class="row row-xs mt-3 mb-4" *ngIf="showInputAccountNo">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter your Name!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Account Number</label>
+                                            <nz-input-group nzPrefixIcon="field-number">
+                                                <input type="text" formControlName="accountNo" nz-input placeholder="Enter Account Number" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mg-t-20 mg-md-t-0">
+                                <button style="margin-top: 35px;" class="ml-4" nz-button nzType="primary" (click)="validateAccount()" *ngIf="showButton">Validate Account No</button>
+                                <button style="margin-top: 35px; background-color: orange; color: #fff; border-color: orange;" *ngIf="showButton2" class="ml-4" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Validating Account No</button>
+                                <button style="margin-top: 35px;" class="ml-4" nz-button nzType="primary" disabled *ngIf="showButton3">Account Validated</button>
+                            </div>
+                        </div>
+                        <div class="row mt-3" *ngIf="showUpload">
+                            <div class="col-lg-4 col-md-4 mb-2" *ngFor="let uploadDoc of uploadedDocs" style="height: 300px; width: 100%;">
+                                <pdf-viewer [src]="uploadDoc" [render-text]="true" style="display: block;"></pdf-viewer>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3 mb-5" *ngIf="showUpload">
+                            <div class="col-md-12">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter your Name!">
+                                            <label class="form-label mb-3" style="font-weight: 600; color: darkslategray;">Upload Multiple Files (PDF Files Only)</label>
+                                            <input type="file" (change)="onFileSelect($event)" accept="application/pdf" multiple="multiple" />
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button style="margin-top: 35px;" nzBlock class="float-right" nz-button nzType="primary" *ngIf="showUploadButton" (click)="uploadDocumentsData()">Upload Documents</button>
+                                <button style="margin-top: 35px; background-color: orange; color: #fff; border-color: orange;" nzBlock *ngIf="showUploadButton2" class="ml-4" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Uploading Document</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,476 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Customer Account Bulk.</h2>
+            <p class="mg-b-0">Customer Account Bulk.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <button nz-button style="width: 100%;" nzType="primary" (click)="swichAccount('account')" nzBlock>Bulk Account</button>
+            </div>
+            <!-- az-dashboard-date -->
+            <!-- <i class="icon ion-md-arrow-forward"></i> -->
+            <div class="date">
+                <button nz-button style="width: 100%;" nzType="default" (click)="swichAccount('customer')" nzBlock>Bulk Customer</button>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <div class="nav-wrapper" *ngIf="account == 'account'">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current == 0" class="nav-link active">Bulk Retail</a>
+            <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current != 0" class="nav-link">Bulk Retail</a>
+            <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current == 1" class="nav-link active">Bulk Corporate</a>
+            <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current != 1" class="nav-link">Bulk Corporate</a>
+            <a href="javascript::void(0)" (click)="tab(2)" *ngIf="current == 2" class="nav-link active">Bulk Savings & Current</a>
+            <a href="javascript::void(0)" (click)="tab(2)" *ngIf="current != 2" class="nav-link">Bulk Savings & Current</a>
+        </nav>
+    </div>
+    <div class="nav-wrapper" *ngIf="account == 'customer'">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" (click)="tab(3)" *ngIf="current == 3" class="nav-link active">Bulk Customer Info</a>
+            <a href="javascript::void(0)" (click)="tab(3)" *ngIf="current != 3" class="nav-link">Bulk Customer Info</a>
+            <a href="javascript::void(0)" (click)="tab(4)" *ngIf="current == 4" class="nav-link active">Bulk Account Update</a>
+            <a href="javascript::void(0)" (click)="tab(4)" *ngIf="current != 4" class="nav-link">Bulk Account Update</a>
+        </nav>
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="steps-content" *ngIf="index == 'First-content'">
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <div class="col-md-12 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Bulk Account Retail</h3>
+                    </div>
+                    <div class="col-md-6"><button class="btn btn-success float-right" (click)="downloadFileSampleBulkRetail()">Download Sample File</button></div>
+                </div>
+            </div>
+
+            <form [formGroup]="fileUploadForm" (ngSubmit)="onSubmitAccountForm()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Upload File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile2" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                            <label class="custom-file-label" for="customFile2">{{fileInputLabel || 'Choose File'}}</label>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Batch ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="col-lg">
+                            <input class="form-control" readonly placeholder="Copy batch ID here." type="text" value="{{ batchNumber }}">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+    </div>
+
+
+    <div class="steps-content" *ngIf="index == 'Second-content'">
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <div class="col-md-12 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Bulk Account Corporate</h3>
+                    </div>
+                    <div class="col-md-6"><button class="btn btn-success float-right" (click)="downloadFileSampleBulkCorporate()">Download Sample File</button></div>
+                </div>
+            </div>
+
+            <form [formGroup]="fileUploadForm" (ngSubmit)="onSubmitAccountFormCorporate()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Upload File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile3" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                            <label class="custom-file-label" for="customFile">{{fileInputLabel || 'Choose File'}}</label>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Batch ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="col-lg">
+                            <input class="form-control" readonly placeholder="Copy batch ID here" type="text" value="{{ batchNumber }}">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'third-content'">
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <div class="col-md-12 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Bulk Saving and Current</h3>
+                    </div>
+                    <div class="col-md-6"><button class="btn btn-success float-right" (click)="downloadFileSampleBulkRetailSavings()">Download Sample File</button></div>
+                </div>
+            </div>
+
+            <form [formGroup]="fileUploadForm" (ngSubmit)="onSubmitAccountFormSavingsCurrent()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Upload File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile4" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                            <label class="custom-file-label" for="customFile4">{{fileInputLabel || 'Choose File'}}</label>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Batch ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="col-lg">
+                            <input class="form-control" readonly placeholder="Copy batch ID here" type="text" value="{{ batchNumber }}">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <div class="steps-content" *ngIf="index == 'fourth-content'">
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <div class="col-md-12 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Bulk Customer Information Update</h3>
+                    </div>
+                    <div class="col-md-6"><button class="btn btn-success float-right" (click)="downloadFileSampleBulkCustomerInfoUpdate()">Download Sample File</button></div>
+                </div>
+            </div>
+
+            <form [formGroup]="fileUploadForm" (ngSubmit)="onSubmitCustomerForm()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Upload File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile5" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                            <label class="custom-file-label" for="customFile5">{{fileInputLabel || 'Choose File'}}</label>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Batch ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="col-lg">
+                            <input class="form-control" readonly placeholder="Copy batch ID here" type="text" value="{{ batchNumber }}">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+
+    </div>
+
+
+
+    <div class="steps-content" *ngIf="index == 'fifth-content'">
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <div class="col-md-12 mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Bulk Customer Account Update</h3>
+                    </div>
+                    <div class="col-md-6"><button class="btn btn-success float-right" (click)="downloadFileSampleBulkCustomerAccountInfoUpdate()">Download Sample File</button></div>
+                </div>
+            </div>
+
+            <form [formGroup]="fileUploadForm" (ngSubmit)="onSubmitAccountUpdate()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Upload File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile6" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                            <label class="custom-file-label" for="customFile6">{{fileInputLabel || 'Choose File'}}</label>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Batch ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="col-lg">
+                            <input class="form-control" readonly placeholder="Copy batch ID here" type="text" value="{{ batchNumber }}">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+
+    </div>
+
+    <!-- <div class="steps-action">
+    <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+      <span>Previous</span>
+    </button>
+    <button nz-button nzType="default" (click)="next()" *ngIf="current < 2">
+      <span>Next</span>
+    </button>
+    <button nz-button nzType="primary" (click)="done()" *ngIf="current === 2">
+      <span>Done</span>
+    </button>
+  </div> -->
+
+</div>
+<!-- az-content-body -->

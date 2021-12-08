@@ -1,0 +1,585 @@
+<div class="az-content-body pd-lg-l-40 d-flex flex-column">
+    <div class="az-content-breadcrumb">
+        <span>Dashboard</span>
+        <!-- <span>Tables</span> -->
+        <span>All Users</span>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between mg-b-20">
+        <h2 class="az-content-title">Users table</h2>
+        <!-- <div class="pd-10 bg-gray-400">Flex item 2</div> -->
+        <div class="row">
+            <!-- <div class="col-sm-12 col-md-12"><button class="btn btn-success btn-block">Add User</button></div> -->
+            <button nz-button nzType="primary" (click)="open()">Create User</button>
+        </div>
+    </div>
+
+
+    <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" [nzFooter]="footerTpl" (nzOnClose)="close()">
+
+
+        <!-- <nz-steps>
+      <nz-step nzTitle="Login" nzStatus="finish" nzIcon="user"></nz-step>
+      <nz-step nzTitle="Verification" nzStatus="finish" nzIcon="solution"></nz-step>
+      <nz-step nzTitle="Pay" nzStatus="process" nzIcon="loading"></nz-step>
+      <nz-step nzTitle="Done" nzStatus="wait" [nzIcon]="iconTemplate"></nz-step>
+      <ng-template #iconTemplate><i nz-icon nzType="smile"></i></ng-template>
+    </nz-steps> -->
+
+        <nz-steps [nzCurrent]="current">
+            <nz-step nzTitle="Validation"></nz-step>
+            <nz-step nzTitle="Role/Permission"></nz-step>
+            <nz-step nzTitle="Preview"></nz-step>
+            <nz-step nzTitle="Finish"></nz-step>
+        </nz-steps>
+
+        <form #signupForm=ngForm (ngSubmit)="onSubmit()">
+            <div *ngIf="index == 'First-content'">
+
+                <div class="az-content-label mg-b-5 mg-t-20 ">Validate User</div>
+                <p class="mg-b-20">Enter User Employee Number.</p>
+
+                <div class="pd-30 pd-sm-40 bg-gray-200">
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0"></label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                            <div class="alert alert-danger" [hidden]="!error">
+                                {{error}}
+                            </div>
+                            <div class="alert alert-success" [hidden]="!success">
+                                {{success}}
+                            </div>
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Employee ID</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-6 mg-t-5 mg-md-t-0">
+                            <input type="text" class="form-control" name="emp_id" [(ngModel)]="form.emp_id" placeholder="e.g AA1000000">
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-2 mg-t-5 mg-md-t-0">
+                            <button type="botton" *ngIf="!disabled" (click)="onGo()" class="btn btn-primary btn-block">Validate</button>
+                            <button *ngIf="disabled" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div *ngIf="showsDetails">
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-4">
+                                <label class="form-label mg-b-0">Firstname</label>
+                            </div>
+                            <!-- col -->
+                            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                <input type="text" class="form-control" disabled name="first_name" [(ngModel)]="form.first_name">
+                            </div>
+                            <!-- col -->
+                        </div>
+                        <!-- row -->
+
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-4">
+                                <label class="form-label mg-b-0">Lastnane</label>
+                            </div>
+                            <!-- col -->
+                            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                <input type="text" class="form-control" disabled name="last_name" [(ngModel)]="form.last_name">
+                            </div>
+                            <!-- col -->
+                        </div>
+                        <!-- row -->
+
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-4">
+                                <label class="form-label mg-b-0">Username</label>
+                            </div>
+                            <!-- col -->
+                            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                <input type="text" class="form-control" disabled name="username" [(ngModel)]="form.username" type="text">
+                            </div>
+                            <!-- col -->
+                        </div>
+                        <!-- row -->
+
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-4">
+                                <label class="form-label mg-b-0">Department</label>
+                            </div>
+                            <!-- col -->
+                            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                <input type="text" class="form-control" placeholder="Enter User Department" name="department" [(ngModel)]="form.department" type="text">
+                            </div>
+                            <!-- col -->
+                        </div>
+                        <!-- row -->
+
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-4">
+                                <label class="form-label mg-b-0">Job Title</label>
+                            </div>
+                            <!-- col -->
+                            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                <input type="text" class="form-control" placeholder="Enter User Job Title" name="job_title" [(ngModel)]="form.job_title" type="text">
+                            </div>
+                            <!-- col -->
+                        </div>
+                        <!-- row -->
+
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-4">
+                                <label class="form-label mg-b-0">Email</label>
+                            </div>
+                            <!-- col -->
+                            <div class="col-md-8 mg-t-5 mg-md-t-0">
+                                <input type="email" class="form-control" placeholder="Enter user email" name="email" required [(ngModel)]="form.email" type="text" value="">
+                            </div>
+                            <!-- col -->
+                        </div>
+                        <!-- row -->
+                    </div>
+                    <!-- <button class="btn btn-dark pd-x-30">Cancel</button> -->
+                </div>
+            </div>
+
+            <div class="steps-content" *ngIf="index == 'Second-content'">
+                <div class="az-content-label mg-b-5">Role and Permission</div>
+                <p class="mg-b-20">Assign user to his or her designated role.</p>
+
+                <div class="pd-30 pd-sm-40 bg-gray-200">
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Role</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <nz-select nzPlaceHolder="Select Role" name="role" required [(ngModel)]="form.role">
+                                <!-- <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option> -->
+                                <nz-option *ngFor="let item of Roles" [nzLabel]="item.slug" [nzValue]="item.name"></nz-option>
+                            </nz-select>
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Permissions</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <nz-select nzMode="tags" nzPlaceHolder="Selet Permission" name="permissions" required [(ngModel)]="form.permissions" [(ngModel)]="permissions">
+                                <!-- <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option> -->
+                                <nz-option [nzLabel]="'restore/user'" [nzValue]="'restore/user'"></nz-option>
+                                <nz-option [nzLabel]="'delete/user'" [nzValue]="'delete/user'"></nz-option>
+                                <nz-option [nzLabel]="'update'" [nzValue]="'update'"></nz-option>
+                            </nz-select>
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Two Factor Authorization</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <select class="form-control select2-no-search" name="two_factor" required [(ngModel)]="form.two_factor">
+                <option label="Choose one"></option>
+                <option value="B">B</option>
+                <option value="A">A</option>
+              </select>
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                </div>
+            </div>
+
+            <div class="steps-content" *ngIf="index == 'third-content'">
+                <div class="az-content-label mg-b-5">Preview</div>
+                <p class="mg-b-20">Re-check and verify user input.</p>
+
+                <nz-list nzBordered nzHeader="User Informations" nzFooter="Click Submit to Submit the form">
+                    <nz-list-item><span nz-typography><mark>Employee ID</mark></span>{{ form.emp_id }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>First Name</mark></span>{{ form.first_name }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Last Name</mark></span>{{ form.last_name }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Username</mark></span>{{ form.username }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Department</mark></span>{{ form.department }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Job Title</mark></span>{{ form.job_title }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Email</mark></span>{{ form.email }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Role</mark></span>{{ form.role }}</nz-list-item>
+                    <nz-list-item><span nz-typography><mark>Permissions</mark></span>{{ form.permissions }}</nz-list-item>
+                </nz-list>
+            </div>
+
+            <button type="submit" style="float: right" class="btn btn-success btn-block" *ngIf="!disabled2 && current === 2" [disabled]="!signupForm.valid">
+      <span>Submit</span>
+    </button>
+            <button type="button" *ngIf="disabled2" class="btn btn-success btn-block"><i class="fa fa-spinner fa-spin"></i> Loading</button>
+
+            <ng-template #footerTpl>
+                <div style="float: right">
+
+                    <div class="steps-action" *ngIf="showsDetails">
+                        <button nz-button nzType="default" (click)="pre()" *ngIf="current >= 0">
+              <span>Previous</span>
+            </button>
+                        <button nz-button nzType="default" (click)="next()" routerLinkActive="router-link-active" *ngIf="current < 2">
+              <span>Next</span>
+            </button>
+                        <button type="button" nz-button nzType="primary" (click)="close()" *ngIf="current === 3">
+              <span>Done</span>
+            </button>
+                    </div>
+                    <!--
+          <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+          <button nz-button nzType="primary" (click)="close()">Submit</button> -->
+                </div>
+            </ng-template>
+        </form>
+
+        <div class="steps-content" *ngIf="index == 'Fourth-content'">
+            <nz-result *ngIf="responsecode == 0" nzStatus="success" nzTitle="Successfully Registration Completed!" nzSubTitle="User ID: 2017182818828182881.">
+                <div nz-result-extra>
+                    <button nz-button nzType="primary" [routerLink]="['/dashboard']">Go Dashboard</button>
+                    <button nz-button (click)="close()">Close Registration</button>
+                </div>
+            </nz-result>
+
+            <nz-result *ngIf="responsecode != 0 && responsecode != 3" nzStatus="warning" nzTitle="There are some problems with your operation">
+                <div nz-result-extra>
+                    <button nz-button nzType="primary" (click)="again()">Register Again</button>
+                    <button nz-button (click)="close()">Close Registration</button>
+                </div>
+            </nz-result>
+
+            <nz-result *ngIf="responsecode == 3" nzTitle="Submission Failed" nzStatus="error" nzSubTitle="Please check and modify the following information before resubmitting.">
+                <div nz-result-content>
+                    <div class="desc">
+                        <h4 nz-title>{{ response }}!</h4>
+                        <!-- <p nz-paragraph>
+              <i nz-icon nzType="close-circle"></i>
+              User Already Exists <a>Thaw immediately</a>
+            </p>
+            <p nz-paragraph>
+              <i nz-icon nzType="close-circle"></i>
+              Email Already Exists <a>Apply immediately </a>
+            </p> -->
+                    </div>
+                </div>
+                <div nz-result-extra>
+                    <button nz-button nzType="primary" (click)="again()">Register Again</button>
+                    <button nz-button (click)="close()">Close Registration</button>
+                </div>
+            </nz-result>
+        </div>
+
+
+
+    </nz-drawer>
+
+    <div class="az-content-label mg-b-5">Total Users: {{ totalUsers }}</div>
+    <!-- <p class="mg-b-20">Searching, ordering and paging goodness will be immediately added to the table, as shown in this example.</p> -->
+    <div>
+
+        <nz-table #nzTable [nzData]="users" nzTableLayout="fixed" [nzPageSize]="10" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="80px">Image</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Employee ID</th>
+                    <th>Verified By</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                        <td>
+                            <div class="az-img-user">
+                                <img src="assets/img/default.jpg" alt="">
+                            </div>
+                            <!-- az-img-user -->
+                        </td>
+                        <td>{{ data.first_name }} {{ data.last_name }}</td>
+                        <td>{{ data.username }}</td>
+                        <td>{{ data.emp_id }}</td>
+                        <td>{{ data.verified_by }}</td>
+                        <td>
+                            <button nz-button nzType="default" (click)="openUpdate(data.id)" nzShape="circle"><i nz-icon nzType="edit"></i></button>
+                            <!-- <button nz-button nzType="danger" (click)="onDelete(data.id)" [nzSize]="size" nzShape="circle" nzDanger><i nz-icon nzType="delete"></i></button> -->
+                            <button nzType="danger" nzDanger nzShape="circle" nz-popconfirm nzPopconfirmTitle="Are you sure Activate this user?" (nzOnConfirm)="onDelete(data.id)" (nzOnCancel)="cancel()" nzPopconfirmPlacement="topRight" nz-button>
+                    <i nz-icon nzType="delete"></i>
+                  </button>
+                        </td>
+                        <!-- <button class="btn btn-secondary btn-block" (click)="openUpdate(data.id)">Update</button> -->
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.id)">
+
+                        <nz-table>
+                            <thead>
+                                <!-- <th></th>
+                    <th>Value</th> -->
+                            </thead>
+                            <tbody id="item">
+                                <tr>
+                                    <td>Job Title</td>
+                                    <td>{{data.job_title }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Department</td>
+                                    <td>{{data.department }}</td>
+                                </tr>
+
+                                <tr *ngIf="data.permissions != null">
+                                    <td>Authorizer</td>
+                                    <td>{{data.permissions[0] }}</td>
+                                </tr>
+                                <tr *ngFor="let data2 of data.permissions; let r=index">
+                                    <td>Inputter</td>
+                                    <td>{{data2[r] }}</td>
+                                </tr>
+                                <tr *ngIf="data.permissions != null">
+                                    <td>Authorizer</td>
+                                    <td>{{data.permissions['authorizer.channel.verify'] }}</td>
+                                </tr>
+                                <tr *ngIf="data.permissions != null">
+                                    <td>Inputter</td>
+                                    <td>{{data.permissions['inputter.channel.store'] }}</td>
+                                </tr>
+                                <tr *ngIf="data.permissions != null">
+                                    <td>User Status</td>
+                                    <td>{{data.permissions['users.verify'] }}</td>
+                                </tr>
+                            </tbody>
+                        </nz-table>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="ht-40"></div>
+</div>
+<!-- az-content-body -->
+
+
+
+<!-- Update User Drawer -->
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible2" nzTitle="Create" [nzFooter]="footerTpl2" (nzOnClose)="close()">
+
+    <nz-steps [nzCurrent]="current">
+        <nz-step nzTitle="Information"></nz-step>
+        <nz-step nzTitle="Depertment"></nz-step>
+        <nz-step nzTitle="Permission"></nz-step>
+    </nz-steps>
+
+    <form #updateform=ngForm (ngSubmit)="onUpdate()">
+        <div *ngIf="index == 'First-content'">
+
+            <div class="az-content-label mg-b-5 mg-t-20 ">Update User</div>
+            <p class="mg-b-20">Edit User Information.</p>
+
+            <div class="pd-30 pd-sm-40 bg-gray-200">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Employee ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <input type="text" class="form-control" required name="emp_id" [(ngModel)]="updateForm.emp_id" placeholder="e.g AA1000000">
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div>
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Firstname</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <input type="text" class="form-control" required name="first_name" [(ngModel)]="updateForm.first_name">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Lastnane</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <input type="text" class="form-control" required name="last_name" [(ngModel)]="updateForm.last_name">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Username</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <input type="text" class="form-control" name="username" [(ngModel)]="updateForm.username" required type="text">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+
+                    <div class="row row-xs align-items-center mg-b-20">
+                        <div class="col-md-4">
+                            <label class="form-label mg-b-0">Email</label>
+                        </div>
+                        <!-- col -->
+                        <div class="col-md-8 mg-t-5 mg-md-t-0">
+                            <input type="email" class="form-control" placeholder="Enter user email" name="email" required [(ngModel)]="updateForm.email" type="text" value="">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- row -->
+                </div>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Two Factor Authorization</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-8 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" name="two_factor" required [(ngModel)]="form.two_factor">
+                      <option label="Choose one"></option>
+                      <option value="B">Yes</option>
+                      <option value="N">No</option>
+                    </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+                <!-- <button class="btn btn-dark pd-x-30">Cancel</button> -->
+            </div>
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'Second-content'">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Department</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" required placeholder="Enter User Department" name="department" [(ngModel)]="updateForm.department" type="text">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Job Title</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" placeholder="Enter User Job Title" name="job_title" [(ngModel)]="updateForm.job_title" type="text">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'third-content'">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Role</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a role" name="role" required [(ngModel)]="updateForm.role">
+                        <nz-option *ngFor="let role of Roles" [nzLabel]="role.name" [nzValue]="role.name"></nz-option>
+                    </nz-select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Permissions</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <nz-select nzMode="tags" nzPlaceHolder="Tag Mode" name="permissions" required [(ngModel)]="updateForm.permissions" [(ngModel)]="permissions">
+                        <!-- <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option> -->
+                        <nz-option [nzLabel]="'restore/user'" [nzValue]="'restore/user'"></nz-option>
+                        <nz-option [nzLabel]="'delete/user'" [nzValue]="'delete/user'"></nz-option>
+                        <nz-option [nzLabel]="'update'" [nzValue]="'update'"></nz-option>
+                    </nz-select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+        </div>
+        <br>
+        <button *ngIf="!disabled2" nz-button type="submit" nzType="primary" nzBlock>Save</button>
+        <button *ngIf="disabled2" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+
+
+        <ng-template #footerTpl2>
+            <div style="float: right">
+
+                <div class="steps-action">
+                    <button nz-button style="margin-right: 8px;" (click)="close()"><span>Close</span></button>
+                    <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+            <span>Previous</span>
+          </button>
+                    <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active" *ngIf="current < 2">
+            <span>Next</span>
+          </button>
+                </div>
+
+                <!-- <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+        <button nz-button nzType="primary" (click)="close()">Submit</button> -->
+            </div>
+        </ng-template>
+
+    </form>
+</nz-drawer>

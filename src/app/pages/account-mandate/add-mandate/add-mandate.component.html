@@ -1,0 +1,303 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Account Mandate.</h2>
+            <p class="mg-b-0">Add Account Mandate.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <!-- <button nz-button style="width: 100%;" nzType="primary" nzBlock>Manage Mandate</button> -->
+            </div>
+            <!-- az-dashboard-date -->
+            <!-- <i class="icon ion-md-arrow-forward"></i> -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <div class="nav-wrapper" *ngIf="account == 'account'">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current == 0" class="nav-link active">Single Mandate</a>
+            <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current != 0" class="nav-link">Single Mandate</a>
+            <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current == 1" class="nav-link active">Bulk Mandate</a>
+            <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current != 1" class="nav-link">Bulk Mandate</a>
+        </nav>
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="steps-content" *ngIf="index == 'First-content'">
+
+        <h3 class="az-content-title mg-b-80 text-center" style="margin-top: -5%;">Add Single Mandate</h3>
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0"></label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                    <div class="alert alert-danger" [hidden]="!error">
+                        {{error}}
+                    </div>
+                    <div class="alert alert-success" [hidden]="!success">
+                        {{success}}
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <form [formGroup]="mandateForm">
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-2">
+                        <label class="form-label mg-b-0" value="">Account Number </label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-4 mg-t-5 mg-md-t-0">
+                        <input class="form-control" maxlength="10" placeholder="Input Customer Account Number." type="text" formControlName="accountNumber" required>
+                        <div *ngIf="mandateForm.get('accountNumber').invalid &&
+                              mandateForm.get('accountNumber').errors &&
+                              (mandateForm.get('accountNumber').dirty || mandateForm.get('accountNumber').touched)">
+                            <small class="text-danger" *ngIf="mandateForm.get('accountNumber').hasError('required')">
+                              This field is required
+                            </small>
+                            <small class="text-danger" *ngIf="mandateForm.get('accountNumber').hasError('pattern')">
+                                This field accept only numbers.
+                            </small>
+                        </div>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-3 mg-t-5 mg-md-t-0">
+                        <nz-tag *ngIf="!showsDetailsv" nzColor="#cd201f"><span>Not Verified</span></nz-tag> &nbsp;
+                        <nz-tag *ngIf="showsDetailsv" nzColor="#87d068"><span>verified</span></nz-tag> &nbsp;
+                        <i nz-icon nzType="file-search" (click)="validAccoundNumber()" *ngIf="veriBut" nzTheme="outline" class="dynamic-delete-button" nzTooltipTitle="Verify Customer" nzTooltipPlacement="top" nz-tooltip></i> &nbsp;
+                        <i nz-icon class="dynamic-delete-button" nzType="loading" *ngIf="disabledv" nzTheme="outline"></i> &nbsp;
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20" *ngIf="showName">
+                    <div class="col-md-2">
+                        <label class="form-label mg-b-0" value="">Account Name </label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-5 mg-t-5 mg-md-t-0">
+                        <input class="form-control" [(ngModel)]="accountNumberName" placeholder="Input Customer Account Number." type="text" formControlName="accountName" required>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-2">
+                        <label class="form-label mg-b-0" value="">Image File Preview</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-4 mg-t-5 mg-md-t-0" *ngIf="hideImagePreview">
+                        <div class="custom-file" style="text-align: left;">
+                            <img [src]="this.ImageFile" style="width: 100px; height: 100px; margin-bottom: 70px;" />
+                        </div>
+                    </div>
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-2 mt-3">
+                        <label class="form-label mg-b-0" value="">Image File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-4 mg-t-5 mg-md-t-0">
+                        <div class="custom-file mt-4" style="text-align: left;">
+                            <input type="file" accept="image/jpeg" (change)="onFileSelect3($event)">
+                        </div>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-1 pr-0">
+                        <label class="form-label mg-b-0" value="">Expiry Date</label>
+                    </div>
+                    <div class="col-md-4 mg-t-5 mg-md-t-0">
+                        <div class="custom-file" style="text-align: left;">
+                            <!-- <input class="form-control" placeholder="Input Customer Account Number." type="date" formControlName="imageExpiryDate" required> -->
+                            <nz-date-picker style="width: 100%;" formControlName="imageExpiryDate" nzFormat="dd-MM-yyyy" [nzDisabledDate]="disabledDate"></nz-date-picker>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-2">
+                        <label class="form-label mg-b-0" value="">Signature File Preview</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-4 mg-t-5 mg-md-t-0" *ngIf="hideSignaturePreview">
+                        <div class="custom-file" style="text-align: left;">
+                            <img [src]="this.SignatureFile" style="width: 100px; height: 100px; margin-bottom: 70px;" />
+                        </div>
+                    </div>
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-2">
+                        <label class="form-label mg-b-0" value="">Signature File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-4 mg-t-5 mg-md-t-0">
+                        <div class="custom-file mt-2" style="text-align: left;">
+                            <input type="file" accept="image/jpeg" (change)="onFileSelect2($event)">
+                        </div>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-1 pr-0">
+                        <label class="form-label mg-b-0" value="">Expiry Date</label>
+                    </div>
+                    <div class="col-md-4 mg-t-5 mg-md-t-0">
+                        <div class="custom-file" style="text-align: left;">
+                            <!-- <input class="form-control" placeholder="Input Customer Account Number." type="date" formControlName="signatureExpiryDate" required> -->
+                            <nz-date-picker style="width: 100%;" formControlName="signatureExpiryDate" nzFormat="dd-MM-yyyy" [nzDisabledDate]="disabledDate"></nz-date-picker>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-2">
+                        <label class="form-label mg-b-0" value="">Remark</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file" style="text-align: left;">
+                            <input class="form-control" placeholder="Remark" type="text" formControlName="remarks" required>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0 mt-3">
+                        <button *ngIf="!disabled" [disabled]="this.validateCheckingItem === ''" (click)="onSubmitSingleMandate()" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+    </div>
+
+
+    <div class="steps-content" *ngIf="index == 'Second-content'">
+        <h3 class="az-content-title mg-b-80" style="margin-top: -5%; text-align: center;">Add Bulk Mandate</h3>
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+            <form [formGroup]="fileUploadForm" (ngSubmit)="onSubmitBulkMandate()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Upload File</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                            <label class="custom-file-label" for="customFile">{{fileInputLabel || 'Choose File'}}</label>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Batch ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="col-lg">
+                            <input class="form-control" readonly placeholder="Copy batch ID here" type="text" value="{{ batchNumber }}">
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Remark</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <div class="custom-file" style="text-align: left;">
+                            <input class="form-control" placeholder="Remark" type="text" formControlName="remarks" required>
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+
+    </div>
+
+    <!-- <div class="steps-action">
+    <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+      <span>Previous</span>
+    </button>
+    <button nz-button nzType="default" (click)="next()" *ngIf="current < 2">
+      <span>Next</span>
+    </button>
+    <button nz-button nzType="primary" (click)="done()" *ngIf="current === 2">
+      <span>Done</span>
+    </button>
+  </div> -->
+
+</div>
+<!-- az-content-body -->

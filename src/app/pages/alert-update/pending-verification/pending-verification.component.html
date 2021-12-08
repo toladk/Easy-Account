@@ -1,0 +1,128 @@
+<div class="az-content-header" #customLoadingTemplate>
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Pending Batch Alert</h2>
+            <p class="mg-b-0">Batch Alert.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <!-- <div class="float-right">
+                    <button class="btn btn-dark btn-with-icon btn-block"><i class="typcn typcn-plus"></i>Upload File Here</button>
+                </div> -->
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+</div>
+
+
+<div class="az-content-body">
+    <div class="pd-10 pd-t-20">
+        <div class="az-content-label mg-b-5" style="margin-bottom: 20px;">Batch Alert List</div>
+        <!-- <div class="row pd-b-10">
+          <div class="col-md-4">
+              <div class="az-content-label pt-3">Tatal Transaction: 0 / 0</div>
+          </div>
+
+          <div class="float-right col-md-8 mt-1">
+
+              <div class="az-header-center">
+
+                  <input type="search" id="item_search" [(ngModel)]="search.accountNumber" class="form-control" placeholder="Search for Student...">
+                  <button class="btn btn-primary" style="margin-right: 30px;" (click)="onSearch()"><i class="typcn typcn-zoom"></i></button>
+                  <button class="btn btn-danger" (click)="onSearchCouncle()"><i class="typcn typcn-times"></i></button>
+
+              </div>
+          </div>
+      </div> -->
+
+        <!-- <nz-table #fixedTable [nzData]="alertRecords" [nzScroll]="{ x: '700px', y: '340px' }" [nzLoading]="loading">
+          <thead>
+              <tr>
+                  <th nzWidth="60px">S/N</th>
+                  <th nzLeft>Account Number</th>
+                  <th nzLeft>Email Address</th>
+                  <th>Mobile Number</th>
+                  <th nzRight>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let data of fixedTable.data; let r= index">
+                  <td nzWidth="60px">{{ r+1 }}</td>
+                  <td nzLeft>{{ data.accountnumber }}</td>
+                  <td>{{ data.emailaddress }}</td>
+                  <td>{{ data.mobilenumber }}</td>
+                  <td nzRight>
+                      <div class="btn-icon-list">
+                          <button class="btn btn-info btn-icon"><i class="typcn typcn-eye"></i></button>
+                          <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-trash"></i></button>
+                      </div>
+                  </td>
+              </tr>
+          </tbody>
+      </nz-table> -->
+
+
+
+        <nz-table #nzTable [nzData]="allPendingBatchAlertList" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">S/N</th>
+                    <th>Batch Number</th>
+                    <th>Processed By</th>
+                    <th>Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data; let r= index">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChangeBatch(data.sn, $event)" (click)="getBatchAlert(data.batch_number, 'batchAlert')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.processed_by }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <div class="btn-icon-list" [hidden]="!approvalItem">
+                                <button class="btn btn-success btn-icon" nz-popconfirm nzPopconfirmTitle="Want to approve batch?" nzOkText="Approve Batch" nzCancelText="cancel" (nzOnConfirm)="approveBatchAlert(data.batch_number)" nz-tooltip nzTooltipTitle="Approve Batch"><i class="typcn typcn-tick"></i></button>
+                                <button class="btn btn-danger btn-icon" nz-popconfirm nzPopconfirmTitle="Want to reject batch?" nzOkText="Reject Batch" nzCancelText="cancel" (nzOnConfirm)="rejectBatchAlert(data.batch_number)" nz-tooltip nzTooltipTitle="Reject Batch"><i class="typcn typcn-times"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="batchNumberDetails" nzTableLayout="fixed" [nzLoading]="subloading">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px">S/N</th>
+                                    <th>Account Number</th>
+                                    <th>Email Address</th>
+                                    <th>Mobile Number</th>
+                                    <th>Created Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data">
+                                    <tr>
+                                        <td>{{ r+1 }}</td>
+                                        <td>{{ data.accountnumber }}</td>
+                                        <td>{{ data.emailaddress }}</td>
+                                        <td>{{ data.mobilenumber }}</td>
+                                        <td>{{ data.datecreated | date }}</td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <!-- </div> -->
+</div>

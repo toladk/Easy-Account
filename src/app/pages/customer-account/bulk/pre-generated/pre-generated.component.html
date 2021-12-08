@@ -1,0 +1,243 @@
+<div class="az-content-body">
+
+
+    <div class="az-content-label mg-b-5">Pre Generated Account</div>
+    <p class="mg-b-20">Pre Generated Account.</p>
+
+
+    <nz-steps [nzCurrent]="current">
+        <nz-step nzTitle="Generate Account"></nz-step>
+        <nz-step nzTitle="Result"></nz-step>
+        <nz-step nzTitle="Finish"></nz-step>
+    </nz-steps>
+
+    <div class="steps-content" *ngIf="index == 'First-content'">
+
+        <div class="pd-30 pd-sm-40" style="margin-top: -8%;">
+
+            <form #signupForm=ngForm (ngSubmit)="onSubmit()">
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0"></label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <div class="alert alert-danger" [hidden]="!error">
+                            {{error}}
+                        </div>
+                        <div class="alert alert-success" [hidden]="!success">
+                            {{success}}
+                        </div>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Account Type</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <!-- <select class="form-control select2-no-search" name="accountType" [(ngModel)]="form.accountType" required> -->
+
+                        <nz-select name="accountType" [(ngModel)]="form.accountType" nzAllowClear nzPlaceHolder="Choose" required>
+                            <nz-option nzLabel="Choose one"></nz-option>
+                            <nz-option nzLabel="Individual" nzValue="Individual"></nz-option>
+                            <nz-option nzLabel="Corporate" nzValue="Corporate"></nz-option>
+                            <nz-option nzLabel="Minor" nzValue="Minor"></nz-option>
+                        </nz-select>
+
+
+
+                        <!-- [(ngModel)]="form.two_factor" -->
+                        <!-- <option label="Choose one">Select Account Type</option>
+            <option value="Individual">Individual</option>
+            <option value="Coporate">Coporate</option> -->
+                        <!-- </select> -->
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Number Of Accounts</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <input type="number" class="form-control" name="numberOfAccounts" [(ngModel)]="form.numberOfAccounts" required>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Scheme Type</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <nz-select nzAllowClear nzPlaceHolder="Choose" (ngModelChange)="onSelectSchemeTypes($event)" name="SchemeType" [(ngModel)]="form.SchemeType" required>
+                            <!-- <select class="form-control select2-no-search" (change)="onSelectSchemeTypes($event)" name="SchemeType" [(ngModel)]="form.SchemeType" required> -->
+                            <!-- [(ngModel)]="form.two_factor" -->
+                            <!-- <option label="Choose one" value="">Select Scheme Type</option>
+            <option *ngFor="let list of shemeTypes" value="{{ list.schemeType }}">{{ list.description }}</option> -->
+
+                            <ng-container *ngFor="let list of shemeTypes">
+                                <nz-option *ngIf="!isLoading" nzLabel="{{ list.description }}" nzValue="{{ list.schemeType }}"></nz-option>
+                            </ng-container>
+                            <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Scheme Code</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Scheme Code" nzAllowClear nzShowSearch nzServerSearch name="SchemeCode" [(ngModel)]="form.SchemeCode" required>
+                            <!-- <nz-option *ngFor="let list of shemecodes" nzLabel="{{ list.description }}" nzValue="{{ list.schemecode }}"> {{ list.description }}</nz-option> -->
+
+                            <ng-container *ngFor="let list of shemecodes">
+                                <nz-option *ngIf="!isLoading2" nzLabel="{{ list.description }} - {{ list.schemecode }}" nzValue="{{ list.schemecode }}"></nz-option>
+                            </ng-container>
+                            <nz-option *ngIf="isLoading2" nzDisabled nzCustomContent>
+                                <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">RM Code</label>
+                    </div>
+                    <!-- col -->
+
+                    <div class="col-md-6  mg-t-5 mg-md-t-0">
+                        <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+                            <input type="text" nz-input (change)="onCheckValidation()" name="manager" [(ngModel)]="form.manager" required class="form-control" placeholder="Enter a valid RM code or leave it empty" />
+                        </nz-input-group>
+                        <ng-template #suffixButton>
+                            <button nz-button nzType="danger" (click)="onGoParentCif()" *ngIf="!disabled2 && !showsDetails3" nzSize="large" nzSearch>Validate</button>
+                            <button nz-button nzType="primary" *ngIf="!disabled2 && showsDetails3" nzSize="large" nzSearch disabled>Confirmed</button>
+                            <button nz-button nzType="danger" *ngIf="disabled2" nzSize="large" disabled nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+                        </ng-template>
+                    </div>
+
+                </div>
+                <!-- row -->
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0">Sol ID</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <select class="form-control select2-no-search" (change)="onCheckValidation()" name="solId" [(ngModel)]="form.solId" required>
+                          <!-- [(ngModel)]="form.two_factor" -->
+                          <option label="Choose one" value="">Select Sol Id</option>
+                          <option *ngFor="let sol of sols" value="{{ sol.solid }}">{{ sol.solid }} - {{ sol.description }}</option>
+                        </select>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+                        <label class="form-label mg-b-0" value="">Introducer Code</label>
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-5 mg-md-t-0">
+                        <input type="text" class="form-control" name="introducerCode" [(ngModel)]="form.introducerCode" required>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+                <br>
+
+                <div class="row row-xs align-items-center mg-b-20">
+                    <div class="col-md-4">
+
+                    </div>
+                    <!-- col -->
+                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                        <button *ngIf="!disabled" nz-button nzType="primary" nzBlock>Submit</button>
+
+                        <button *ngIf="disabled" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button>
+                    </div>
+                    <!-- col -->
+                </div>
+                <!-- row -->
+            </form>
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'Second-content'">
+        <nz-result *ngIf="responsecode == 0" nzStatus="success" nzTitle="Account Generated Successfully!" nzSubTitle="Copy your batch ID below.">
+
+            <div nz-result-content>
+                <div class="desc">
+                    <h2 nz-title>{{ batchNumber }}</h2>
+                </div>
+            </div>
+
+            <div nz-result-extra>
+                <!-- <button nz-button nzType="primary" [routerLink]="['app/dashboard']">Go Dashboard</button> -->
+                <button nz-button (click)="again()">Generate again</button>
+            </div>
+        </nz-result>
+
+        <nz-result *ngIf="responsecode != 0 && responsecode != 3" nzStatus="warning" nzTitle="There are some problems with your operation">
+            <div nz-result-extra>
+                <button nz-button nzType="primary" (click)="again()">Register Again</button>
+                <button nz-button (click)="close()">Close Registration</button>
+            </div>
+        </nz-result>
+
+        <nz-result *ngIf="responsecode == 3" nzTitle="Submission Failed" nzStatus="error" nzSubTitle="Please check and modify the following information before resubmitting.">
+            <div nz-result-content>
+                <div class="desc">
+                    <h4 nz-title>{{ response }}!</h4>
+                    <!-- <p nz-paragraph>
+          <i nz-icon nzType="close-circle"></i>
+          User Already Exists <a>Thaw immediately</a>
+        </p>
+        <p nz-paragraph>
+          <i nz-icon nzType="close-circle"></i>
+          Email Already Exists <a>Apply immediately </a>
+        </p> -->
+                </div>
+            </div>
+            <div nz-result-extra>
+                <button nz-button nzType="primary" (click)="again()">Register Again</button>
+                <button nz-button (click)="close()">Close Registration</button>
+            </div>
+        </nz-result>
+    </div>
+    <!-- <div class="steps-action">
+    <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+      <span>Previous</span>
+    </button>
+    <button nz-button nzType="default" (click)="next()" *ngIf="current < 2">
+      <span>Next</span>
+    </button>
+    <button nz-button nzType="primary" (click)="done()" *ngIf="current === 2">
+      <span>Done</span>
+    </button>
+  </div> -->
+
+
+</div>
+<!-- az-content-body -->

@@ -1,0 +1,194 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Authorize Pending Mandate!</h2>
+            <p class="mg-b-0">Authorize Pending Account Mandate.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <!--        <button nz-button nzType="primary">Add Teller</button>-->
+            </div>
+            <!-- az-dashboard-date -->
+            <!-- <i class="icon ion-md-arrow-forward"></i> -->
+            <!-- <div class="date">
+        <button nz-button nzType="default">Existing Customer</button>
+      </div> -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <div class="nav-wrapper">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" class="nav-link active">Pending Mandates</a>
+            <!-- <a href="javascript::void(0)" class="nav-link">Bulk</a> -->
+        </nav>
+    </div>
+</div>
+
+
+<div class="az-content-body">
+    <div class="az-content-label mg-b-5" style="margin-bottom: 20px;">All Pending Mandate List</div>
+    <!-- <p class="mg-b-20">Pre Generated Teller.</p> -->
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100"> -->
+
+    <nz-table #nzTable [nzData]="pendingMandate" nzTableLayout="fixed" [nzLoading]="loading">
+        <thead>
+            <tr>
+                <th nzWidth="60px"></th>
+                <th nzWidth="60px">S/N</th>
+                <th nzLeft>Batch Number</th>
+                <th nzLeft>Inputter</th>
+                <th>Process Type</th>
+                <th>Upload Date</th>
+                <th nzRight>Action</th>
+            </tr>
+        </thead>
+        <tbody id="item">
+            <ng-container *ngFor="let data of nzTable.data; let r= index">
+                <tr>
+                    <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'pendingMandate')"></td>
+                    <td>{{ r+1 }}</td>
+                    <td nzLeft>{{ data.batch_number }}</td>
+                    <td>{{ data.inputter }}</td>
+                    <td>{{ data.process_type }}</td>
+                    <td>{{ data.upload_date }}</td>
+                    <td nzRight>
+                        <button [hidden]="!admin" nz-button nzType="success" nzShape="circle" class="mr-2" nz-popconfirm nzPopconfirmTitle="Are you sure you want to approve mandate?" (nzOnConfirm)="approveMandate(data.batch_number)" (nzOnCancel)="cancel()" nzPopconfirmPlacement="topRight"
+                            nzOkText="Approve Mandate" style="background-color: #4BA145; color: #fff; border-color: #4BA145;" nz-tooltip nzTooltipTitle="Approve Mandate"><i nz-icon nzType="check"></i></button>
+
+                        <button [hidden]="!admin" nz-button nzType="danger" nzShape="circle" class="mr-2" nz-popconfirm nzPopconfirmTitle="Are you sure you want to reject mandate?" (nzOnConfirm)="rejectMandate(data.batch_number)" (nzOnCancel)="cancel()" nzPopconfirmPlacement="topRight"
+                            nzOkText="Reject Mandate" nzShape="circle" nz-tooltip nzTooltipTitle="Reject Mandate"><i nz-icon nzType="close"></i></button>
+                    </td>
+                </tr>
+                <tr [nzExpand]="expandSet.has(data.sn)">
+
+                    <nz-table #nzTable [nzData]="pendingMandateInfo" nzTableLayout="fixed">
+                        <thead>
+                            <tr>
+                                <th nzWidth="50px">Account Name</th>
+                                <th nzWidth="50px">Account No</th>
+                                <th nzWidth="50px">Image File</th>
+                                <th nzWidth="50px">Signature File</th>
+                                <th nzWidth="50px">Remarks</th>
+                                <th nzWidth="50px">Expiry Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="item">
+                            <ng-container *ngFor="let data of nzTable.data">
+                                <tr>
+                                    <td>{{ data.account_name }}</td>
+                                    <td>{{ data.account_number }}</td>
+                                    <td>
+                                        <img (click)="getPendingMandateDetailsByIdImage(data.id)" src="data:image/png;base64,{{ data.image }}" style='display:block; width: 100px; height: 100px; cursor: pointer;' />
+                                    </td>
+                                    <td>
+                                        <img (click)="getPendingMandateDetailsByIdSignature(data.id)" src="data:image/png;base64,{{ data.signature }}" style='display:block; width: 100px; height: 100px; cursor: pointer;' />
+                                    </td>
+                                    <td>{{ data.remarks }}</td>
+                                    <td>{{ data.signature_expiry_date }}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </nz-table>
+
+
+                </tr>
+            </ng-container>
+        </tbody>
+    </nz-table>
+
+
+    <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" [nzFooter]="footerTpl" (nzOnClose)="close()">
+
+        <div class="az-content-label mg-b-5">Add Teller</div>
+        <!-- <p class="mg-b-20">A form control layout using row with left label alignment.</p> -->
+
+        <div class="pd-30 pd-sm-40 bg-gray-200">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Firstname</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" placeholder="Enter your firstname">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Lastnane</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" placeholder="Enter your lastname">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Email</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="email" class="form-control" placeholder="Enter your email">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <button class="btn btn-az-primary pd-x-30 mg-r-5">Register</button>
+            <button class="btn btn-dark pd-x-30">Cancel</button>
+        </div>
+
+        <ng-template #footerTpl>
+            <div style="float: right">
+                <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+                <button nz-button nzType="primary" (click)="close()">Submit</button>
+            </div>
+        </ng-template>
+    </nz-drawer>
+
+
+    <!-- Modal for Image Preview-->
+    <nz-modal [(nzVisible)]="isVisibleImage" nzTitle="Image Uploaded File" (nzOnCancel)="handleCancelImage()">
+        <ng-container *nzModalContent>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-center">
+                            <img src="data:image/png;base64,{{ mandateDetailsById?.image }}" style="height: auto; width: auto;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div *nzModalFooter></div>
+    </nz-modal>
+
+    <!--  Modal for Signature Preview-->
+    <nz-modal [(nzVisible)]="isVisibleSignature" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="handleCancelSignature()">
+        <ng-template #modalTitle>Signature Uploaded File</ng-template>
+
+
+        <ng-template #modalContent>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-center">
+                            <img src="data:image/png;base64,{{ mandateDetailsById2?.signature }}" style="height: auto; width: auto;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template #modalFooter></ng-template>
+    </nz-modal>
+
+    <!-- </div> -->
+</div>
+<!-- az-content-body -->

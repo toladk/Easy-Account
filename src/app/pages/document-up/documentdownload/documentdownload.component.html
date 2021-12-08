@@ -1,0 +1,112 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Download Document</h2>
+            <!-- <p class="mg-b-0 mt-2">Multiple Upload.</p> -->
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <div class="float-right">
+                    <!-- <button class="btn btn-dark btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Create Single Account</button> -->
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="row">
+
+        <div class="card col-md-12">
+            <h4 class="text-center mt-5">Download Files</h4>
+
+            <div class="col-md-12 col-lg-12 pl-0 pr-0">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <form nz-form [formGroup]="downloadForm">
+                        <div class="row row-xs mt-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter your Name!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Account Number</label>
+                                            <nz-input-group nzPrefixIcon="field-number">
+                                                <input type="text" formControlName="accountNo" nz-input placeholder="Enter Account Number" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mg-t-20 mg-md-t-0">
+                                <button style="margin-top: 35px;" class="ml-4" nz-button nzType="primary" (click)="validateAccount()" *ngIf="showButton">Validate Account & View Document</button>
+                                <button style="margin-top: 35px; background-color: orange; color: #fff; border-color: orange;" *ngIf="showButton2" class="ml-4" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Validating Account</button>
+                                <button style="margin-top: 35px;" class="ml-4" nz-button nzType="primary" disabled *ngIf="showButton3">Account Validated</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="">
+                        <div class="row">
+                            <div class="col-md-12 mt-3">
+                                <h5>Document List</h5>
+                                <div class="">
+                                    <nz-table #nzTable [nzData]="listOfDdocumentData" nzTableLayout="fixed">
+                                        <thead>
+                                            <tr>
+                                                <th>Account Number</th>
+                                                <th nzCustomFilter>Document Type</th>
+                                                <th>Document Name
+                                                    <nz-filter-trigger [(nzVisible)]="tableVisible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
+                                                        <i nz-icon nzType="search"></i>
+                                                    </nz-filter-trigger>
+                                                </th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let data of nzTable.data">
+                                                <td>{{ data.account_number }}</td>
+                                                <td>{{ data.document_type }}</td>
+                                                <td>{{ data.document_name }}</td>
+                                                <td>
+                                                    <button nz-button nzType="success" nzShape="circle" class="mr-2" style="background-color: #4BA145; color: #fff; border-color: #4BA145;" (click)="downloadDocu(data.document_path)" nz-tooltip nzTooltipTitle="Download Document"><i nz-icon nzType="download"></i></button>
+                                                    <button nz-button nzType="success" nzShape="circle" class="mr-2" style="background-color: #4588a1; color: #fff; border-color: #4588a1;" (click)="viewDocument(data.base64_encoded)" nz-tooltip nzTooltipTitle="View Document"><i nz-icon nzType="eye"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </nz-table>
+                                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                                        <div class="ant-table-filter-dropdown">
+                                            <div class="search-box">
+                                                <input type="text" nz-input placeholder="Search...." [(ngModel)]="searchValue" />
+                                                <button nz-button nzSize="small" nzType="primary" (click)="searchTable()" class="search-button">Search</button>
+                                                <button nz-button nzSize="small" (click)="resetTable()">Reset</button>
+                                            </div>
+                                        </div>
+                                    </nz-dropdown-menu>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzVisible]="visibleDocument" [nzWidth]="720" nzTitle="View Document" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+        <div class="row">
+            <div class="col-lg-12 col-md-12" style="height: 700px; width: 100%;">
+                <pdf-viewer [src]="documentToView" [render-text]="true" style="display: block;"></pdf-viewer>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>

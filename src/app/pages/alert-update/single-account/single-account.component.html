@@ -1,0 +1,496 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Alert Info Update</h2>
+            <p class="mg-b-0">Single Account.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <!-- <div class="float-right mr-2">
+                    <button class="btn btn-success btn-with-icon btn-block" (click)="openPendingBatchAlert()"><i class="typcn typcn-arrow-repeat"></i>Pending Batch</button>
+                </div> -->
+                <div class="float-right mr-2">
+                    <button class="btn btn-primary btn-with-icon btn-block" (click)="openPendingAlert()"><i class="typcn typcn-arrow-sync"></i>Pending Single Account</button>
+                </div>
+                <div class="float-right">
+                    <button class="btn btn-danger btn-with-icon btn-block" (click)="openDeleteDetails()"><i class="typcn typcn-delete"></i>Delete Single Account</button>
+                </div>
+                <div class="float-right">
+                    <button class="btn btn-dark btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Profile Single Account</button>
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <!-- <div class="nav-wrapper">
+    <nav class="nav az-nav-line">
+      <a href="javascript::void(0)" class="nav-link active">Single</a>
+      <a href="javascript::void(0)" class="nav-link">Bulk</a>
+    </nav>
+  </div> -->
+</div>
+
+
+<div class="az-content-body">
+    <div class="pd-10 pd-t-20 bg-gray-100">
+        <div class="row pd-b-10">
+            <div class="col-md-4">
+                <div class="az-content-label pt-3">Total Transaction: {{ alertRecords2.length }}</div>
+            </div>
+
+            <div class="float-right col-md-8 mt-1">
+
+                <div class="az-header-center">
+
+                    <input type="search" id="item_search" [(ngModel)]="search.accountNumber" class="form-control" placeholder="Click the search icon to search with account no...">
+                    <div>
+                        <div>
+                            <button class="btn btn-primary" style="margin-right: 50px;" (click)="onSearch()"><i class="typcn typcn-zoom"></i></button>
+                        </div>
+                        <div>
+                            <button class="btn btn-danger" (click)="onSearchCancel()"><i class="typcn typcn-times"></i></button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <!-- az-header-center -->
+            </div>
+        </div>
+
+        <nz-table #fixedTable [nzData]="alertRecords" [nzScroll]="{ x: '700px', y: '340px' }" [nzLoading]="loading" *ngIf="searchTable">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">S/N</th>
+                    <th nzLeft>Account Number</th>
+                    <th nzLeft>Email Address</th>
+                    <th>Mobile Number</th>
+                    <th>Date Created</th>
+                    <th nzRight>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of fixedTable.data; let r= index">
+                    <td nzWidth="60px">{{ r+1 }}</td>
+                    <td nzLeft>{{ data.accountnumber }}</td>
+                    <td>{{ data.emailaddress }}</td>
+                    <td>{{ data.mobilenumber }}</td>
+                    <td>{{ data.created_at | date }}</td>
+                    <td nzRight>
+                        <div class="btn-icon-list">
+                            <button class="btn btn-info btn-icon" (click)="getSingleAlertDetails(data.accountnumber)"><i class="typcn typcn-eye"></i></button>
+                            <!-- <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-eye"></i></button> -->
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+
+        <nz-table #fixedTable [nzData]="alertRecords2" [nzScroll]="{ x: '700px', y: '340px' }" [nzLoading]="loading" *ngIf="loadTable">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">S/N</th>
+                    <th nzLeft>Account Number</th>
+                    <th nzLeft>Email Address</th>
+                    <th>Mobile Number</th>
+                    <th>Date Created</th>
+                    <th nzRight>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of fixedTable.data; let r= index">
+                    <td nzWidth="60px">{{ r+1 }}</td>
+                    <td nzLeft>{{ data.account_number }}</td>
+                    <td>{{ data.email }}</td>
+                    <td>{{ data.phone_number }}</td>
+                    <td>{{ data.created_at | date }}</td>
+                    <td nzRight>
+                        <div class="btn-icon-list" [hidden]="!approvalItem">
+                            <button class="btn btn-info btn-icon" (click)="getSingleAlertDetails(data.account_number)"><i class="typcn typcn-eye"></i></button>
+                            <!-- <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.account_number,  data.phone_number,  data.email)"><i class="typcn typcn-eye"></i></button> -->
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</div>
+
+<!-- Drawer To view details -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visibleDetails" nzTitle="Account Details" (nzOnClose)="closeDetails()">
+
+    <nz-table #basicTable [nzData]="singleAlertDetails" [nzLoading]="loading">
+        <thead>
+            <tr>
+                <th nzWidth="60px">S/N</th>
+                <th nzLeft>Account Number</th>
+                <th nzLeft>Email Address</th>
+                <th>Mobile Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data; let r= index">
+                <td nzWidth="60px">{{ r+1 }}</td>
+                <td nzLeft>{{ data.accountnumber }}</td>
+                <td>{{ data.emailaddress }}</td>
+                <td>{{ data.mobilenumber }}</td>
+                <td nzRight>
+                    <div class="btn-icon-list">
+                        <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-delete"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+</nz-drawer>
+
+<!-- Create Alert Profile-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="820" [nzVisible]="visible" nzTitle="Create" [nzFooter]="footerTpl" (nzOnClose)="close()">
+
+
+    <div class="steps-content" *ngIf="index == 'Create-Alert'">
+
+        <div class="az-content-label mg-b-5 mb-3">Update Alert Profile</div>
+        <!-- <p class="mg-b-20">A form control layout using row with left label alignment.</p> -->
+
+        <div class="pd-30 pd-sm-40 bg-gray-200">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Account Option</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" value="Single Account" disabled>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Show Balance</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+
+                    <div class="row mg-t-10">
+                        <div class="col-lg-4">
+                            <label class="rdiobox">
+          <input name="rdio" type="radio" (click)="onAction('yes')">
+          <span>Yes</span>
+        </label>
+                        </div>
+                        <!-- col-3 -->
+                        <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                            <label class="rdiobox">
+          <input name="rdio" type="radio" checked (click)="onAction('no')">
+          <span>No</span>
+        </label>
+                        </div>
+                        <!-- col-3 -->
+                    </div>
+                    <!-- row -->
+
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Account Number</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-5 mg-t-5 mg-md-t-0">
+                    <input type="text" maxlength="10" minlength="10" class="form-control" [pattern]="numberPattern" #offNos="ngModel" name="accountNumber" [(ngModel)]="alertPayload.accountNumber" placeholder="Account Number">
+                    <div *ngIf="offNos.errors" style="color: orangered;">
+                        <div *ngIf="offNos.errors.pattern">
+                            Not valid, accept only numbers & minimum of 10 numbers.
+                        </div>
+                    </div>
+                </div>
+                <!-- col -->
+
+                <div iv class="col-md-2 mg-t-5 mg-md-t-0">
+                    <nz-tag *ngIf="!showsDetailsv" nzColor="#cd201f"><span>Not Verified</span></nz-tag> &nbsp;
+                    <nz-tag *ngIf="showsDetailsv" nzColor="#87d068"><span>verified</span></nz-tag> &nbsp;
+                    <i nz-icon nzType="file-search" (click)="validAccountNumber()" *ngIf="!disabledv" nzTheme="outline" class="dynamic-delete-button" nzTooltipTitle="Verify Customer" nzTooltipPlacement="top" nz-tooltip></i> &nbsp;
+                    <i nz-icon class="dynamic-delete-button" nzType="loading" *ngIf="disabledv" nzTheme="outline"></i> &nbsp;
+                </div>
+                <!-- col -->
+
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Account Name</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" [pattern]="nameSpacePattern" #offName="ngModel" [(ngModel)]="account_name" placeholder="Account Name">
+                    <div *ngIf="offName.errors" style="color: orangered;">
+                        <div *ngIf="offName.errors.pattern">
+                            Not valid, accept only alphabets.
+                        </div>
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">E-mail</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="email" [pattern]="emailPattern" #offEmail="ngModel" class="form-control" name="email" [(ngModel)]="accountemail" placeholder="Enter your email">
+                    <div *ngIf="offEmail.errors" style="color: orangered;">
+                        <div *ngIf="offEmail.errors.pattern">
+                            Email not valid.
+                        </div>
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Phone Number</label>
+                </div>
+                <div class="col-md-8 d-flex">
+                    <div class="col-md-2 pl-0 pr-0">
+                        <input type="text" class="form-control" value="{{phoneHeaher.code}}" placeholder="code" readonly>
+                    </div>
+                    <div class="col-md-1 pl-0 pr-0">
+                        <input type="text" class="form-control" value="{{phoneHeaher.state}}" placeholder="digit" readonly>
+                    </div>
+                    <div class="col-md-9 pl-0 pr-0">
+                        <input type="text" [pattern]="numberPattern" #offNo="ngModel" maxlength="10" class="form-control" [(ngModel)]="accountdetailphone_number" placeholder="Enter your last 10 phone no">
+                        <div *ngIf="offNo.errors" style="color: orangered;">
+                            <div *ngIf="offNo.errors.pattern">
+                                Not valid, accept only numbers & minimum of 10 numbers.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <button class="btn btn-dark pd-x-30">Cancel</button> -->
+        </div>
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'View-details'">
+
+        <div class="az-content-label mg-b-5 mb-3">View Details</div>
+        <!-- <p class="mg-b-20">A form control layout using row with left label alignment.</p> -->
+
+        <div class="pd-30 pd-sm-40 bg-gray-200">
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0"></label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                    <div class="alert alert-danger" [hidden]="!error">
+                        {{error}}
+                    </div>
+                    <div class="alert alert-success" [hidden]="!success">
+                        {{success}}
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <!-- <div class="row pd-b-10">
+              <div class="col-md-4">
+                  <div class="az-content-label pt-3">Total Transaction: 0 / 0</div>
+              </div>
+
+              <div class="float-right col-md-8 mt-1">
+
+                  <div class="az-header-center">
+
+
+                  </div>
+              </div>
+          </div> -->
+
+            <nz-table #fixedTable [nzData]="alertRecords" [nzLoading]="loading">
+                <thead>
+                    <tr>
+                        <th nzWidth="60px">S/N</th>
+                        <th nzLeft>Account Number</th>
+                        <th nzLeft>Email Address</th>
+                        <th>Mobile Number</th>
+                        <th nzRight>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of fixedTable.data; let r= index">
+                        <td nzWidth="60px">{{ r+1 }}</td>
+                        <td nzLeft>{{ data.accountnumber }}</td>
+                        <td>{{ data.emailaddress }}</td>
+                        <td>{{ data.mobilenumber }}</td>
+                        <td nzRight>
+                            <div class="btn-icon-list" [hidden]="!approvalItem">
+                                <!-- <button class="btn btn-info btn-icon"><i class="typcn typcn-eye"></i></button> -->
+                                <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-delete"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+
+        </div>
+    </div>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button class="btn btn-dark pd-x-30" style="margin-right: 8px;" (click)="close()">Close</button>
+            <button class="btn btn-success pd-x-30 mg-r-5" *ngIf="index == 'Create-Alert'" [disabled]="!account_name" (click)="onSubmitSingle()">Profile</button>
+            <button class="btn btn-az-primary pd-x-30 mg-r-5" *ngIf="index == 'View-details'" (click)="again()">Update Another Profile</button>
+        </div>
+    </ng-template>
+</nz-drawer>
+
+<!-- Drawer To Pending Alert -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="820" [nzVisible]="visiblePendingAlert" nzTitle="Pending Single Alert" (nzOnClose)="closePendingAlert()">
+
+
+    <nz-table #fixedTable [nzData]="allPendingAlertList" [nzLoading]="loading">
+        <thead>
+            <tr>
+                <th nzWidth="60px">S/N</th>
+                <th nzLeft>Account Number</th>
+                <th nzLeft>Email Address</th>
+                <th>Mobile Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of fixedTable.data; let r= index">
+                <td nzWidth="60px">{{ r+1 }}</td>
+                <td nzLeft>{{ data.account_number }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.phone_number }}</td>
+                <td nzRight>
+                    <div class="btn-icon-list">
+                        <button class="btn btn-info btn-icon" (click)="onViewPendingAlertDetails( data.id)"><i class="typcn typcn-eye"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+</nz-drawer>
+
+
+<!-- Drawer To Pending Alert Details -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visiblePendingAlertDetails" nzTitle="Pending Single Alert Details" (nzOnClose)="closePendingAlertDetails()">
+
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-md-12 d-flex pl-0 pr-0 mb-3">
+                <div class="col-md-6 pl-0">
+                    <div class="az-form-group" style="padding: 8px 15px !important;">
+                        <label class="forPreviewLabel"><i nz-icon nzType="user" nzTheme="outline" style="font-size: 20px;" class="mr-2"></i>Account Number</label>
+                        <h6 class="forPreview" style="margin-left: 29px;">{{ pendingAlertDetails?.account_number }}</h6>
+                    </div>
+                </div>
+                <div class="col-md-6 pl-0">
+                    <div class="az-form-group" style="padding: 8px 15px !important;">
+                        <label class="forPreviewLabel"><i nz-icon nzType="user" nzTheme="outline" style="font-size: 20px;" class="mr-2"></i>Email</label>
+                        <h6 class="forPreview" style="margin-left: 29px;">{{ pendingAlertDetails?.email }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 d-flex pl-0 pr-0 mb-3">
+                <div class="col-md-6 pl-0">
+                    <div class="az-form-group" style="padding: 8px 15px !important;">
+                        <label class="forPreviewLabel"><i nz-icon nzType="user" nzTheme="outline" style="font-size: 20px;" class="mr-2"></i>Phone Number</label>
+                        <h6 class="forPreview" style="margin-left: 29px;">{{ pendingAlertDetails?.phone_number }}</h6>
+                    </div>
+                </div>
+                <div class="col-md-6 pl-0">
+                    <div class="az-form-group" style="padding: 8px 15px !important;">
+                        <label class="forPreviewLabel"><i nz-icon nzType="user" nzTheme="outline" style="font-size: 20px;" class="mr-2"></i>Processed By</label>
+                        <h6 class="forPreview" style="margin-left: 29px;">{{ pendingAlertDetails?.processed_by }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 d-flex pl-0 pr-0 mt-5" [hidden]="!approvalItem">
+                <div class="col-md-6 pl-0">
+                    <button nz-button [nzLoading]="isLoadingOneReject" style="background-color: #C82333; border: #C82333; color: white;" (click)="rejectAlert(pendingAlertDetails.id)"><i class="typcn typcn-arrow-times"></i>Reject</button>
+                </div>
+                <div class="col-md-6 pl-0">
+                    <button nz-button [nzLoading]="isLoadingOneApprove" style="float: right; margin-right: 0px; background-color: #4BA145; border: #4BA145; color: white;" (click)="approveAlert(pendingAlertDetails.id)"><i class="typcn typcn-arrow-tick"></i>Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</nz-drawer>
+
+<!-- Drawer To Delete details -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visibleDeleteDetails" nzTitle="Account Details" (nzOnClose)="closeDeleteDetails()">
+
+
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p mb-3">
+        <form [formGroup]="deleteForm">
+            <div class="row row-xs align-items-center mg-b-15">
+                <div class="col-md-2">
+                    <label class="form-label mg-b-0">Account No</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6">
+                    <input type="text" class="form-control" formControlName="accountNumber" placeholder="E.g 22143872449">
+                </div>
+                <!-- col -->
+                <div class="col-md-2">
+                    <button nz-button nzType="primary" (click)="getAccountDetailsToDelete()" [nzLoading]="isLoadingOne">Get Account Details</button>
+                </div>
+                <!-- col -->
+            </div>
+        </form>
+    </div>
+
+
+    <nz-table #fixedTable [nzData]="singleAlertDetailsDelete" [nzLoading]="loading" *ngIf="deleteInfo">
+        <thead>
+            <tr>
+                <th nzWidth="60px">S/N</th>
+                <th nzLeft>Account Number</th>
+                <th nzLeft>Email Address</th>
+                <th>Mobile Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of fixedTable.data; let r= index">
+                <td nzWidth="60px">{{ r+1 }}</td>
+                <td nzLeft>{{ data.accountnumber }}</td>
+                <td>{{ data.emailaddress }}</td>
+                <td>{{ data.mobilenumber }}</td>
+                <td nzRight>
+                    <div class="btn-icon-list" [hidden]="!approvalItem">
+                        <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-delete"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+</nz-drawer>

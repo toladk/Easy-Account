@@ -1,0 +1,266 @@
+<div class="az-content-header">
+  <div class="az-content-header-top">
+    <div>
+      <h2 class="az-content-title mg-b-5 mg-b-lg-8">Account Opening Authorization!</h2>
+      <p class="mg-b-0">Authorize pending account opening.</p>
+    </div>
+    <div class="az-dashboard-date">
+      <div class="date">
+        <!-- <button nz-button style="width: 100%;" nzType="primary" class="pending" (click)="swichAccount('account')" nzBlock>Pending</button> -->
+        <div class="mr-2"><button class="btn btn-warning btn-with-icon btn-block" (click)="swichAccount('account')"><i class="typcn typcn-tick"></i> Pending</button></div>
+      </div><!-- az-dashboard-date -->
+      <!-- <i class="icon ion-md-arrow-forward"></i> -->
+      <div class="date">
+        <!-- <button nz-button style="width: 100%;" nzType="default" class="active"  nzBlock>Authorized</button> -->
+        <div class="mr-2"><button class="btn btn-info btn-with-icon btn-block" (click)="swichAccount('customer')"><i class="typcn typcn-book"></i> All Authorized</button></div>
+      </div><!-- az-dashboard-date -->
+    </div><!-- az-dashboard-date -->
+  </div><!-- az-content-body-title -->
+  <div class="nav-wrapper" *ngIf="account == 'account'">
+    <nav class="nav az-nav-line">
+      <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current == 0" class="nav-link active">Individual</a>
+      <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current != 0" class="nav-link">Individual</a>
+      <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current == 1" class="nav-link active">Corporate</a>
+      <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current != 1" class="nav-link">Corporate</a>
+    </nav>
+  </div>
+</div>
+
+
+<div class="az-content-body">
+  <div class="steps-content" *ngIf="index == 'First-content'">
+    <div class="az-content-label mg-b-5">Pending Individual Account</div>
+    <p class="mg-b-20">Pre Generated Teller.</p>
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100"> -->
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p"> -->
+    <nz-table #fixedTable
+              [nzData]="individualAccount"
+              [nzScroll]="{ x: '700px', y: '440px' }"
+              [nzLoading]="loading">
+      <thead>
+      <tr>
+        <th nzWidth="60px">#</th>
+        <th nzLeft>Request Type</th>
+        <th nzLeft>Customer Name</th>
+        <th>email</th>
+        <th>Scheme Code</th>
+        <th>Scheme Type</th>
+        <th>Requested By</th>
+        <th>approved By</th>
+        <!-- <th>Created At</th> -->
+        <th nzRight>Action</th>
+      </tr>
+      </thead>
+      <tbody id="item">
+      <tr *ngFor="let data of fixedTable.data; let r= index">
+        <td nzWidth="60px">{{ r+1 }}</td>
+        <td nzLeft>{{data.request_type}}</td>
+        <td nzLeft *ngIf="data.name !== ''">{{data.name}}</td> <td nzLeft *ngIf="data.name == ''"> - </td>
+        <td *ngIf="data.email !== ''">{{data.email}}</td> <td *ngIf="data.email == ''"> - </td>
+        <td *ngIf="data.scheme_code !== ''">{{data.scheme_code}}</td> <td *ngIf="data.scheme_code == ''"> - </td>
+        <td *ngIf="data.scheme_type !== ''">{{data.scheme_type}}</td> <td *ngIf="data.scheme_type == ''"> - </td>
+        <th *ngIf="data.requested_by !== ''">{{data.requested_by}}</th> <th *ngIf="data.requested_by == ''"> - </th>
+        <th *ngIf="data.approved_by !== ''">{{ data.approved_by}}</th> <th *ngIf="data.approved_by == ''"> - </th>
+        <!-- <th>{{data.created_at}}</th> -->
+        <td nzRight>
+          <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" nzShape="circle"><i nz-icon nzType="down" nzTheme="outline"></i></button>
+
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="action('approve', data.id, data.request_type)">Approve</li>
+              <li nz-menu-item (click)="action('reject',  data.id, data.request_type)" nzDanger>Reject</li>
+            </ul>
+          </nz-dropdown-menu>
+<!--          <button nz-button nzType="primary" (click)="open()">Activate</button>-->
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+    <!-- </div> -->
+   </div>
+
+  <div class="steps-content" *ngIf="index == 'Second-content'" style="width: 100%">
+    <div class="az-content-label mg-b-5">Pending Corporate Account</div>
+    <p class="mg-b-20">Pre Generated Corporate Teller.</p>
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100"> -->
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+      <nz-table #fixedTable
+                [nzData]="corporateAccount"
+                [nzScroll]="{ x: '700px', y: '340px' }"
+                [nzLoading]="loading">
+        <thead>
+        <tr>
+          <th>S/N</th>
+          <th nzLeft>Request Type</th>
+          <th nzLeft>Customer Name</th>
+          <th>email</th>
+          <th>Scheme Code</th>
+          <th>Scheme Type</th>
+          <th>Requested By</th>
+          <th>approved By</th>
+          <!-- <th>Created At</th> -->
+          <th nzRight>Action</th>
+        </tr>
+        </thead>
+        <tbody id="item">
+        <tr *ngFor="let data of fixedTable.data; let r= index">
+          <td>{{ r+1 }}</td>
+          <td nzLeft>{{data.request_type}}</td>
+          <td nzLeft>{{data.name}}</td>
+          <td>{{data.scheme_code}}</td>
+          <td>{{data.scheme_type}}</td>
+          <th>{{data.requested_by}}</th>
+          <th>{{ data.approved_by}}</th>
+          <!-- <th>{{data.created_at}}</th> -->
+          <td nzRight>
+            <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" nzShape="circle"><i nz-icon nzType="down" nzTheme="outline"></i></button>
+
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item (click)="action2('approve', data.id, data.request_type)">Approve</li>
+                <li nz-menu-item (click)="action2('reject',  data.id, data.request_type)" nzDanger>Reject</li>
+              </ul>
+            </nz-dropdown-menu>
+  <!--          <button nz-button nzType="primary" (click)="open()">Activate</button>-->
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+  <div class="steps-content" *ngIf="index == 'third-content'" style="width: 100%">
+    <div class="az-content-label mg-b-5">Joint Account</div>
+    <!-- <p class="mg-b-20">Pre Generated Corporate Teller.</p> -->
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100"> -->
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p"> -->
+      <nz-table #fixedTable
+                [nzData]="accountOpenings"
+                [nzScroll]="{ x: '700px', y: '490px' }"
+                [nzLoading]="loading">
+        <thead>
+        <tr>
+          <th nzWidth="60px">S/N</th>
+          <th nzLeft>Request Type</th>
+          <th nzLeft>Customer Name</th>
+          <th>Customer ID</th>
+          <th>Account Number</th>
+          <th>Scheme Code</th>
+          <th>Scheme Type</th>
+        </tr>
+        </thead>
+        <tbody id="item">
+        <tr *ngFor="let data of fixedTable.data; let r= index">
+          <td nzWidth="60px">{{ r+1 }}</td>
+          <td nzLeft>{{data.request_type}}</td>
+          <td *ngIf="data.name !== ''">{{data.name}}</td> <td nzLeft *ngIf="data.name == ''"> - </td>
+          <th *ngIf="data.customer_id !== ''">{{data.customer_id}}</th> <th *ngIf="data.customer_id == ''"> - </th>
+          <th *ngIf="data.account_number !== ''">{{ data.account_number}}</th>  <th *ngIf="data.account_number == ''"> - </th>
+          <td *ngIf="data.scheme_code !== ''">{{data.scheme_code}}</td> <td *ngIf="data.scheme_code == ''"> - </td>
+          <td *ngIf="data.scheme_type !== ''">{{data.scheme_type}}</td> <td *ngIf="data.scheme_type == ''"> - </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    <!-- </div> -->
+  </div>
+
+  <div class="steps-content" *ngIf="index == 'fourth-content'" style="width: 100%">
+    <div class="az-content-label mg-b-5">Minor Account</div>
+    <!-- <p class="mg-b-20">Pre Generated Corporate Teller.</p> -->
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100"> -->
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+      <nz-table #fixedTable
+                [nzData]="corporateAccount"
+                [nzScroll]="{ x: '700px', y: '500px' }"
+                [nzLoading]="loading">
+        <thead>
+        <tr>
+          <th>S/N</th>
+          <th nzLeft>Request Type</th>
+          <th nzLeft>Customer Name</th>
+          <th>email</th>
+          <th>Scheme Code</th>
+          <th>Scheme Type</th>
+          <th>Requested By</th>
+          <th>approved By</th>
+          <!-- <th>Created At</th> -->
+          <th nzRight>Action</th>
+        </tr>
+        </thead>
+        <tbody id="item">
+        <tr *ngFor="let data of fixedTable.data; let r= index">
+          <td>{{ r+1 }}</td>
+          <td nzLeft>{{data.request_type}}</td>
+          <td nzLeft>{{data.name}}</td>
+          <td>{{data.scheme_code}}</td>
+          <td>{{data.scheme_type}}</td>
+          <th>{{data.requested_by}}</th>
+          <th>{{ data.approved_by}}</th>
+          <!-- <th>{{data.created_at}}</th> -->
+          <td nzRight>
+            <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" nzShape="circle"><i nz-icon nzType="down" nzTheme="outline"></i></button>
+
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item (click)="action2('approve', data.id)">Approve</li>
+                <li nz-menu-item (click)="action2('reject',  data.id)" nzDanger>Reject</li>
+              </ul>
+            </nz-dropdown-menu>
+  <!--          <button nz-button nzType="primary" (click)="open()">Activate</button>-->
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+  <div class="steps-content" *ngIf="index == 'fifth-content'" style="width: 100%">
+    <div class="az-content-label mg-b-5">Normal Account</div>
+    <!-- <p class="mg-b-20">Pre Generated Corporate Teller.</p> -->
+    <!-- <div class="pd-30 pd-sm-40 bg-gray-100"> -->
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+      <nz-table #fixedTable
+                [nzData]="corporateAccount"
+                [nzScroll]="{ x: '700px', y: '340px' }"
+                [nzLoading]="loading">
+        <thead>
+        <tr>
+          <th>S/N</th>
+          <th nzLeft>Request Type</th>
+          <th nzLeft>Customer Name</th>
+          <th>email</th>
+          <th>Scheme Code</th>
+          <th>Scheme Type</th>
+          <th>Requested By</th>
+          <th>approved By</th>
+          <!-- <th>Created At</th> -->
+          <th nzRight>Action</th>
+        </tr>
+        </thead>
+        <tbody id="item">
+        <tr *ngFor="let data of fixedTable.data; let r= index">
+          <td>{{ r+1 }}</td>
+          <td nzLeft>{{data.request_type}}</td>
+          <td nzLeft>{{data.name}}</td>
+          <td>{{data.scheme_code}}</td>
+          <td>{{data.scheme_type}}</td>
+          <th>{{data.requested_by}}</th>
+          <th>{{ data.approved_by}}</th>
+          <!-- <th>{{data.created_at}}</th> -->
+          <td nzRight>
+            <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" nzShape="circle"><i nz-icon nzType="down" nzTheme="outline"></i></button>
+
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item (click)="action2('approve', data.id)">Approve</li>
+                <li nz-menu-item (click)="action2('reject',  data.id)" nzDanger>Reject</li>
+              </ul>
+            </nz-dropdown-menu>
+  <!--          <button nz-button nzType="primary" (click)="open()">Activate</button>-->
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</div><!-- az-content-body -->

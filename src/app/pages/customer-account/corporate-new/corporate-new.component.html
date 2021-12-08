@@ -1,0 +1,1456 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Corporate Account</h2>
+            <p class="mg-b-0">All Transaction.</p>
+        </div>
+        <div class="az-dashboard-date" [hidden]="!admin">
+            <div class="date">
+            </div>
+            <div class="date">
+                <div class="float-right"><button class="btn btn-primary btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Create Corporate CIF</button></div>
+            </div>
+
+            <div class="date">
+                <div class="float-right"><button class="btn btn-success btn-with-icon btn-block" (click)="open4()"><i class="typcn typcn-plus"></i>Create Corporate CIF & Account</button></div>
+            </div>
+
+            <div class="date">
+                <div class="float-right"><button class="btn btn-primary btn-with-icon btn-block" (click)="open6()"><i class="typcn typcn-plus"></i>Create Account</button></div>
+            </div>
+
+        </div>
+    </div>
+    <!-- az-content-body-title -->
+
+    <div class="nav-wrapper">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" *ngIf="indextab == 'First-content'" (click)="tab('firstTab')" class="nav-link active">Pending</a>
+            <a href="javascript::void(0)" *ngIf="indextab != 'First-content'" (click)="tab('firstTab')" class="nav-link">Pending</a>
+            <a href="javascript::void(0)" *ngIf="indextab == 'Second-content'" (click)="tab('secondTab')" class="nav-link active">Approved</a>
+            <a href="javascript::void(0)" *ngIf="indextab != 'Second-content'" (click)="tab('secondTab')" class="nav-link">Approved</a>
+            <a href="javascript::void(0)" *ngIf="indextab == 'Third-content'" (click)="tab('thirdTab')" class="nav-link active">Rejected</a>
+            <a href="javascript::void(0)" *ngIf="indextab != 'Third-content'" (click)="tab('thirdTab')" class="nav-link">Rejected</a>
+        </nav>
+    </div>
+</div>
+
+<div class="az-content-body">
+
+    <div class="" *ngIf="indextab == 'First-content'">
+        <div class="col-md-12 col-lg-12 mg-t-10">
+            <div class="col-md-12 pl-0 pr-0">
+                <nz-table #fixedTable [nzData]="allPendingCorpList" [nzScroll]="{ x: '700px', y: '440px' }" [nzLoading]="loading">
+                    <thead>
+                        <tr>
+                            <th nzWidth="60px">#</th>
+                            <th nzLeft>Request Type</th>
+                            <th nzLeft>Customer Name</th>
+                            <th>Requested By</th>
+                            <th>Date Created</th>
+                            <th nzRight>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="item">
+                        <tr *ngFor="let data of fixedTable.data; let r= index">
+                            <td nzWidth="60px">{{ r+1 }}</td>
+                            <td nzLeft>{{data.request_type}}</td>
+                            <td nzLeft>{{data.corporate_name}}</td>
+                            <td>{{data.requested_by}}</td>
+                            <td>{{data.created_at | date}}</td>
+                            <td nzRight>
+                                <div class="btn-icon-list az-content-label az-content-label-sm mg-b-10">
+                                    <button class="btn btn-success btn-icon" style="background-color: #4BA145; border: #4BA145; color: white; padding-left: 10px; padding-right: 35px;" type="button" nzTooltipTitle="view" nzTooltipPlacement="rightTop" nz-button nz-tooltip (click)="viewCorporateAccount(data.id)"><i class="typcn typcn-eye"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+
+    <div class="" *ngIf="indextab == 'Second-content'">
+        <div class="col-md-12 col-lg-12 mg-t-10">
+            <div class="col-md-12 pl-0 pr-0">
+                <nz-table #fixedTable [nzData]="allApprovedCorpList" [nzScroll]="{ x: '700px', y: '440px' }" [nzLoading]="loading">
+                    <thead>
+                        <tr>
+                            <th nzWidth="60px">#</th>
+                            <th nzLeft>Request Type</th>
+                            <th nzLeft>Corporate Name</th>
+                            <th nzLeft>Customer ID</th>
+                            <th>Account No</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody id="item">
+                        <tr *ngFor="let data of fixedTable.data; let r= index">
+                            <td nzWidth="60px">{{ r+1 }}</td>
+                            <td nzLeft>{{data.request_type}}</td>
+                            <td nzLeft>{{data.corporate_name}}</td>
+                            <td nzLeft>{{ data.customer_id }}</td>
+                            <td>{{data.account_number}}</td>
+                            <td>{{data.created_at | date}}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+
+    <div class="" *ngIf="indextab == 'Third-content'">
+        <div class="col-md-12 col-lg-12 mg-t-10">
+            <div class="col-md-12 pl-0 pr-0">
+                <nz-table #fixedTable [nzData]="allRejectedCorpList" [nzScroll]="{ x: '700px', y: '440px' }" [nzLoading]="loading">
+                    <thead>
+                        <tr>
+                            <th nzWidth="60px">#</th>
+                            <th nzLeft>Request Type</th>
+                            <th nzLeft>Customer Name</th>
+                            <th>Customer ID</th>
+                            <th>Date Created</th>
+                            <th nzRight>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="item">
+                        <tr *ngFor="let data of fixedTable.data; let r= index">
+                            <td nzWidth="60px">{{ r+1 }}</td>
+                            <td nzLeft>{{data.request_type}}</td>
+                            <td nzLeft>{{data.customer_name}}</td>
+                            <td>{{data.customer_id}}</td>
+                            <td>{{data.created_at | date}}</td>
+                            <td nzRight>
+                                <div class="btn-icon-list az-content-label az-content-label-sm mg-b-10">
+                                    <button class="btn btn-info btn-icon" style="background-color: #2693b1; border: #2693b1; color: white; padding-left: 10px; padding-right: 35px;" type="button" nzTooltipTitle="edit" nzTooltipPlacement="rightTop" (click)="updateAc(data.id)" nz-button nz-tooltip><i class="typcn typcn-edit"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!-- Drawer For Create Account-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="870" [nzVisible]="drawerOpen" nzTitle="Create Corporate" [nzFooter]="footerTpl" (nzOnClose)="close()">
+    <form nz-form *nzDrawerContent [formGroup]="corpForm">
+        <div class="col-md-12 col-lg-12 pl-0 pr-0">
+
+            <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                <div class="pl-0 pr-0 col-md-12">
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Corporate Name</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" formControlName="corporateName" nz-input placeholder="Enter Corporate Name" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['corporateName'].dirty && corpForm.hasError('required', 'corporateName')">Corporate name is required</span>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.hasError('pattern', 'corporateName')">Corporate name is invalid</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control nzErrorTip="Please enter Date!">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Date of Incorporation</label>
+                                        <nz-input-group>
+                                            <!-- <input type="date" formControlName="dateOfIncorporation" nz-input placeholder="Enter Employee ID" /> -->
+                                            <nz-date-picker style="width: 100%;" formControlName="dateOfIncorporation" nzFormat="dd-MM-yyyy" [nzDisabledDate]="disabledDate"></nz-date-picker>
+                                        </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Key Contact Person Name</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" formControlName="keyContactPersonName" nz-input placeholder="Enter Key Contact Person Name" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['keyContactPersonName'].dirty && corpForm.hasError('required', 'keyContactPersonName')">Contact name is required</span>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.hasError('pattern', 'keyContactPersonName')">Contact name is invalid</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Registration Number</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" formControlName="registrationNumber" nz-input placeholder="Enter Registeration Number" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['registrationNumber'].dirty && corpForm.hasError('required', 'registrationNumber')">Registration no is required</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Sector</label>
+                                <nz-select style="width: 100%;" (nzOpenChange)="getSubSector()" nzShowSearch nzAllowClear formControlName="sector" nzPlaceHolder="Select Sector">
+                                    <nz-option *ngFor="let list of allSectorList" [nzValue]="list.sectorcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Sub Sector</label>
+                                <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="subSector" nzPlaceHolder="Select Sub Sector">
+                                    <nz-option *ngFor="let list of allSubSectorList" [nzValue]="list.subsectorcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Tax ID</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" formControlName="taxId" nz-input placeholder="Enter Tax ID" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['taxId'].dirty && corpForm.hasError('required', 'taxId')">Tx ID is required</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Address</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" formControlName="address" nz-input placeholder="Enter Address" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['address'].dirty && corpForm.hasError('required', 'address')">Address is required</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Segment</label>
+                                <nz-select style="width: 100%;" (ngModelChange)="getSubSegmentByValue()" nzShowSearch nzAllowClear formControlName="segment" nzPlaceHolder="Select Segment">
+                                    <nz-option *ngFor="let list of allSegmentList" [nzValue]="list.segmentcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Sub Segment</label>
+                                <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="subSegment" nzPlaceHolder="Select Sub Segment">
+                                    <nz-option *ngFor="let list of allSubsegmentValueList" [nzValue]="list.subsegmentcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Phone Number</label>
+                                        <div class="col-md-12 d-flex pl-0 pr-0">
+                                            <div class="col-md-2 pl-0 pr-0">
+                                                <nz-input-group>
+                                                    <input value="+234" nz-input placeholder="Enter Your last 10 Digit" readonly />
+                                                </nz-input-group>
+                                            </div>
+                                            <div class="col-md-10 pl-0 pr-0">
+                                                <nz-input-group>
+                                                    <input type="text" maxlength="10" formControlName="phoneNumber" nz-input placeholder="Enter Your last 10 Digit" />
+                                                </nz-input-group>
+                                            </div>
+                                        </div>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['phoneNumber'].dirty && corpForm.hasError('required', 'phoneNumber')">Phone number is required</span>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.hasError('pattern', 'phoneNumber')">Phone number is invalid</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Email</label>
+                                        <nz-input-group nzPrefixIcon="mail">
+                                            <input type="email" formControlName="email" nz-input placeholder="Enter Email" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['email'].dirty && corpForm.hasError('required', 'email')">Email is required</span>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.hasError('pattern', 'email')">Email is invalid</span>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">State</label>
+                                <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="state" nzPlaceHolder="Select Sector">
+                                    <nz-option *ngFor="let list of allStateList" [nzValue]="list.statecode" [nzLabel]="list.statename"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">City</label>
+                                <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="city" nzPlaceHolder="Select Sub Sector">
+                                    <nz-option *ngFor="let list of allCityList" [nzValue]="list.lgacode" [nzLabel]="list.lganame"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-12">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control>
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Primary Rm Id</label>
+                                        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                            <input type="text" formControlName="primaryRmId" nz-input placeholder="Enter Primary Rm Id" />
+                                        </nz-input-group>
+                                        <span class="text-danger valiFontSizes" *ngIf="corpForm.controls['primaryRmId'].dirty && corpForm.hasError('required', 'primaryRmId')">Primary RM ID is required</span>
+                                        <ng-template #suffixIconButton>
+                                            <button nz-button nzType="primary" [nzLoading]="isLoadingOne" (click)="validateRm()" nzSearch>Validate</button>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+            <button nz-button nzType="primary" style="background: #57B952; border-color: #57B952;" [disabled]="resultRmCode === ''" (click)="submitCorporate()"><i class="typcn typcn-eye mr-2"></i>Create Corporate</button>
+        </div>
+    </ng-template>
+</nz-drawer>
+
+<!-- Drawer for View Account -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="870" [nzVisible]="drawerOpen2" nzTitle="Corporate Account Profile" (nzOnClose)="close2()">
+
+    <ng-container *nzDrawerContent>
+        <!-- <p class="title" style=" margin-bottom: 24px;"><b>User Profile</b></p> -->
+        <nz-descriptions [nzColumn]="2" nzTitle="Customer Personal Information" *ngIf="this.accountRequestType === 'Customer Creation'">
+            <nz-descriptions-item nzTitle="Corporate Name" [nzSpan]="1">{{ accountCorporateName }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="key contact person name" [nzSpan]="1">{{ accountKeyContactPerson }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Email" [nzSpan]="1">{{ accountEmail }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Address" [nzSpan]="1">{{ accountAddress }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Registration Number" [nzSpan]="1">{{ accountRegisterationNo }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Date of incorporation" [nzSpan]="1">{{ accountDateofIncor }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Customer Id" [nzSpan]="1">{{ accountCustomerId }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Phone Number" [nzSpan]="1">{{ accountPhoneNo }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="App ID" [nzSpan]="1">{{ accountAppId }}</nz-descriptions-item>
+        </nz-descriptions>
+        <nz-divider></nz-divider>
+
+        <nz-descriptions [nzColumn]="2" nzTitle="Account Details" *ngIf="this.accountRequestType === 'Account Creation' || this.accountRequestType === 'Account Creation Minor' || this.accountRequestType === 'Account Creation Joint'">
+            <nz-descriptions-item nzTitle="Account Number" [nzSpan]="1">{{ accountAccountNo }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Limit Amount" [nzSpan]="1">{{ accountLimitAmount }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Currency" [nzSpan]="1">{{ accountCurrency }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Primary RM" [nzSpan]="1">{{ accountPrimaryRm }}</nz-descriptions-item>
+
+            <nz-descriptions-item nzTitle="Scheme Code" [nzSpan]="1">{{ accountSchemeCode }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Scheme Type" [nzSpan]="1">{{ accountSchemeType }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sector Code" [nzSpan]="2">{{ accountSectorCode }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="sub_sector Code" [nzSpan]="1">{{ accountSubSectorCode }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Segment" [nzSpan]="2">{{ accountSegment }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sub Segment" [nzSpan]="1">{{ accountSubSegment }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Sol Id" [nzSpan]="1">{{ accountSolId }}</nz-descriptions-item>
+        </nz-descriptions>
+
+        <nz-descriptions [nzColumn]="2" nzTitle="Document Informations">
+            <nz-descriptions-item nzTitle="Document Code" [nzSpan]="1">{{ accountDocumemtCode }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Document Type Code" [nzSpan]="1">{{ accountDocumentTydeCode }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Reference Number" [nzSpan]="1">{{ accountReferenceNo }}</nz-descriptions-item>
+        </nz-descriptions>
+
+        <nz-divider></nz-divider>
+        <nz-descriptions [nzColumn]="2" nzTitle="Internal">
+            <nz-descriptions-item nzTitle="Introducer Code" [nzSpan]="1">{{ accountIntroducerCode }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Request Type" [nzSpan]="1">{{ accountRequestType }}</nz-descriptions-item>
+        </nz-descriptions>
+
+        <div class="row row-xs mt-3 mr-2">
+            <div class="col-sm-12 col-md-12">
+                <button class="btn btn-success btn-with-icon float-right" (click)="open3()"><i class="typcn typcn-plus"></i> Decision</button>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>
+
+<!-- Drawer for Approve Account -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="770" [nzVisible]="drawerOpen3" nzTitle="Decision" (nzOnClose)="close3()">
+    <form nz-form *nzDrawerContent [formGroup]="approveForm">
+        <div class="col-md-12 col-lg-12 pl-0 pr-0">
+
+            <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                <div class="pl-0 pr-0 col-md-12">
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-12">
+                            <div class="az-form-group">
+                                <label class="form-label mb-3" style="font-weight: 600; color: darkslategray;">Action</label>
+                                <div class="d-flex">
+                                    <label class="rdiobox">
+                                  <input type="radio" value="A" formControlName="approveOrReject">
+                                  <span class="mr-5">Approve</span>
+                                </label>
+
+                                    <label class="rdiobox">
+                                  <input type="radio" value="R" formControlName="approveOrReject">
+                                  <span>Reject</span>
+                                </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-12">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control style="width: 100%;" nzErrorTip="Please Enter Comment!">
+                                        <label class="form-label mb-2" style="font-weight: 600; color: darkslategray;"> Comment</label>
+                                        <textarea formControlName="comment" nz-input rows="3" placeholder="Comment"></textarea>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3 mr-2">
+                        <div class="col-sm-12 col-md-12">
+                            <button class="btn btn-success btn-with-icon float-right" [hidden]="!authorizeUser" (click)="submitApproveORReject()" *ngIf="showAppro"><i class="typcn typcn-check"></i> Submit</button>
+                            <button class="btn btn-warning btn-with-icon float-right" [hidden]="!authorizeUser" *ngIf="showAppro2"><i class="typcn typcn-arrow-sync"></i> Submiting Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</nz-drawer>
+
+<!-- Drawer For Create Corporate CIF & Account-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="870" [nzVisible]="drawerOpen4" nzTitle="Create Corporate CIF & Account" (nzOnClose)="close4()">
+
+    <nz-steps [nzCurrent]="current">
+        <nz-step nzTitle="Validation"></nz-step>
+        <nz-step nzTitle="Account"></nz-step>
+        <nz-step nzTitle="Identification"></nz-step>
+        <nz-step nzTitle="Signatories"></nz-step>
+    </nz-steps>
+
+
+    <form nz-form [formGroup]="accountForm">
+        <div class="steps-content" *ngIf="index == 'First-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 270px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Customer ID</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="customerId" nz-input placeholder="Enter Customer ID" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['customerId'].dirty && accountForm.hasError('required', 'customerId')">Customer ID is required</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mg-t-20 mg-md-t-0">
+                                <button class="btn btn-success btn-with-icon ml-3 mt-4" *ngIf="validateBtn" (click)="customerVerification()">Validate Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'Second-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Corporate Name</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="corporateName" nz-input placeholder="Enter Corporate Name" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['corporateName'].dirty && accountForm.hasError('required', 'corporateName')">Corporate name is required</span>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.hasError('pattern', 'corporateName')">Corporate name is invalid</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter date of incorporation!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Date of Incorporation</label>
+                                            <nz-input-group>
+                                                <!-- <input type="date" formControlName="dateOfIncorporation" nz-input placeholder="Enter Date" /> -->
+                                                <nz-date-picker style="width: 100%;" formControlName="dateOfIncorporation" nzFormat="dd-MM-yyyy" [nzDisabledDate]="disabledDate"></nz-date-picker>
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;"> Key Contact Person Name</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="keyContactPersonName" nz-input placeholder="Enter Key Contact Person Name" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['keyContactPersonName'].dirty && accountForm.hasError('required', 'keyContactPersonName')">Contact name is required</span>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.hasError('pattern', 'keyContactPersonName')">Contact name is invalid</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Registration no!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Registration Number</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="registrationNumber" nz-input placeholder="Enter Registeration Number" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Email</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="email" formControlName="email" nz-input placeholder="Enter Email" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['email'].dirty && accountForm.hasError('required', 'email')">Email is required</span>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.hasError('pattern', 'email')">Email is invalid</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Scheme Type</label>
+                                    <nz-select style="width: 100%;" (ngModelChange)="getSchemeCode()" nzShowSearch nzAllowClear formControlName="schemeType" nzPlaceHolder="Select Sector">
+                                        <nz-option *ngFor="let list of allschemeTypeList" [nzValue]="list.schemeType" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Scheme Code</label>
+                                    <nz-select style="width: 100%;" (ngModelChange)="getSubHeadCode()" nzShowSearch nzAllowClear formControlName="schemeCode" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allSchemeCodeList" [nzValue]="list.schemecode" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">GI SubHead Code</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="glSubHeadCode" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allSubHeadeCodeList" [nzValue]="list.glsubheadcode" [nzLabel]="list.glsubheadcode"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sector</label>
+                                    <nz-select style="width: 100%;" (nzOpenChange)="getSubSector()" nzShowSearch nzAllowClear formControlName="sector" nzPlaceHolder="Select Sector">
+                                        <nz-option *ngFor="let list of allSectorList" [nzValue]="list.sectorcode" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sub Sector</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="subSector" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allSubSectorList" [nzValue]="list.subsectorcode" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Segment</label>
+                                    <nz-select style="width: 100%;" (ngModelChange)="getSubSegmentByValue2()" nzShowSearch nzAllowClear formControlName="segment" nzPlaceHolder="Select Sector">
+                                        <nz-option *ngFor="let list of allSegmentList" [nzValue]="list.segmentcode" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sub Segment</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="subSegment" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allSubsegmentValueList2" [nzValue]="list.subsegmentcode" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-12">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Address</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="address" nz-input placeholder="Enter Address" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['address'].dirty && accountForm.hasError('required', 'address')">Address is required</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Currency</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="currency" nzPlaceHolder="Select Currency" [(ngModel)]="selectedValue">
+                                        <nz-option nzLabel="Naira" nzValue="NGN"></nz-option>
+                                        <nz-option nzLabel="Pounds" nzValue="GBP"></nz-option>
+                                        <nz-option nzLabel="Euro" nzValue="EUR"></nz-option>
+                                        <nz-option nzLabel="Dollars" nzValue="USD"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sol ID</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="solId" nzPlaceHolder="Select Sol ID">
+                                        <nz-option *ngFor="let list of allSolList" [nzValue]="list.solid" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;"> Phone Number</label>
+                                            <div class="col-md-12 d-flex pl-0 pr-0">
+                                                <div class="col-md-2 pl-0 pr-0">
+                                                    <nz-input-group>
+                                                        <input value="+234" nz-input placeholder="Enter Your last 10 Digit" readonly />
+                                                    </nz-input-group>
+                                                </div>
+                                                <div class="col-md-10 pl-0 pr-0">
+                                                    <nz-input-group>
+                                                        <input type="text" maxlength="10" formControlName="phoneNumber" nz-input placeholder="Enter Your last 10 Digit" />
+                                                    </nz-input-group>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['phoneNumber'].dirty && accountForm.hasError('required', 'phoneNumber')">Phone Number is required</span>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.hasError('pattern', 'phoneNumber')">Phone Number is invalid</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Introducer Code</label>
+                                            <!-- <nz-input-group nzSearch [nzAddOnAfter]="suffixButton"> -->
+                                            <nz-input-group>
+                                                <input type="text" formControlName="introducerCode" nz-input placeholder="Enter RM Code" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['introducerCode'].dirty && accountForm.hasError('required', 'introducerCode')">Introducer code is required</span>
+                                            <!-- <ng-template #suffixButton>
+                                                <button nz-button nzType="primary" *ngIf="showValidate" nzSearch (click)="validateRmCode()">Validate</button>
+                                                <button nz-button nzType="warning" *ngIf="showValidate2" style="background-color: orange; border-color: orange; color: black;" nzSearch>Validating</button>
+                                            </ng-template> -->
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">State</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="state" nzPlaceHolder="Select Sector">
+                                        <nz-option *ngFor="let list of allStateList" [nzValue]="list.statecode" [nzLabel]="list.statename"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">City</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="city" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allCityList" [nzValue]="list.lgacode" [nzLabel]="list.lganame"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'Third-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Primary RM ID</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="primaryRmId" nz-input placeholder="Enter Primary RM ID" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['primaryRmId'].dirty && accountForm.hasError('required', 'primaryRmId')">Primary RM ID is required</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Tax ID</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="taxId" nz-input placeholder="Enter Tax ID" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['taxId'].dirty && accountForm.hasError('required', 'taxId')">Tax ID is required</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Document Type</label>
+                                    <nz-select style="width: 100%;" (ngModelChange)="getAllDocumetCode()" nzShowSearch nzAllowClear formControlName="documentTypeCode" nzPlaceHolder="Select Sector">
+                                        <nz-option *ngFor="let list of allDocumentTypeList" [nzValue]="list.documentTypeCode" [nzLabel]="list.documentTypeDescription"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Document Code</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="documentCode" nzPlaceHolder="Select Document Code">
+                                        <nz-option *ngFor="let list of allDocumentCodeList" [nzValue]="list.documentcode" [nzLabel]="list.documentcodedescription"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Place Of Issue</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="placeOfIssue" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allCityList" [nzValue]="list.lgacode" [nzLabel]="list.lganame"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Reference Number</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="referenceNumber" nz-input placeholder="Enter Reference Number" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['referenceNumber'].dirty && accountForm.hasError('required', 'referenceNumber')">Reference Number is required</span>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.hasError('pattern', 'referenceNumber')">Reference Number is invalid</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter your Name!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Issue Date</label>
+                                            <nz-input-group>
+                                                <!-- <input type="date" formControlName="documentIssueDate" nz-input placeholder="Enter Date" /> -->
+                                                <nz-date-picker style="width: 100%;" formControlName="documentIssueDate" nzFormat="dd-MM-yyyy" [nzDisabledDate]="disabledDate"></nz-date-picker>
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter your Name!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Expiry Date</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="date" formControlName="expiryDate" nz-input placeholder="Enter Date" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'Fourth-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="col-md-12 mb-2">
+                            <div class="text-center">
+                                <h5>Click <b>Add Signatories Button</b> to add fields !!</h5>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-12" formArrayName="signatories" style="border-left: 0px !important;">
+                                <div class="az-form-group">
+                                    <label class="form-label mb-3" style="font-weight: 600; color: darkslategray;">Signatories</label>
+                                    <nz-form-item *ngFor="let signatory of signatories().controls; let sigIndex=index">
+                                        <div class="col-md-12 pl-0 pr-0 d-flex" [formGroupName]="sigIndex" style="border-left: 0px !important;">
+                                            <div class="col-md-3 pl-0 pr-2">
+                                                <nz-form-item>
+                                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                                        <nz-input-group nzPrefixIcon="user">
+                                                            <input type="text" maxlength="11" formControlName="bvn" nz-input placeholder="Enter BVN" />
+                                                        </nz-input-group>
+                                                    </nz-form-control>
+                                                </nz-form-item>
+                                            </div>
+                                            <div class="col-md-3 pl-0 pr-2">
+                                                <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="relationshipType" nzPlaceHolder="Select Relationship Type">
+                                                    <nz-option nzValue="ADM" nzLabel="ADMINISTRATOR"></nz-option>
+                                                    <nz-option nzValue="ASSOC" nzLabel="ENTERPRISE BANK ASSOCIATES"></nz-option>
+                                                    <nz-option nzValue="AUN" nzLabel="AUNT"></nz-option>
+                                                    <nz-option nzValue="BIL" nzLabel="BROTHER IN LAW"></nz-option>
+                                                    <nz-option nzValue="BRO" nzLabel="BROTHER"></nz-option>
+                                                    <nz-option nzValue="COD" nzLabel="CO-DIRECTOR"></nz-option>
+                                                    <nz-option nzValue="COP" nzLabel="CO-PARTNERS"></nz-option>
+                                                    <nz-option nzValue="COU" nzLabel="COUSIN"></nz-option>
+                                                    <nz-option nzValue="COW" nzLabel="CO-WORKER"></nz-option>
+                                                    <nz-option nzValue="DAU" nzLabel="DAUGHTER"></nz-option>
+                                                    <nz-option nzValue="DIL" nzLabel="DAUGHTER IN LAW"></nz-option>
+                                                    <nz-option nzValue="DIS" nzLabel="DISTRIBUTOR"></nz-option>
+                                                    <nz-option nzValue="EMP" nzLabel="EMPLOYEE"></nz-option>
+                                                    <nz-option nzValue="EMR" nzLabel="EMPLOYER"></nz-option>
+                                                    <nz-option nzValue="EXE" nzLabel="EXECUTOR"></nz-option>
+                                                    <nz-option nzValue="FAT" nzLabel="FATHER"></nz-option>
+                                                    <nz-option nzValue="FIA" nzLabel="FIANCEE"></nz-option>
+                                                    <nz-option nzValue="FIL" nzLabel="FATHER IN LAW"></nz-option>
+                                                    <nz-option nzValue="FIN" nzLabel="FIANCE"></nz-option>
+                                                    <nz-option nzValue="GDF" nzLabel="GRANDFATHER"></nz-option>
+                                                    <nz-option nzValue="GDM" nzLabel="GRANDMOTHER"></nz-option>
+                                                    <nz-option nzValue="GFM" nzLabel="GRAND FATHER (MATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GFP" nzLabel="GRAND FATHER (PATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GMM" nzLabel="GRAND MOTHER (MATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GMP" nzLabel="GRAND MOTHER (PATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GRASO" nzLabel="GRAND SON"></nz-option>
+                                                    <nz-option nzValue="GRD" nzLabel="GUARDIAN"></nz-option>
+                                                    <nz-option nzValue="GUA" nzLabel="GUARANTOR'"></nz-option>
+                                                    <nz-option nzValue="HOL" nzLabel="HOLDING CO"></nz-option>
+                                                    <nz-option nzValue="HUS" nzLabel="HUSBAND"></nz-option>
+                                                    <nz-option nzValue="LEG" nzLabel="LEGAL GUARDIAN"></nz-option>
+                                                    <nz-option nzValue="MIG" nzLabel="MIGRATION DATA WITH."></nz-option>
+                                                    <nz-option nzValue="MIL" nzLabel="MOTHER IN LAW"></nz-option>
+                                                    <nz-option nzValue="MNDT" nzLabel="MANDATE HOLDER"></nz-option>
+                                                    <nz-option nzValue="MOT" nzLabel="MOTHER"></nz-option>
+                                                    <nz-option nzValue="NEE" nzLabel="NIECE"></nz-option>
+                                                    <nz-option nzValue="NEP" nzLabel="NEPHEW"></nz-option>
+                                                    <nz-option nzValue="NGU" nzLabel="NATURAL GUARDIAN"></nz-option>
+                                                    <nz-option nzValue="OTH" nzLabel="OTHERS"></nz-option>
+                                                    <nz-option nzValue="POA" nzLabel="POWER OF ATTORNEY HOLDER"></nz-option>
+                                                    <nz-option nzValue="RELPA" nzLabel="RELATED PARTY CODE"></nz-option>
+                                                    <nz-option nzValue="SEL" nzLabel="SELF"></nz-option>
+                                                    <nz-option nzValue="SIL" nzLabel="SON IN LAW"></nz-option>
+                                                    <nz-option nzValue="SIS" nzLabel="SISTER"></nz-option>
+                                                    <nz-option nzValue="SON" nzLabel="SON"></nz-option>
+                                                    <nz-option nzValue="SPO" nzLabel="SPOUSE"></nz-option>
+                                                    <nz-option nzValue="SSL" nzLabel="SISTER IN LAW"></nz-option>
+                                                    <nz-option nzValue="SUB" nzLabel="SUBSIDIARY"></nz-option>
+                                                    <nz-option nzValue="SUP" nzLabel="SUPPLIER"></nz-option>
+                                                    <nz-option nzValue="UNC" nzLabel="UNCLE"></nz-option>
+                                                    <nz-option nzValue="OTHER" nzLabel="OTHER"></nz-option>
+                                                </nz-select>
+                                            </div>
+                                            <div class="col-md-5 pl-0 pr-2">
+                                                <nz-form-item>
+                                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                                        <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+                                                            <input type="text" formControlName="customerId" nz-input placeholder="Enter Customer Id" />
+                                                        </nz-input-group>
+                                                        <ng-template #suffixButton>
+                                                            <button nz-button nzType="primary" [nzLoading]="isLoadingOne" (click)="verifyFieldCus(signatory)" nzSearch>Validate</button>
+                                                            <!-- <button nz-button nzType="warning" *ngIf="showValidate2" style="background-color: orange; border-color: orange; color: black;" nzSearch>Validating</button> -->
+                                                        </ng-template>
+                                                    </nz-form-control>
+                                                </nz-form-item>
+                                            </div>
+                                            <div class="col-md-1 pull-right">
+                                                <i nz-icon nzType="minus-circle-o" class="float-right mt-1" style="cursor: pointer; color: #999; font-size: 24px; transition: all 0.3s;" (click)="removeSignatories(sigIndex)"></i>
+                                            </div>
+                                        </div>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-12 text-center">
+                                <nz-form-item>
+                                    <nz-form-control>
+                                        <button nz-button nzType="dashed" class="add-button" (click)="addSignatories()">
+                                  <i nz-icon nzType="plus"></i>
+                                  Add Signatories
+                                </button>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+    <div class="float-right">
+        <button class="mr-2" nz-button nzType="primary" (click)="pre()" *ngIf="current > 0">
+        <span>Previous</span>
+      </button>
+        <button class="mr-2" nz-button nzType="default" style="background-color: #4BA145; border-color: #4BA145; color: white;" (click)="next()" *ngIf="current < 3">
+        <span>Next</span>
+      </button>
+        <button class="mr-2" style="background-color: #4BA145; border-color: #4BA145; color: white;" nz-button nzType="primary" (click)="submitCorporateAccount()" *ngIf="current === 3">
+        <span>Create Corporate Account</span>
+      </button>
+    </div>
+
+</nz-drawer>
+
+<!--Drawer to Edit Reject Account-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="870" [nzVisible]="drawerOpen5" nzTitle="Edit Rejected Account" (nzOnClose)="close5()">
+
+    <form nz-form *nzDrawerContent [formGroup]="corpForm">
+        <div class="col-md-12 col-lg-12 pl-0 pr-0">
+
+            <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                <div class="pl-0 pr-0 col-md-12">
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Corporate Name</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" [(ngModel)]="accountCorporateName" formControlName="corporateName" nz-input placeholder="Enter Corporate Name" />
+                                        </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control nzErrorTip="Please enter valid Email!">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Email</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="email" [(ngModel)]="accountEmail" formControlName="email" nz-input placeholder="Enter Email" />
+                                        </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Key Contact Person Name</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" [(ngModel)]="accountKeyContactPerson" formControlName="keyContactPersonName" nz-input placeholder="Enter Key Contact Person Name" />
+                                        </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control nzErrorTip="Please enter your last 10 digit!">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Phone Number</label>
+                                        <div class="col-md-12 d-flex pl-0 pr-0">
+                                            <div class="col-md-2 pl-0 pr-0">
+                                                <nz-input-group>
+                                                    <input value="+234" nz-input placeholder="Enter Your last 10 Digit" readonly />
+                                                </nz-input-group>
+                                            </div>
+                                            <div class="col-md-10 pl-0 pr-0">
+                                                <nz-input-group>
+                                                    <input type="text" maxlength="10" [(ngModel)]="accountPhoneNoSlice" formControlName="phoneNumber" nz-input placeholder="Enter Your last 10 Digit" />
+                                                </nz-input-group>
+                                            </div>
+                                        </div>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Sector</label>
+                                <nz-select style="width: 100%;" [(ngModel)]="accountSectorCode" (nzOpenChange)="getSubSector()" nzShowSearch nzAllowClear formControlName="sector" nzPlaceHolder="Select Sector">
+                                    <nz-option *ngFor="let list of allSectorList" [nzValue]="list.sectorcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Sub Sector</label>
+                                <nz-select style="width: 100%;" [(ngModel)]="accountSubSectorCode" nzShowSearch nzAllowClear formControlName="subSector" nzPlaceHolder="Select Sub Sector">
+                                    <nz-option *ngFor="let list of allSubSectorList" [nzValue]="list.subsectorcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Segment</label>
+                                <nz-select style="width: 100%;" [(ngModel)]="accountSegment" (ngModelChange)="getSubSegmentByValue()" nzShowSearch nzAllowClear formControlName="segment" nzPlaceHolder="Select Sector">
+                                    <nz-option *ngFor="let list of allSegmentList" [nzValue]="list.segmentcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Sub Segment</label>
+                                <nz-select style="width: 100%;" [(ngModel)]="accountSubSegment" nzShowSearch nzAllowClear formControlName="subSegment" nzPlaceHolder="Select Sub Sector">
+                                    <nz-option *ngFor="let list of allSubsegmentValueList" [nzValue]="list.subsegmentcode" [nzLabel]="list.description"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">State</label>
+                                <nz-select style="width: 100%;" [(ngModel)]="accountState" nzShowSearch nzAllowClear formControlName="state" nzPlaceHolder="Select State">
+                                    <nz-option *ngFor="let list of allStateList" [nzValue]="list.statecode" [nzLabel]="list.statename"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="az-form-group">
+                                <label class="form-label" style="font-weight: 600; color: darkslategray;">City</label>
+                                <nz-select style="width: 100%;" [(ngModel)]="accountCity" nzShowSearch nzAllowClear formControlName="city" nzPlaceHolder="Select City">
+                                    <nz-option *ngFor="let list of allCityList" [nzValue]="list.lgacode" [nzLabel]="list.lganame"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-12">
+                            <div class="az-form-group">
+                                <nz-form-item style="margin-bottom: 9px !important;">
+                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;"> Primary Rm Id</label>
+                                        <nz-input-group nzPrefixIcon="user">
+                                            <input type="text" [(ngModel)]="accountPrimaryRm" formControlName="primaryRmId" nz-input placeholder="Enter Primary Rm Id" />
+                                        </nz-input-group>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3">
+                        <div class="col-md-12 mg-t-5 mg-md-t-0">
+                            <div class="pl-0 pr-0 col-md-12">
+                                <div class="row row-xs mt-3">
+                                    <div class="col-md-12" formArrayName="signatoriesToBeValidated" style="border-left: 0px !important;">
+                                        <div class="az-form-group">
+                                            <label class="form-label mb-3" style="font-weight: 600; color: darkslategray;">Signatories</label>
+                                            <nz-form-item *ngFor="let signatory of signatoriesToBeValidated().controls; let sigIndex=index" style="margin-bottom: 0px !important;">
+                                                <div class="col-md-12 pl-0 pr-0 d-flex" [formGroupName]="sigIndex" style="border-left: 0px !important;">
+                                                    <div class="col-md-3 pl-0 pr-2">
+                                                        <nz-form-item>
+                                                            <nz-form-control nzErrorTip="Please enter your Name!">
+                                                                <nz-input-group nzSearch>
+                                                                    <input type="text" maxlength="11" formControlName="bvn" nz-input placeholder="Enter Bvn" />
+                                                                </nz-input-group>
+                                                            </nz-form-control>
+                                                        </nz-form-item>
+                                                    </div>
+                                                    <div class="col-md-3 pl-0 pr-2">
+                                                        <nz-form-item>
+                                                            <nz-form-control nzErrorTip="Please enter your Name!">
+                                                                <nz-input-group nzSearch>
+                                                                    <input type="text" formControlName="customerId" nz-input placeholder="Enter Customer Id" />
+                                                                </nz-input-group>
+                                                            </nz-form-control>
+                                                        </nz-form-item>
+                                                    </div>
+                                                    <div class="col-md-3 pl-0 pr-2">
+                                                        <select class="form-control select" formControlName="relationshipType" (change)="selectChange($event)" style="margin-top: 3px;">
+                                                          <option value="">Select Relationship Type</option>
+                                                          <option *ngFor="let list of relations" value="{{list.value}}">{{list.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2 pl-0 pr-2">
+                                                        <button nz-button nzSearch nzType="primary" (click)="verifyFieldCus(signatory)" [nzLoading]="isLoadingOne">Validate</button>
+                                                    </div>
+                                                    <div class="col-md-1 pull-right">
+                                                        <i nz-icon nzType="minus-circle-o" class="float-right mt-1" style="cursor: pointer; color: #999; font-size: 24px; transition: all 0.3s;" (click)="removeSignatoriesUpdate(sigIndex)"></i>
+                                                    </div>
+                                                </div>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-xs mt-3">
+                                    <div class="col-md-12 text-center">
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <button nz-button nzType="dashed" class="add-button" (click)="addSignatoriesUpdate()">
+                            <i nz-icon nzType="plus"></i>
+                            Add Signatories
+                          </button>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-xs mt-3 mr-2">
+                        <div class="col-sm-12 col-md-12">
+                            <button class="btn btn-success btn-with-icon float-right" *ngIf="showUpda" (click)="updateCustomerAccount()"><i class="typcn typcn-check"></i> Update Account</button>
+                            <button class="btn btn-warning btn-with-icon float-right" *ngIf="showUpda2"><i class="typcn typcn-arrow-sync"></i> Updating Account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</nz-drawer>
+
+<!-- Drawer Account-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="870" [nzVisible]="drawerOpen6" nzTitle="Create Account" (nzOnClose)="close6()">
+
+    <nz-steps [nzCurrent]="current">
+        <nz-step nzTitle="Validation"></nz-step>
+        <nz-step nzTitle="Account & Identification"></nz-step>
+        <nz-step nzTitle="Signatories"></nz-step>
+    </nz-steps>
+
+
+    <form nz-form [formGroup]="accountForm">
+        <div class="steps-content" *ngIf="index == 'First-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 270px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Customer ID</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="customerId" nz-input placeholder="Enter Customer ID" />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['customerId'].dirty && accountForm.hasError('required', 'customerId')">Customer ID is required</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mg-t-20 mg-md-t-0">
+                                <button class="btn btn-success btn-with-icon ml-3 mt-4" *ngIf="validateBtn" (click)="customerVerification()">Validate Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'Second-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control>
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Corporate Name</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" [(ngModel)]="corporatenameFetch" formControlName="corporateName" nz-input />
+                                            </nz-input-group>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.controls['corporateName'].dirty && accountForm.hasError('required', 'corporateName')">Corporate name is required</span>
+                                            <span class="text-danger valiFontSizes" *ngIf="accountForm.hasError('pattern', 'corporateName')">Corporate name is invalid</span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Scheme Type</label>
+                                    <nz-select style="width: 100%;" (ngModelChange)="getSchemeCode()" nzShowSearch nzAllowClear formControlName="schemeType" nzPlaceHolder="Select Sector">
+                                        <nz-option *ngFor="let list of allschemeTypeList" [nzValue]="list.schemeType" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Scheme Code</label>
+                                    <nz-select style="width: 100%;" (ngModelChange)="getSubHeadCode()" nzShowSearch nzAllowClear formControlName="schemeCode" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allSchemeCodeList" [nzValue]="list.schemecode" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">GI SubHead Code</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="glSubHeadCode" nzPlaceHolder="Select Sub Sector">
+                                        <nz-option *ngFor="let list of allSubHeadeCodeList" [nzValue]="list.glsubheadcode" [nzLabel]="list.glsubheadcode"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Currency</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="currency" nzPlaceHolder="Select Currency" [(ngModel)]="selectedValue">
+                                        <nz-option nzLabel="Naira" nzValue="NGN"></nz-option>
+                                        <nz-option nzLabel="Pounds" nzValue="GBP"></nz-option>
+                                        <nz-option nzLabel="Euro" nzValue="EUR"></nz-option>
+                                        <nz-option nzLabel="Dollars" nzValue="USD"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sol ID</label>
+                                    <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="solId" nzPlaceHolder="Select Sol ID">
+                                        <nz-option *ngFor="let list of allSolList" [nzValue]="list.solid" [nzLabel]="list.description"></nz-option>
+                                    </nz-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-12">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter your Name!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Introducer Code</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="introducerCode" nz-input placeholder="Enter Introducer Code" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-content" *ngIf="index == 'Third-content'">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0 mt-5">
+
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="col-md-12 mb-2">
+                            <div class="text-center">
+                                <h5>Click <b>Add Signatories Button</b> to add fields !!</h5>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-12" formArrayName="signatories" style="border-left: 0px !important;">
+                                <div class="az-form-group">
+                                    <label class="form-label mb-3" style="font-weight: 600; color: darkslategray;">Signatories</label>
+                                    <nz-form-item *ngFor="let signatory of signatories().controls; let sigIndex=index">
+                                        <div class="col-md-12 pl-0 pr-0 d-flex" [formGroupName]="sigIndex" style="border-left: 0px !important;">
+                                            <div class="col-md-3 pl-0 pr-2">
+                                                <nz-form-item>
+                                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                                        <nz-input-group nzPrefixIcon="user">
+                                                            <input type="text" maxlength="11" formControlName="bvn" nz-input placeholder="Enter BVN" />
+                                                        </nz-input-group>
+                                                    </nz-form-control>
+                                                </nz-form-item>
+                                            </div>
+                                            <div class="col-md-3 pl-0 pr-2">
+                                                <nz-select style="width: 100%;" nzShowSearch nzAllowClear formControlName="relationshipType" nzPlaceHolder="Select Relationship Type">
+                                                    <nz-option nzValue="ADM" nzLabel="ADMINISTRATOR"></nz-option>
+                                                    <nz-option nzValue="ASSOC" nzLabel="ENTERPRISE BANK ASSOCIATES"></nz-option>
+                                                    <nz-option nzValue="AUN" nzLabel="AUNT"></nz-option>
+                                                    <nz-option nzValue="BIL" nzLabel="BROTHER IN LAW"></nz-option>
+                                                    <nz-option nzValue="BRO" nzLabel="BROTHER"></nz-option>
+                                                    <nz-option nzValue="COD" nzLabel="CO-DIRECTOR"></nz-option>
+                                                    <nz-option nzValue="COP" nzLabel="CO-PARTNERS"></nz-option>
+                                                    <nz-option nzValue="COU" nzLabel="COUSIN"></nz-option>
+                                                    <nz-option nzValue="COW" nzLabel="CO-WORKER"></nz-option>
+                                                    <nz-option nzValue="DAU" nzLabel="DAUGHTER"></nz-option>
+                                                    <nz-option nzValue="DIL" nzLabel="DAUGHTER IN LAW"></nz-option>
+                                                    <nz-option nzValue="DIS" nzLabel="DISTRIBUTOR"></nz-option>
+                                                    <nz-option nzValue="EMP" nzLabel="EMPLOYEE"></nz-option>
+                                                    <nz-option nzValue="EMR" nzLabel="EMPLOYER"></nz-option>
+                                                    <nz-option nzValue="EXE" nzLabel="EXECUTOR"></nz-option>
+                                                    <nz-option nzValue="FAT" nzLabel="FATHER"></nz-option>
+                                                    <nz-option nzValue="FIA" nzLabel="FIANCEE"></nz-option>
+                                                    <nz-option nzValue="FIL" nzLabel="FATHER IN LAW"></nz-option>
+                                                    <nz-option nzValue="FIN" nzLabel="FIANCE"></nz-option>
+                                                    <nz-option nzValue="GDF" nzLabel="GRANDFATHER"></nz-option>
+                                                    <nz-option nzValue="GDM" nzLabel="GRANDMOTHER"></nz-option>
+                                                    <nz-option nzValue="GFM" nzLabel="GRAND FATHER (MATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GFP" nzLabel="GRAND FATHER (PATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GMM" nzLabel="GRAND MOTHER (MATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GMP" nzLabel="GRAND MOTHER (PATERNAL)"></nz-option>
+                                                    <nz-option nzValue="GRASO" nzLabel="GRAND SON"></nz-option>
+                                                    <nz-option nzValue="GRD" nzLabel="GUARDIAN"></nz-option>
+                                                    <nz-option nzValue="GUA" nzLabel="GUARANTOR'"></nz-option>
+                                                    <nz-option nzValue="HOL" nzLabel="HOLDING CO"></nz-option>
+                                                    <nz-option nzValue="HUS" nzLabel="HUSBAND"></nz-option>
+                                                    <nz-option nzValue="LEG" nzLabel="LEGAL GUARDIAN"></nz-option>
+                                                    <nz-option nzValue="MIG" nzLabel="MIGRATION DATA WITH."></nz-option>
+                                                    <nz-option nzValue="MIL" nzLabel="MOTHER IN LAW"></nz-option>
+                                                    <nz-option nzValue="MNDT" nzLabel="MANDATE HOLDER"></nz-option>
+                                                    <nz-option nzValue="MOT" nzLabel="MOTHER"></nz-option>
+                                                    <nz-option nzValue="NEE" nzLabel="NIECE"></nz-option>
+                                                    <nz-option nzValue="NEP" nzLabel="NEPHEW"></nz-option>
+                                                    <nz-option nzValue="NGU" nzLabel="NATURAL GUARDIAN"></nz-option>
+                                                    <nz-option nzValue="OTH" nzLabel="OTHERS"></nz-option>
+                                                    <nz-option nzValue="POA" nzLabel="POWER OF ATTORNEY HOLDER"></nz-option>
+                                                    <nz-option nzValue="RELPA" nzLabel="RELATED PARTY CODE"></nz-option>
+                                                    <nz-option nzValue="SEL" nzLabel="SELF"></nz-option>
+                                                    <nz-option nzValue="SIL" nzLabel="SON IN LAW"></nz-option>
+                                                    <nz-option nzValue="SIS" nzLabel="SISTER"></nz-option>
+                                                    <nz-option nzValue="SON" nzLabel="SON"></nz-option>
+                                                    <nz-option nzValue="SPO" nzLabel="SPOUSE"></nz-option>
+                                                    <nz-option nzValue="SSL" nzLabel="SISTER IN LAW"></nz-option>
+                                                    <nz-option nzValue="SUB" nzLabel="SUBSIDIARY"></nz-option>
+                                                    <nz-option nzValue="SUP" nzLabel="SUPPLIER"></nz-option>
+                                                    <nz-option nzValue="UNC" nzLabel="UNCLE"></nz-option>
+                                                    <nz-option nzValue="OTHER" nzLabel="OTHER"></nz-option>
+                                                </nz-select>
+                                            </div>
+                                            <div class="col-md-5 pl-0 pr-2">
+                                                <nz-form-item>
+                                                    <nz-form-control nzErrorTip="Please enter your Name!">
+                                                        <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+                                                            <input type="text" formControlName="customerId" nz-input placeholder="Enter Customer Id" />
+                                                        </nz-input-group>
+                                                        <ng-template #suffixButton>
+                                                            <button nz-button nzType="primary" [nzLoading]="isLoadingOne" (click)="verifyFieldCus(signatory)" *ngIf="showValidate" nzSearch>Validate</button>
+                                                            <!-- <button nz-button nzType="warning" *ngIf="showValidate2" style="background-color: orange; border-color: orange; color: black;" nzSearch>Validating</button> -->
+                                                        </ng-template>
+                                                    </nz-form-control>
+                                                </nz-form-item>
+                                            </div>
+                                            <div class="col-md-1 pull-right">
+                                                <i nz-icon nzType="minus-circle-o" class="float-right mt-1" style="cursor: pointer; color: #999; font-size: 24px; transition: all 0.3s;" (click)="removeSignatories(sigIndex)"></i>
+                                            </div>
+                                        </div>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-12 text-center">
+                                <nz-form-item>
+                                    <nz-form-control>
+                                        <button nz-button nzType="dashed" class="add-button" (click)="addSignatories()">
+                                <i nz-icon nzType="plus"></i>
+                                Add Signatories
+                              </button>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+    <div class="float-right">
+        <button class="mr-2" nz-button nzType="primary" (click)="pre()" *ngIf="current > 0">
+      <span>Previous</span>
+    </button>
+        <button class="mr-2" nz-button nzType="default" style="background-color: #4BA145; border-color: #4BA145; color: white;" (click)="next()" *ngIf="current < 2">
+      <span>Next</span>
+    </button>
+        <button class="mr-2" style="background-color: #4BA145; border-color: #4BA145; color: white;" nz-button nzType="primary" (click)="submitCorporateAccountAccount()" *ngIf="current === 2">
+      <span>Create Account</span>
+    </button>
+    </div>
+
+</nz-drawer>

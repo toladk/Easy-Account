@@ -1,0 +1,69 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Account Inquiries</h2>
+            <p class="mg-b-0">List of account Inquiries.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <!-- <div class="date">
+
+        <button  nz-button nzType="default" [routerLink]= "['/new-customer']">Create Customer</button>
+      </div>
+
+      <div class="date">
+        <button nz-button nzType="primary" [routerLink]="['/indevidual',{outlets: {Savings: ['new-minor']}}]">Create Account</button>
+      </div> -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <div class="nav-wrapper">
+        <nav class="nav az-nav-line" *ngIf="account == 'new'">
+            <a href="javascript::void(0)" class="nav-link active">Completed Process</a>
+            <!-- <a href="javascript::void(0)" [routerLink]= "['/indevidual',{outlets: {Savings: ['new-bulk']}}]" routerLinkActive="active" class="nav-link">Joint</a> &nbsp;
+      <a href="javascript::void(0)" [routerLink]= "['/indevidual',{outlets: {Savings: ['new-normal']}}]" routerLinkActive="active" class="nav-link">Normal</a> -->
+        </nav>
+
+        <!-- <nav class="nav az-nav-line" *ngIf="account == 'existing'">
+      <a href="javascript::void(0)" [routerLink]= "['/savings',{outlets: {Savings: ['new-bvn']}}]" routerLinkActive="active" class="nav-link">Account Opening (BVN)</a>
+      <a href="javascript::void(0)" routerLinkActive="active" class="nav-link">Account Opening (Without BVN)</a>
+      <a href="javascript::void(0)" routerLinkActive="active" class="nav-link">Account Opening (Minor)</a>
+      <a href="javascript::void(0)" routerLinkActive="active" class="nav-link">Account Opening (Bulk)</a>
+    </nav> -->
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="steps-content" *ngIf="index == 'First-content'" style="width: 100%">
+        <div class="az-content-label mg-b-5">Completed Process</div>
+        <nz-table #fixedTable [nzData]="Inquiries" [nzScroll]="{ x: '700px', y: '490px' }" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">S/N</th>
+                    <th nzLeft>Request Type</th>
+                    <th nzLeft>Customer Name</th>
+                    <th>Customer ID</th>
+                    <th>Account Number</th>
+                    <th>Scheme Code</th>
+                    <th>Scheme Type</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <tr *ngFor="let data of fixedTable.data; let r= index">
+                    <td nzWidth="60px">{{ r+1 }}</td>
+                    <td nzLeft>{{data.request_type}}</td>
+                    <td>{{data.name}}</td>
+                    <th>{{data.customer_id}}</th>
+                    <th>{{ data.account_number}}</th>
+                    <td>{{data.scheme_code}}</td>
+                    <td>{{data.scheme_type}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <!-- </div> -->
+    </div>
+
+</div>
+<!-- az-content-body -->

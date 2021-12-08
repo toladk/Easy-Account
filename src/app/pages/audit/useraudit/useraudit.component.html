@@ -1,0 +1,117 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Audit</h2>
+            <p class="mg-b-0 mt-2">User Audit</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="">
+                <div class="float-right">
+                    <!-- <button nz-button nzType="primary" style="color: #fff;" (click)="exportUser()" [nzLoading]="isLoadingExport">Export Users</button> -->
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+</div>
+
+<div class="az-content-body pd-lg-l-40 d-flex flex-column">
+
+    <div class="col-md-12 col-lg-12 card mg-t-10">
+        <form [formGroup]="filterForm">
+            <nz-spin [nzSpinning]="isSpinning">
+                <div class="col-md-12 pr-0 pl-0 d-flex mt-3 mb-3">
+                    <div class="col-md-3 pl-0">
+                        <div class="az-form-group">
+                            <nz-form-item style="margin-bottom: 9px !important;">
+                                <nz-form-control>
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Inputter</label>
+                                    <nz-input-group nzPrefixIcon="filter">
+                                        <input formControlName="inputter" nz-input placeholder="Inputer" />
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl-0">
+                        <div class="az-form-group">
+                            <nz-form-item style="margin-bottom: 9px !important;">
+                                <nz-form-control>
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Authorizer</label>
+                                    <nz-input-group nzPrefixIcon="filter">
+                                        <input formControlName="authorizer" nz-input placeholder="Authorizer" />
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl-0">
+                        <div class="az-form-group">
+                            <nz-form-item style="margin-bottom: 9px !important;">
+                                <nz-form-control>
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Start Date</label>
+                                    <nz-input-group nzPrefixIcon="right-square">
+                                        <input type="date" formControlName="startDate" nz-input placeholder="Enter Date" />
+                                        <!-- <nz-date-picker formControlName="fromDate" nzBorderless></nz-date-picker> -->
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl-0">
+                        <div class="az-form-group">
+                            <nz-form-item style="margin-bottom: 9px !important;">
+                                <nz-form-control>
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">End Date</label>
+                                    <nz-input-group nzPrefixIcon="left-square">
+                                        <input type="date" formControlName="endDate" nz-input placeholder="Enter Date" />
+                                        <!-- <nz-date-picker formControlName="toDate" nzBorderless></nz-date-picker> -->
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12 pr-0 pl-0 d-flex mb-3">
+                    <div class="col-md-4 pl-0">
+                        <div class=""><button class="btn btn-success btn-with-icon btn-block" (click)="getFilterUser()"><i class="typcn typcn-zoom"></i> Get Audit Users</button></div>
+                    </div>
+                    <div class="col-md-4 pl-0">
+
+                    </div>
+                    <div class="col-md-4 pr-0">
+                        <div class=""><button class="btn btn-success btn-with-icon btn-block" (click)="downloadFilterUser()"><i class="typcn typcn-download"></i> Download Audit Users</button></div>
+                    </div>
+                </div>
+            </nz-spin>
+        </form>
+    </div>
+
+    <div class="az-content-label mt-3 mb-1 mg-b-5">Total Audit User: {{ auditUserList.length }}</div>
+
+    <nz-table #basicTable [nzData]="auditUserList">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Authorizer</th>
+                <th>Inputter</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td>{{ data.id }}</td>
+                <td>{{ data.authorizer }}</td>
+                <td>{{ data.inputter }}</td>
+                <td>
+                    <div *ngIf="data.approved_or_rejected === 'R'" style="background-color: orangered; text-align: center; color: #fff; border-radius: 5px;">Reject</div>
+                    <div *ngIf="data.approved_or_rejected === 'A'" style="background-color: #4BA145; text-align: center; color: #fff; border-radius: 5px;">Approved</div>
+                    <div *ngIf="data.approved_or_rejected === 'N'" style="background-color: #19829a; text-align: center; color: #fff; border-radius: 5px;">Pending</div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+</div>

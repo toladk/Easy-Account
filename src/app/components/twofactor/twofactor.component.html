@@ -1,0 +1,43 @@
+<div class="az-body bg-success">
+    <div class="az-signin-wrapper mb-3">
+        <div class="az-card-signin" style="height: 370px !important;">
+            <h1 class="az-logo text-success">HB-NG</h1>
+            <div class="az-signin-header">
+                <h2>Welcome!</h2>
+                <h4>Please enter your token !!</h4>
+
+                <form [formGroup]="twoFactorForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label>Token</label>
+                        <div class="col-md-12 pl-0 pr-0">
+                            <div class="row row-xs">
+                                <div class="col-md-3">
+                                    <input type="text" maxlength="2" formControlName="token1" class="form-control text-center" #input1 (keyup)="(input1.value.length == 2) ? input2.focus() : ''" placeholder="- -" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" maxlength="2" formControlName="token2" name="token2" class="form-control text-center" #input2 (keyup)="(input2.value.length == 2) ? input3.focus() : ''" placeholder="- -" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" maxlength="2" formControlName="token3" class="form-control text-center" #input3 (keyup)="(input3.value.length == 2) ? input4.focus() : ''" placeholder="- -" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" maxlength="2" formControlName="token4" class="form-control text-center" #input4 placeholder="- -" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- form-group -->
+                    <button nz-button nzBlock nzType="primary" class="mt-2" type="submit" *ngIf="showLoginSub" style="background-color: #4BA145; border-color: #4BA145;">Sign In</button>
+                    <button nz-button nzBlock nzType="warning" nzLoading type="submit" *ngIf="showLoginSub2" style="background-color: orange; border-color: orange; color: white;">Signing In</button>
+                </form>
+            </div>
+            <!-- az-signin-header -->
+            <div class="az-signin-footer mt-3 mb-5 text-center">
+                <p>Click here to <a routerLink='/login' style="color: #4BA145;">Login Page</a></p>
+            </div>
+            <!-- az-signin-footer -->
+        </div>
+        <!-- az-card-signin -->
+    </div>
+    <!-- az-signin-wrapper -->
+</div>

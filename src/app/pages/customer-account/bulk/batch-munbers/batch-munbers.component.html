@@ -1,0 +1,987 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Batch Details!</h2>
+            <p class="mg-b-0">Preview the batch number details.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <button nz-button style="width: 100%;" nzType="primary" (click)="swichAccount('account')" nzBlock>Account Info</button>
+            </div>
+            <!-- az-dashboard-date -->
+            <!-- <i class="icon ion-md-arrow-forward"></i> -->
+            <div class="date">
+                <button nz-button style="width: 100%;" nzType="default" (click)="swichAccount('customer')" nzBlock>Customer Info</button>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <div class="nav-wrapper" *ngIf="account == 'account'">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current == 0" class="nav-link active">Retail</a>
+            <a href="javascript::void(0)" (click)="tab(0)" *ngIf="current != 0" class="nav-link">Retail</a>
+            <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current == 1" class="nav-link active">Corporate</a>
+            <a href="javascript::void(0)" (click)="tab(1)" *ngIf="current != 1" class="nav-link">Corporate</a>
+            <a href="javascript::void(0)" (click)="tab(7)" *ngIf="current == 7" class="nav-link active">Current Savings</a>
+            <a href="javascript::void(0)" (click)="tab(7)" *ngIf="current != 7" class="nav-link">Current Savings</a>
+            <a href="javascript::void(0)" (click)="tab(2)" *ngIf="current == 2" class="nav-link active">Pregenerated Retail</a>
+            <a href="javascript::void(0)" (click)="tab(2)" *ngIf="current != 2" class="nav-link">Pregenerated Retail</a>
+            <a href="javascript::void(0)" (click)="tab(3)" *ngIf="current == 3" class="nav-link active">Pregenerated Corporate</a>
+            <a href="javascript::void(0)" (click)="tab(3)" *ngIf="current != 3" class="nav-link">Pregenerated Corporate</a>
+            <a href="javascript::void(0)" (click)="tab(5)" *ngIf="current == 5" class="nav-link active">Corporate & Savings</a>
+            <a href="javascript::void(0)" (click)="tab(5)" *ngIf="current != 5" class="nav-link">Corporate & Savings</a>
+        </nav>
+    </div>
+    <div class="nav-wrapper" *ngIf="account == 'customer'">
+        <nav class="nav az-nav-line">
+            <a href="javascript::void(0)" (click)="tab(4)" *ngIf="current == 4" class="nav-link active">Customer Info Update</a>
+            <a href="javascript::void(0)" (click)="tab(4)" *ngIf="current != 4" class="nav-link">Customer Info Upate</a>
+            <a href="javascript::void(0)" (click)="tab(6)" *ngIf="current == 6" class="nav-link active">Customer Account Update</a>
+            <a href="javascript::void(0)" (click)="tab(6)" *ngIf="current != 6" class="nav-link">Customer Account Update</a>
+        </nav>
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="steps-content" *ngIf="index == 'First-content'">
+
+        <h5 class="mg-b-20">Retail Bulk Details</h5>
+
+        <nz-table #nzTable [nzData]="retails" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Total Inputter</th>
+                    <th>Total Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'retail')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=retail&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th nzWidth="150px">Name</th>
+                                    <th nzWidth="150px">Account Number</th>
+                                    <th>Scheme Code</th>
+                                    <th>Scheme Type</th>
+                                    <th>Inputter</th>
+                                    <th>Status</th>
+                                    <th>Updated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <td [nzExpand]="expandSet2.has(r+1)" (nzExpandChange)="onExpandChange2(r+1, $event)"></td>
+                                        <td>{{ data.salutation }} {{ data.firstname }} {{ data.lastname }}</td>
+                                        <td>{{ data.account_number }}</td>
+                                        <td>{{ data.schemecode }}</td>
+                                        <td>{{ data.schemetype }}</td>
+                                        <td>{{ data.introducercode }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>{{ data.upload_date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status == 'FAILED'" class="badge badge-info" (click)="retryRetail(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status == 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                    <tr [nzExpand]="expandSet2.has(r+1)">
+                                        <!--
+                      <h5 [ngStyle]="{ 'margin-bottom.px': 16 }">Other Inforations</h5> -->
+                                        <nz-list nzBordered nzHeader="Other Inforations" nzFooter="Footer">
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Salutation</mark></span> {{ data.salutation }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Name</mark></span> {{ data.firstname }} {{ data.lastname }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Address</mark></span> {{ data.address }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>BVN</mark></span> {{ data.bvn }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Date of birth</mark></span> {{ data.dateofbirth }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>gender</mark></span> {{ data.gender }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Phone Number</mark></span> {{ data.phonenumber }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Pre Generated</mark></span> {{ data.pre_generated }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>GL Subhead Code</mark></span> {{ data.glsubheadcode }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Created by </mark></span> {{ data.createdbysystemid }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Cif id</mark></span> {{ data.cifid }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Currency</mark></span> {{ data.currency }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Solid</mark></span> {{ data.solid }}
+                                            </nz-list-item>
+                                        </nz-list>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'Second-content'">
+
+        <h5 class="mg-b-20">Corporate Account Bulk Details</h5>
+
+        <nz-table #nzTable [nzData]="allCorporates" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Total Inputter</th>
+                    <th>Total Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'coporate')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=corporate&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th nzWidth="150px">Corporate Name</th>
+                                    <th nzWidth="150px">Account Number</th>
+                                    <th>Scheme Code</th>
+                                    <th>Scheme Type</th>
+                                    <th>Inputter</th>
+                                    <th>Status</th>
+                                    <th>Updated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <td [nzExpand]="expandSet2.has(r+1)" (nzExpandChange)="onExpandChange2(r+1, $event)"></td>
+                                        <td>{{ data.corporate_name }}</td>
+                                        <td>{{ data.account_number }}</td>
+                                        <td>{{ data.scheme_code }}</td>
+                                        <td>{{ data.scheme_type }}</td>
+                                        <td>{{ data.introducer_code }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>{{ data.upload_date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status == 'FAILED'" class="badge badge-info" (click)="retryCorporate(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status == 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                    <tr [nzExpand]="expandSet2.has(r+1)">
+                                        <!--
+                      <h5 [ngStyle]="{ 'margin-bottom.px': 16 }">Other Inforations</h5> -->
+                                        <nz-list nzBordered nzHeader="Other Inforations" nzFooter="Footer">
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Customer id</mark></span> {{ data.customer_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Corporate Name</mark></span> {{ data.corporate_name }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Address</mark></span> {{ data.address }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Account Number</mark></span> {{ data.account_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Date of Incorporation</mark></span> {{ data.date_of_incorporation }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Key Ccontact Person Name</mark></span> {{ data.key_contact_person_name }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Phone Number</mark></span> {{ data.phone_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Primary RM id</mark></span> {{ data.primary_rm_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Pre Generated</mark></span> {{ data.pre_generated }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Registration Number</mark></span> {{ data.registration_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Created by </mark></span> {{ data.requested_by }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Cif id</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Currency</mark></span> {{ data.currency }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Solid ID</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Tax id</mark></span> {{ data.tax_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Sub sector</mark></span> {{ data.sub_sector }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Tax id</mark></span> {{ data.tax_id }}
+                                            </nz-list-item>
+                                        </nz-list>
+
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'Eight-content'">
+
+        <h5 class="mg-b-20">Current Savings Bulk Details</h5>
+
+        <nz-table #nzTable [nzData]="currentsavings" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Total Inputter</th>
+                    <th>Total Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'currentsavings')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=retail&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th nzWidth="150px">Name</th>
+                                    <th nzWidth="150px">Account Number</th>
+                                    <th>Scheme Code</th>
+                                    <th>Scheme Type</th>
+                                    <th>Inputter</th>
+                                    <th>Status</th>
+                                    <th>Updated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <td [nzExpand]="expandSet2.has(r+1)" (nzExpandChange)="onExpandChange2(r+1, $event)"></td>
+                                        <td>{{ data.salutation }} {{ data.firstname }} {{ data.lastname }}</td>
+                                        <td>{{ data.account_number }}</td>
+                                        <td>{{ data.schemecode }}</td>
+                                        <td>{{ data.schemetype }}</td>
+                                        <td>{{ data.introducercode }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>{{ data.upload_date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status == 'FAILED'" class="badge badge-info" (click)="retryRetail(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status == 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                    <tr [nzExpand]="expandSet2.has(r+1)">
+                                        <!--
+                    <h5 [ngStyle]="{ 'margin-bottom.px': 16 }">Other Inforations</h5> -->
+                                        <nz-list nzBordered nzHeader="Other Inforations" nzFooter="Footer">
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Salutation</mark></span> {{ data.salutation }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Name</mark></span> {{ data.firstname }} {{ data.lastname }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Address</mark></span> {{ data.address }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>BVN</mark></span> {{ data.bvn }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Date of birth</mark></span> {{ data.dateofbirth }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>gender</mark></span> {{ data.gender }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Phone Number</mark></span> {{ data.phonenumber }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Pre Generated</mark></span> {{ data.pre_generated }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>GL Subhead Code</mark></span> {{ data.glsubheadcode }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Created by </mark></span> {{ data.createdbysystemid }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Cif id</mark></span> {{ data.cifid }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Currency</mark></span> {{ data.currency }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Solid</mark></span> {{ data.solid }}
+                                            </nz-list-item>
+                                        </nz-list>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'third-content'">
+
+        <h5 class="mg-b-20">Pre Generate Retail</h5>
+
+        <nz-table #nzTable [nzData]="allPregeneratedRetail" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Total Inputter</th>
+                    <th>Total Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'pregeneratedRetail')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=pregeneratedRetail&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th nzWidth="150px">Account Name</th>
+                                    <th nzWidth="150px">Account Number</th>
+                                    <th>Scheme Code</th>
+                                    <th>Scheme Type</th>
+                                    <th>Inputter</th>
+                                    <th>Status</th>
+                                    <th>Updated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <td [nzExpand]="expandSet2.has(r+1)" (nzExpandChange)="onExpandChange2(r+1, $event)"></td>
+                                        <td>{{ data.firstname }} {{ data.lastname }}</td>
+                                        <td>{{ data.account_number }}</td>
+                                        <td>{{ data.schemecode }}</td>
+                                        <td>{{ data.schemetype }}</td>
+                                        <td>{{ data.introducercode }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'Processed' || 'SUCCESS'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>{{ data.upload_date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status == 'Processed' || 'SUCCESS'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status == 'FAILED'" class="badge badge-info" (click)="retryPregeneratedRetail(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status == 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                    <tr [nzExpand]="expandSet2.has(r+1)">
+                                        <!--
+                      <h5 [ngStyle]="{ 'margin-bottom.px': 16 }">Other Inforations</h5> -->
+                                        <nz-list nzBordered nzHeader="Other Inforations" nzFooter="Footer">
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Batch Number</mark></span> {{ data.batch_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Salutation</mark></span> {{ data.salutation }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Customer Name</mark></span> {{ data.firstname }} {{ data.lastname }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Customer id</mark></span> {{ data.cifid }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Address</mark></span> {{ data.address }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Account Number</mark></span> {{ data.account_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Gender</mark></span> {{ data.gender }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Date of Birth</mark></span> {{ data.dateofbirth }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Phone Number</mark></span> {{ data.phonenumber }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Registration Number</mark></span> {{ data.registration_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Introducer code</mark></span> {{ data.introducercode }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Created by system</mark></span> {{ data.createdbysystemid }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Currency</mark></span> {{ data.currency }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Solid ID</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>gl Subheadcode</mark></span> {{ data.glsubheadcode }}
+                                            </nz-list-item>
+                                        </nz-list>
+
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'fourth-content'">
+
+        <h5 class="mg-b-20">Pre Generate Corporate</h5>
+
+        <nz-table #nzTable [nzData]="allPregeneratedCorporate" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Total Inputter</th>
+                    <th>Total Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'pregeneratedCorporate')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=pregeneratedCorporate&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th nzWidth="150px">Corporate Name</th>
+                                    <th nzWidth="150px">Account Number</th>
+                                    <th>Scheme Code</th>
+                                    <th>Scheme Type</th>
+                                    <th>Inputter</th>
+                                    <th>Status</th>
+                                    <th>Updated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <td [nzExpand]="expandSet2.has(r+1)" (nzExpandChange)="onExpandChange2(r+1, $event)"></td>
+                                        <td>{{ data.corporate_name }}</td>
+                                        <td>{{ data.account_number }}</td>
+                                        <td>{{ data.scheme_code }}</td>
+                                        <td>{{ data.scheme_type }}</td>
+                                        <td>{{ data.introducer_code }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status == 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>{{ data.upload_date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status == 'Pending'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status == 'Processed'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status == 'FAILED'" class="badge badge-info" (click)="retryPregenratedCorporate(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status == 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                    <tr [nzExpand]="expandSet2.has(r+1)">
+                                        <!--
+                      <h5 [ngStyle]="{ 'margin-bottom.px': 16 }">Other Inforations</h5> -->
+                                        <nz-list nzBordered nzHeader="Other Inforations" nzFooter="Footer">
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Customer id</mark></span> {{ data.customer_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Corporate Name</mark></span> {{ data.corporate_name }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Address</mark></span> {{ data.address }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Account Number</mark></span> {{ data.account_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Date of Incorporation</mark></span> {{ data.date_of_incorporation }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Key Ccontact Person Name</mark></span> {{ data.key_contact_person_name }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Phone Number</mark></span> {{ data.phone_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Primary RM id</mark></span> {{ data.primary_rm_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Pre Generated</mark></span> {{ data.pre_generated }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Registration Number</mark></span> {{ data.registration_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Created by </mark></span> {{ data.requested_by }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Cif id</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Currency</mark></span> {{ data.currency }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Solid ID</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Tax id</mark></span> {{ data.tax_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Sub sector</mark></span> {{ data.sub_sector }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Tax id</mark></span> {{ data.tax_id }}
+                                            </nz-list-item>
+                                        </nz-list>
+
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'fifth-content'">
+
+        <h5 class="mg-b-20">Customer Information Update</h5>
+
+        <nz-table #nzTable [nzData]="allCustomerUpdate" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Total Inputter</th>
+                    <th>Total Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'customerUpdate')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=customerUpdate&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <!-- <th nzWidth="60px"></th> -->
+                                    <th nzWidth="150px">Customer ID</th>
+                                    <th nzWidth="150px">Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Date of Birth</th>
+                                    <th>Requested By</th>
+                                    <th>Approved By</th>
+                                    <th>Status</th>
+                                    <th>Updated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <!-- <td [nzExpand]="expandSet2.has(r+1)" (nzExpandChange)="onExpandChange2(r+1, $event)"></td> -->
+                                        <td>{{ data.customer_id }}</td>
+                                        <td>{{ data.email }}</td>
+                                        <td>{{ data.phone_number }}</td>
+                                        <td>{{ data.date_of_birth }}</td>
+                                        <td>{{ data.requested_by }}</td>
+                                        <td>{{ data.approved_by }}</td>
+                                        <td>
+                                            <span *ngIf="data.status === 'Pending'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status === 'SUCCESS'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status === 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>{{ data.upload_date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status === 'Pending'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status === 'SUCCESS'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status === 'FAILED'" class="badge badge-info" (click)="retryCustomerUpdate(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status === 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <div class="steps-content" *ngIf="index == 'seventh-content'">
+
+        <h5 class="mg-b-20">Customer Account Update</h5>
+
+        <nz-table #nzTable [nzData]="AllCustomerAccountUpdate" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">#</th>
+                    <th nzWidth="250px">Batch Number</th>
+                    <th nzWidth="150px">Total Count</th>
+                    <th>Inputter</th>
+                    <th>Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getBatchID(data.batch_number, 'AccountUpdate')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.inputter }}</td>
+                        <td>{{ data.upload_date }}</td>
+                        <td>
+                            <span><a nz-button nzTooltipTitle="Download Report" nz-tooltip nzType="link" href="{{ host }}ExcelExport?Type=customeraccountupdate&BatchNumber={{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="download"></i></a></span>
+                            <span><a nz-button nzTooltipTitle="Download Upload Report" nz-tooltip nzType="link" href="{{ downloadUploadReport }}Report/{{ data.batch_number }}" [nzSize]="size"><i nz-icon nzType="cloud-download" style="color: #4BA145;"></i></a></span>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="retailInfo" nzTableLayout="fixed">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="60px"></th>
+                                    <th nzWidth="150px">Account No</th>
+                                    <th nzWidth="190px">Full Name</th>
+                                    <th nzWidth="190px">Email</th>
+                                    <th nzWidth="130px">Date of Birth</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                    <tr>
+                                        <td>{{ r+1 }}</td>
+                                        <td>{{ data.account_number }}</td>
+                                        <td>{{ data.first_name }} {{ data.last_name }}</td>
+                                        <td>{{ data.email }}</td>
+                                        <td>{{ data.date_of_birth | date }}</td>
+                                        <td>
+                                            <span *ngIf="data.status === 'PENDING'" class="badge badge-warning">{{ data.status }}</span>
+                                            <span *ngIf="data.status === 'SUCCESS'" class="badge badge-success">{{ data.status }}</span>
+                                            <span *ngIf="data.status === 'FAILED'" class="badge badge-danger">{{ data.status }}</span>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="data.status == 'PENDING'" class="badge badge-warning" disabled>pending</span>
+                                            <span *ngIf="data.status == 'SUCCESS'" class="badge badge-success" disabled>done</span>
+                                            <span *ngIf="show && data.status == 'FAILED'" class="badge badge-info" (click)="retryCustomerAccountUpdate(data.batch_number, data.id)" style="cursor: pointer;">Retry</span>
+                                            <span *ngIf="loadingRetry && data.status == 'FAILED'"><div class="loader"></div></span>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr [nzExpand]="expandSet2.has(r+1)">
+                                        <nz-list nzBordered nzHeader="Other Inforations" nzFooter="Footer">
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Customer id</mark></span> {{ data.customer_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Corporate Name</mark></span> {{ data.corporate_name }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Address</mark></span> {{ data.address }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Account Number</mark></span> {{ data.account_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Date of Incorporation</mark></span> {{ data.date_of_incorporation }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Key Ccontact Person Name</mark></span> {{ data.key_contact_person_name }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Phone Number</mark></span> {{ data.phone_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Primary RM id</mark></span> {{ data.primary_rm_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Pre Generated</mark></span> {{ data.pre_generated }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Registration Number</mark></span> {{ data.registration_number }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Created by </mark></span> {{ data.requested_by }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Cif id</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Currency</mark></span> {{ data.currency }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Solid ID</mark></span> {{ data.sol_id }}
+                                            </nz-list-item>
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Tax id</mark></span> {{ data.tax_id }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Sub sector</mark></span> {{ data.sub_sector }}
+                                            </nz-list-item>
+
+                                            <nz-list-item>
+                                                <span nz-typography><mark>Tax id</mark></span> {{ data.tax_id }}
+                                            </nz-list-item>
+                                        </nz-list>
+
+                                    </tr> -->
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+</div>
+<!-- az-content-body -->

@@ -1,0 +1,300 @@
+<div class="az-content-header" #customLoadingTemplate>
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Alert Info Update</h2>
+            <p class="mg-b-0">File Upload.</p>
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <!-- <div class="float-right mr-2">
+                    <button class="btn btn-success btn-with-icon btn-block" (click)="openPendingBatchAlert()"><i class="typcn typcn-arrow-repeat"></i>Pending Batch Alert</button>
+                </div> -->
+                <div class="float-right">
+                    <button class="btn btn-dark btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Upload File Here</button>
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+    <!-- az-content-body-title -->
+    <!-- <div class="nav-wrapper">
+    <nav class="nav az-nav-line">
+      <a href="javascript::void(0)" class="nav-link active">Single</a>
+      <a href="javascript::void(0)" class="nav-link">Bulk</a>
+    </nav>
+  </div> -->
+</div>
+
+
+<div class="az-content-body">
+    <div class="pd-10 pd-t-20">
+        <div class="az-content-label mg-b-5" style="margin-bottom: 20px;">File Upload Alert List</div>
+        <!-- <div class="row pd-b-10">
+            <div class="col-md-4">
+                <div class="az-content-label pt-3">Tatal Transaction: 0 / 0</div>
+            </div>
+
+            <div class="float-right col-md-8 mt-1">
+
+                <div class="az-header-center">
+
+                    <input type="search" id="item_search" [(ngModel)]="search.accountNumber" class="form-control" placeholder="Search for Student...">
+                    <button class="btn btn-primary" style="margin-right: 30px;" (click)="onSearch()"><i class="typcn typcn-zoom"></i></button>
+                    <button class="btn btn-danger" (click)="onSearchCouncle()"><i class="typcn typcn-times"></i></button>
+
+                </div>
+            </div>
+        </div> -->
+
+        <!-- <nz-table #fixedTable [nzData]="alertRecords" [nzScroll]="{ x: '700px', y: '340px' }" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px">S/N</th>
+                    <th nzLeft>Account Number</th>
+                    <th nzLeft>Email Address</th>
+                    <th>Mobile Number</th>
+                    <th nzRight>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of fixedTable.data; let r= index">
+                    <td nzWidth="60px">{{ r+1 }}</td>
+                    <td nzLeft>{{ data.accountnumber }}</td>
+                    <td>{{ data.emailaddress }}</td>
+                    <td>{{ data.mobilenumber }}</td>
+                    <td nzRight>
+                        <div class="btn-icon-list">
+                            <button class="btn btn-info btn-icon"><i class="typcn typcn-eye"></i></button>
+                            <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table> -->
+
+
+
+        <nz-table #nzTable [nzData]="fileUploadAlertList" nzTableLayout="fixed" [nzLoading]="loading">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th nzWidth="60px">S/N</th>
+                    <th nzLeft>Batch Number</th>
+                    <th nzLeft>Count</th>
+                    <th>Process By</th>
+                    <th>Upload Date</th>
+                </tr>
+            </thead>
+            <tbody id="item">
+                <ng-container *ngFor="let data of nzTable.data; let r= index">
+                    <tr>
+                        <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChange(data.sn, $event)" (click)="getUploadAlertID(data.batch_number, 'fileUpload')"></td>
+                        <td>{{ data.sn }}</td>
+                        <td nzLeft>{{ data.batch_number }}</td>
+                        <td>{{ data.total_count }}</td>
+                        <td>{{ data.processed_by }}</td>
+                        <td>{{ data.upload_date }}</td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.sn)">
+
+                        <nz-table #nzTable [nzData]="uploadAlertInfo" nzTableLayout="fixed" [nzLoading]="subloading">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="50px">Account Number</th>
+                                    <th nzWidth="50px">Email</th>
+                                    <th nzWidth="50px">Phone Number</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item">
+                                <ng-container *ngFor="let data of nzTable.data">
+                                    <tr>
+                                        <td>{{ data.accountnumber }}</td>
+                                        <td>{{ data.emailaddress }}</td>
+                                        <td>{{ data.mobilenumber }}</td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </nz-table>
+
+
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+
+    </div>
+
+    <!-- </div> -->
+</div>
+<!-- az-content-body -->
+
+<!-- Drawer To Pending Batch Alert -->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="820" [nzVisible]="visiblePendingBatchAlert" nzTitle="Pending Batch Alert" (nzOnClose)="closePendingBatchAlert()">
+
+
+    <nz-table #nzTable [nzData]="allPendingBatchAlertList" nzTableLayout="fixed" [nzLoading]="loading">
+        <thead>
+            <tr>
+                <th nzWidth="60px"></th>
+                <th nzWidth="60px">S/N</th>
+                <th>Batch Number</th>
+                <th>Processed By</th>
+            </tr>
+        </thead>
+        <tbody id="item">
+            <ng-container *ngFor="let data of nzTable.data">
+                <tr>
+                    <td [nzExpand]="expandSet.has(data.sn)" (nzExpandChange)="onExpandChangeBatch(data.sn, $event)" (click)="getBatchAlert(data.batch_number, 'batchAlert')"></td>
+                    <td>{{ data.sn }}</td>
+                    <td>{{ data.batch_number }}</td>
+                    <td>{{ data.processed_by }}</td>
+                </tr>
+                <tr [nzExpand]="expandSet.has(data.sn)">
+
+                    <nz-table #nzTable [nzData]="batchNumberDetails" nzTableLayout="fixed" [nzLoading]="loading">
+                        <thead>
+                            <tr>
+                                <th nzWidth="60px">S/N</th>
+                                <th>Account Number</th>
+                                <th>Email Address</th>
+                                <th>Mobile Number</th>
+                                <th>Date Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="item">
+                            <ng-container *ngFor="let data of nzTable.data; let r=index">
+                                <tr>
+                                    <td>{{ r+1 }}</td>
+                                    <td>{{ data.accountnumber }}</td>
+                                    <td>{{ data.emailaddress }}</td>
+                                    <td>{{ data.mobilenumber }}</td>
+                                    <td>{{ data.datecreated | date }}</td>
+                                    <td>
+                                        <div class="btn-icon-list" [hidden]="!approvalItem">
+                                            <button class="btn btn-success btn-icon" nz-tooltip nzTooltipTitle="Approve Batch" (click)="approveBatchAlert()"><i class="typcn typcn-tick"></i></button>
+                                            <button class="btn btn-danger btn-icon" nz-tooltip nzTooltipTitle="Reject Batch" (click)="rejectBatchAlert()"><i class="typcn typcn-times"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </nz-table>
+                </tr>
+            </ng-container>
+        </tbody>
+    </nz-table>
+
+</nz-drawer>
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible" nzTitle="Upload" [nzFooter]="footerTpl" (nzOnClose)="close()">
+
+
+    <div class="steps-content" *ngIf="index == 'Create-Alert'">
+
+        <div class="az-content-label mg-b-5">Update Alert Profile</div>
+        <p class="mg-b-20">File Upload.</p>
+        <div class="az-content-label mg-b-20" (click)="downloadFileSample()"><button class="btn btn-success">Download Sample File</button></div>
+
+        <div class="pd-30 pd-sm-40 bg-gray-200">
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Account Option</label>
+                </div>
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input type="text" class="form-control" value="File Upload" disabled>
+                </div>
+            </div>
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0" value="">Upload File</label>
+                </div>
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile" name="myfile" (change)="onFileSelect($event)" #UploadFileInput>
+                        <label class="custom-file-label" for="customFile">{{fileInputLabel || 'Choose File'}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="steps-content" *ngIf="index == 'View-details'">
+
+      <div class="az-content-label mg-b-5">View Details</div>
+
+      <div class="pd-30 pd-sm-40 bg-gray-200">
+
+          <div class="row row-xs align-items-center mg-b-20">
+              <div class="col-md-4">
+                  <label class="form-label mg-b-0"></label>
+              </div>
+              <div class="col-md-6 mg-t-5 mg-md-t-0">
+
+                  <div class="alert alert-danger" [hidden]="!error">
+                      {{error}}
+                  </div>
+                  <div class="alert alert-success" [hidden]="!success">
+                      {{success}}
+                  </div>
+              </div>
+          </div>
+
+          <div class="row pd-b-10">
+              <div class="col-md-4">
+                  <div class="az-content-label pt-3">Tatal Transaction: 0 / 0</div>
+              </div>
+
+              <div class="float-right col-md-8 mt-1">
+
+                  <div class="az-header-center">
+
+
+                  </div>
+              </div>
+          </div>
+
+          <nz-table #fixedTable [nzData]="alertRecords" [nzScroll]="{ x: '700px', y: '340px' }" [nzLoading]="loading">
+              <thead>
+                  <tr>
+                      <th nzWidth="60px">S/N</th>
+                      <th nzLeft>Account Number</th>
+                      <th nzLeft>Email Address</th>
+                      <th>Mobile Number</th>
+                      <th nzRight>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let data of fixedTable.data; let r= index">
+                      <td nzWidth="60px">{{ r+1 }}</td>
+                      <td nzLeft>{{ data.accountnumber }}</td>
+                      <td>{{ data.emailaddress }}</td>
+                      <td>{{ data.mobilenumber }}</td>
+                      <td nzRight>
+                          <div class="btn-icon-list">
+                              <button class="btn btn-info btn-icon"><i class="typcn typcn-eye"></i></button>
+                              <button class="btn btn-danger btn-icon" (click)="onDeleteRow( data.accountnumber,  data.mobilenumber,  data.emailaddress)"><i class="typcn typcn-trash"></i></button>
+                          </div>
+                      </td>
+                  </tr>
+              </tbody>
+          </nz-table>
+
+      </div>
+  </div> -->
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <!-- <button class="btn btn-dark pd-x-30" style="margin-right: 8px;" (click)="close()">Close</button>
+            <button class="btn btn-success pd-x-30 mg-r-5" *ngIf="index == 'Create-Alert'" (click)="onSubmitSingle()">Upload</button> -->
+            <button nz-button nzType="primary" style="margin-right: 8px;" (click)="close()">Cancel</button>
+            <button nz-button nzType="primary" style="background-color: #4BA145; border: #4BA145; color: #fff;" (click)="onSubmitSingle()" [nzLoading]="isLoadingOne">Upload</button>
+            <!-- <button class="btn btn-az-primary pd-x-30 mg-r-5" *ngIf="index == 'View-details'" (click)="again()">Upload Another</button> -->
+        </div>
+    </ng-template>
+</nz-drawer>
+
+
+<!-- <ngx-loading [show]="loadingUxLoader" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading> -->

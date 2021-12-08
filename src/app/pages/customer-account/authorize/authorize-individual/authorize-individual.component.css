@@ -1,0 +1,11 @@
+[nz-button].pending {
+  margin-right: 8px;
+  margin-bottom: 12px;
+  background-color:rgb(218, 215, 32);
+}
+
+[nz-button].active {
+  margin-right: 8px;
+  margin-bottom: 12px;
+  background-color: #1CAA3D;
+}

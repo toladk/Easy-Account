@@ -1,0 +1,336 @@
+<div class="az-content-label mg-b-5">Customer Account open With BVN</div>
+    <p class="mg-b-20">BVN is an important Requirment here.</p>
+
+  <form #signupForm=ngForm (ngSubmit)="onSubmit()">
+    <div id="wizard3">
+
+      <h3>Personal Information</h3>
+      <section>
+        <p>Provide all neccessary customer information here.</p>
+
+        <div class="pd-30 pd-sm-40 bg-gray-200 wd-xl-100p">
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <!-- <label class="form-label mg-b-0">BVN</label> -->
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <div class="alert alert-danger" [hidden]="!error">
+                {{error}}
+              </div>
+              <div class="alert alert-success" [hidden]="!success">
+                {{success}}
+              </div>
+            </div><!-- col -->
+          </div><!-- row -->
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <!-- <label class="form-label mg-b-0">Firstname</label> -->
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <div class="row row-sm">
+                <div class="col-sm-7">
+                  <select class="form-control select2-no-search" name="Salutation" [(ngModel)]="form.Salutation" required>
+                    <option label="Salutation"></option>
+                    <option value="MR.">Mr</option>
+                    <option value="MRS.">Mrs</option>
+                    <option value="MISS">Miss</option>
+                    <option value="BRO">Bro</option>
+                    <option value="SISTER">Sister</option>
+                  </select>
+                </div><!-- col -->
+                <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                  <select class="form-control select2-no-search" name="Gender" [(ngModel)]="form.Gender" required>
+                    <option label="Gender"></option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                  </select>
+                </div><!-- col -->
+              </div><!-- row -->
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">BVN</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="text" id="BVN" [(ngModel)]="form.BVN" name="BVN"  class="form-control" placeholder="Enter customer BVN" required>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Email</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="email" name="Email" id="Email" [(ngModel)]="form.Email" class="form-control" placeholder="Enter customer email" required>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Marital Status</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="text" name="MaritalStatus" [(ngModel)]="form.MaritalStatus" required class="form-control" placeholder="Enter customer marital status" required>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Address</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <textarea name="Address" [(ngModel)]="form.Address" class="form-control" row="4" placeholder="Enter customer address" required></textarea>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">APP ID</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="email" name="APPID" [(ngModel)]="form.APPID" required class="form-control" placeholder="Enter customer app id">
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Limit Amount</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="number" name="LimitAmount" [(ngModel)]="form.LimitAmount" class="form-control" required placeholder="Limit Amount">
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <!-- <button class="btn btn-az-primary pd-x-30 mg-r-5">Register</button>
+          <button class="btn btn-dark pd-x-30">Cancel</button> -->
+        </div>
+      </section>
+      <h3>Official Information</h3>
+      <section>
+        <p>Proceed customer account opening with necessary official requirments.</p>
+
+        <div class="pd-30 pd-sm-40 bg-gray-200 wd-xl-100p">
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <!-- <label class="form-label mg-b-0">BVN</label> -->
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <div class="alert alert-danger" [hidden]="!error">
+                {{error}}
+              </div>
+              <div class="alert alert-success" [hidden]="!success">
+                {{success}}
+              </div>
+            </div><!-- col -->
+          </div><!-- row -->
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Initial Deposit</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">N</span>
+                </div>
+                <input type="number" name="InitialDeposit" [(ngModel)]="form.InitialDeposit" class="form-control" required aria-label="Amount (to the nearest Naira)">
+                <div class="input-group-append">
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div><!-- input-group -->
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Request Card</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <select class="form-control select2-no-search" name="RequestCard" [(ngModel)]="form.RequestCard" required>
+                <option label="Select Option"></option>
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Scheme Type</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="text" name="SchemeType" [(ngModel)]="form.SchemeType" class="form-control" required placeholder="Enter Scheme Type">
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Scheme Code</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="text" name="SchemeCode" [(ngModel)]="form.SchemeCode" class="form-control" row="4" placeholder="Enter Scheme Code">
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Profile Alert</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <select class="form-control select2-no-search" name="ProfileAlert" [(ngModel)]="form.ProfileAlert" required>
+                <option label="Select Option"></option>
+                <option value="MasterCard">Master Card</option>
+                <option value="Verve">Verve</option>
+              </select>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Card Type</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <select class="form-control select2-no-search" name="CardType"  [(ngModel)]="form.CardType" required>
+                <option label="Select Option"></option>
+                <option value="Y">Master</option>
+                <option value="N">No</option>
+              </select>
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Gl SubHeadCode</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="number" name="GlSubHeadCode" [(ngModel)]="form.GlSubHeadCode" class="form-control" placeholder="Enter Gl SubHeadCode">
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Cif Id</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <input type="text" name="CifId" [(ngModel)]="form.CifId" class="form-control" placeholder="CifId">
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <!-- <button class="btn btn-az-primary pd-x-30 mg-r-5">Register</button>
+          <button class="btn btn-dark pd-x-30">Cancel</button> -->
+        </div>
+      </section>
+      <h3>Upload Files</h3>
+      <section>
+        <p>Upload customer image file and signature here.</p>
+
+        <div class="pd-30 pd-sm-40 bg-gray-200 wd-xl-100p">
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <!-- <label class="form-label mg-b-0">BVN</label> -->
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+              <div class="alert alert-danger" [hidden]="!error">
+                {{error}}
+              </div>
+              <div class="alert alert-success" [hidden]="!success">
+                {{success}}
+              </div>
+            </div><!-- col -->
+          </div><!-- row -->
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Initial Deposit</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+
+                  <div class="custom-file">
+                    <input type="file" class="form-control" name="file" (change)="uploadFile($event)">
+                    <!-- <input type="file" [(ngModel)]="form.Email" class="form-control" name="file" (change)="uploadFile($event)" id="customFile"> -->
+                    <!-- <label class="custom-file-label" for="customFile">Choose file</label> -->
+                  </div>
+
+
+            </div><!-- col -->
+          </div><!-- row -->
+
+          <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+              <label class="form-label mg-b-0">Request Card</label>
+            </div><!-- col -->
+            <div class="col-md-8 mg-t-5 mg-md-t-0">
+
+
+                  <div class="custom-file">
+                    <input type="file" class="form-control" name="file" (change)="uploadFile($event)">
+                    <!-- <label class="custom-file-label" for="customFile">Choose file</label> -->
+                  </div>
+
+
+            </div><!-- col -->
+          </div><!-- row -->
+
+
+         <!-- <button *ngIf="!disabled2" nz-button type="submit"  nzType="primary" nzBlock>Save</button>
+         <button *ngIf="disabled2" nz-button type="button" nzType="primary" nzBlock nzLoading><i nz-icon nzType="poweroff"></i> Loading</button> -->
+        </div>
+
+          <!-- <button class="btn btn-dark pd-x-30">Cancel</button> -->
+      </section>
+
+      <h3>Submission</h3>
+      <section>
+        <p>Proceed customer account .</p>
+
+        <nz-result
+        *ngIf="responsecode == 0"
+        nzStatus="success"
+        nzTitle="Successfully Registration Completed!"
+        nzSubTitle="User ID: 2017182818828182881."
+          >
+        <div nz-result-extra>
+          <button nz-button nzType="primary" [routerLink]="['/dashboard']" >Go Dashboard</button>
+          <button nz-button >Close Registration</button>
+        </div>
+      </nz-result>
+
+      <nz-result
+        *ngIf="responsecode != 0 && responsecode != 3"
+         nzStatus="warning" nzTitle="There are some problems with your operation">
+          <div nz-result-extra>
+            <button nz-button nzType="primary" >Register Again</button>
+            <button nz-button >Close Registration</button>
+          </div>
+        </nz-result>
+
+      <nz-result
+        *ngIf="responsecode == 3"
+        nzTitle="Submission Failed"
+        nzStatus="error"
+        nzSubTitle="Please check and modify the following information before resubmitting."
+      >
+        <div nz-result-content>
+          <div class="desc">
+            <h4 nz-title>{{ response }}!</h4>
+            <!-- <p nz-paragraph>
+              <i nz-icon nzType="close-circle"></i>
+              User Already Exists <a>Thaw immediately</a>
+            </p>
+            <p nz-paragraph>
+              <i nz-icon nzType="close-circle"></i>
+              Email Already Exists <a>Apply immediately </a>
+            </p> -->
+          </div>
+        </div>
+        <div nz-result-extra>
+          <button nz-button nzType="primary">Register Again</button>
+          <button nz-button>Close Registration</button>
+        </div>
+      </nz-result>
+      </section>
+
+    <button type="submit" class="btn btn-primary pd-x-30 mg-r-5" style="float: right;">Submit</button>
+    </div>
+  </form>
+<div class="ht-40"></div>

@@ -1,0 +1,295 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8 mt-4">Account Form</h2>
+            <!-- <p class="mg-b-0 mt-2">Multiple Upload.</p> -->
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <div class="float-right">
+                    <!-- <button class="btn btn-dark btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i>Create Single Account</button> -->
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="row">
+
+        <div class="card col-md-12">
+            <div class="col-md-12 col-lg-12 pl-0 pr-0">
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="" id="contentToConvertToPdf">
+                        <div class="ml-5 mr-5 mt-5">
+                            <h4 class="text-center mt-4" *ngIf="showInputAccountNo">Generate Account Form</h4>
+                            <h4 class="text-center mt-5" *ngIf="accountInputInfo">Account Informations</h4>
+                            <form nz-form [formGroup]="accountForm">
+                                <div class="row row-xs mt-3 mb-4" *ngIf="showInputAccountNo">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Account Number</label>
+                                                    <nz-input-group nzPrefixIcon="field-number">
+                                                        <input type="text" maxlength="10" formControlName="accountNo" nz-input placeholder="Enter Account Number" />
+                                                    </nz-input-group>
+                                                    <span class="text-danger valiFontSizes" *ngIf="accountForm.get('accountNo').errors && (accountForm.get('accountNo').touched || accountForm.get('accountNo').dirty)">
+                                              <span *ngIf="accountForm.get('accountNo').errors.required">Account no is required</span>
+                                                    <span *ngIf="accountForm.get('accountNo').errors.pattern">Account no is invalid</span><br>
+                                                    </span>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mg-t-20 mg-md-t-0">
+                                        <button style="margin-top: 35px;" class="ml-4" nz-button nzType="primary" (click)="validateAccount()" [nzLoading]="isLoadingOne">Validate Account No</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="" *ngIf="accountInputInfo">
+                                <div class="row row-xs mt-3" *ngIf="showProf1">
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="upload-btn-wrapper mb-2">
+                                                <button class="btn">
+                              <i nz-icon nzType="user" nzTheme="outline" style="font-size: 30px;"></i><br>
+                              account image
+                            </button>
+                                                <input type="file" accept="image/jpeg" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="" style="float: right;padding-top: 35px;">
+                                            <img src="assets/img/loginlogo.png" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3" *ngIf="showProf2">
+                                    <div class="col-md-4">
+                                        <div class="">
+                                            <div class="upload-btn-wrapper mb-2">
+                                                <img src="{{'data:image/jpeg;base64,' + imageToUse}}" style="height: 130px; width: 130px; border-radius: 8px; border: 2px solid #D9D9D9" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="" style="float: right;padding-top: 35px;">
+                                            <img src="assets/img/loginlogo.png" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3">
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Salutation</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="salutationToUse" nz-input placeholder="Enter Salutation" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">First Name</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="firstNameToUse" nz-input placeholder="Enter First Name" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Middle Name</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="middleNameToUse" nz-input placeholder="Enter Middle Name" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Last Name</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="lastNameToUse" nz-input placeholder="Enter Last Name" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3">
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">BVN</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="bvnToUse" nz-input placeholder="Enter BVN" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Gender</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="genderToUse" nz-input placeholder="Enter Gender" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Email</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="emailToUse" nz-input placeholder="Enter Name" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Phone Number</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="phoneNumberToUse" nz-input placeholder="Enter Phone Number" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3">
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Account Number</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="accountNoToUse" nz-input placeholder="Enter BVN" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Date of Birth</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="dateOfBirthToUse" nz-input placeholder="Enter Gender" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sol ID</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="solIdToUse" nz-input placeholder="Enter Name" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Customer ID</label>
+                                                    <nz-input-group>
+                                                        <input type="text" [(ngModel)]="customerIdToUse" nz-input placeholder="Enter Phone Number" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3">
+                                    <div class="col-md-12">
+                                        <div class="">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control>
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Address</label>
+                                                    <nz-input-group>
+                                                        <textarea [(ngModel)]="addressToUse" nz-input rows="2" placeholder="Enter Address"></textarea>
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3" *ngIf="uploadedSig1">
+                                    <div class="col-md-12">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Signatories</label>
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <div class="col-md-4 pl-0">
+                                                <img src="{{'data:image/jpeg;base64,' + signatureToUse}}" style="height: 130px; width: 100px;" />
+                                            </div>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <div class="row row-xs mt-3" *ngIf="uploadedSig2">
+                                    <div class="col-md-12">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Signatories</label>
+                                        <h6 style="color: #2e8aac;">No Uploaded signature for account !!</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row row-xs" *ngIf="accountInputInfo">
+                        <div class="col-md-12 d-flex">
+                            <div class="col-md-6 pl-5">
+                                <button style="margin-top: 35px; background-color: #2e8aac; border: #2e8aac;" nz-button nzType="primary" (click)="printAnother()" [nzLoading]="isLoadingOneForm">Download another account form</button>
+                            </div>
+                            <div class="col-md-6 pr-5">
+                                <button style="margin-top: 35px; float: right; background-color: #1CAA3D; border: #1CAA3D;" nz-button nzType="primary" (click)="downloadPdf()" [nzLoading]="isLoadingOneForm">Download Form</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

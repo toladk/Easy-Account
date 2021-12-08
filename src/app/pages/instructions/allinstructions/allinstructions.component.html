@@ -1,0 +1,1939 @@
+<div class="az-content-header">
+    <div class="az-content-header-top">
+        <div>
+            <h2 class="az-content-title mg-b-5 mg-b-lg-8">Instruction Table</h2>
+            <!-- <p class="mg-b-0 mt-2">Multiple Upload.</p> -->
+        </div>
+        <div class="az-dashboard-date">
+            <div class="date">
+                <div class="float-right">
+                    <!-- <button class="btn btn-dark btn-with-icon btn-block"><i class="typcn typcn-plus"></i>Create New Instruction</button> -->
+                </div>
+            </div>
+            <!-- az-dashboard-date -->
+        </div>
+        <!-- az-dashboard-date -->
+    </div>
+</div>
+
+
+<div class="az-content-body">
+
+    <div class="col-md-12 col-lg-12 card mg-t-10">
+
+        <div class="col-md-12">
+            <div class="col-md-12 pl-0 pr-0 d-flex mt-5 mb-5">
+                <div class="col-md-4 pl-0">
+                    <div class="az-content-label pt-3">List Of Active Instructions</div>
+                </div>
+                <div class="col-md-4 pl-0 pr-0 mt-1">
+                    <nz-input-group [nzSuffix]="suffixIconSearch">
+                        <input type="text" [(ngModel)]="searchValue" nz-input placeholder="Search" />
+                    </nz-input-group>
+                    <ng-template #suffixIconSearch>
+                        <i nz-icon nzType="search"></i>
+                    </ng-template>
+                </div>
+                <div class="col-md-4 pr-0">
+                    <div class="float-right"><button class="btn btn-success btn-with-icon btn-block" (click)="open()"><i class="typcn typcn-plus"></i> Create New Instruction</button></div>
+                </div>
+            </div>
+
+
+            <nz-spin [nzSpinning]="isSpinning2">
+                <nz-table #fixedTable [nzData]="allInstructionList" [nzScroll]="{ x: '700px', y: '440px' }">
+                    <thead>
+                        <tr>
+                            <th nzWidth="60px">#</th>
+                            <th>Account Name</th>
+                            <th>Account No</th>
+                            <th>Total Amount</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th nzRight>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="item">
+                        <tr *ngFor="let data of fixedTable.data | allinstructionfilter: searchValue; let r= index">
+                            <td nzWidth="60px">{{ r+1 }}</td>
+                            <td>{{ data.accountName }}</td>
+                            <td>{{ data.accountNumber }}</td>
+                            <td>{{ data.totalAmount }}</td>
+                            <td>{{ data.startDate | date }}</td>
+                            <td>{{ data.endDate | date }}</td>
+                            <td>
+                                <button class="mr-2" style="background-color: #4BA145; border-color: #4BA145;" nz-button nzType="primary" [nzSize]="size" nzTooltipTitle="View User" nzTooltipPlacement="left" nz-button nz-tooltip (click)="viewInstruction(data)"><i nz-icon nzType="eye"></i></button>
+                                <button class="mr-2" style="background-color: rgb(56, 69, 167); border-color: rgb(56, 69, 167);" nz-button nzType="primary" [nzSize]="size" nzTooltipTitle="Update Instruction" nzTooltipPlacement="left" nz-button nz-tooltip (click)="updateInstrc(data)"><i nz-icon nzType="edit"></i></button>
+                                <button class="mr-2" style="background-color: orangered; border-color: orangered;" nz-button nzType="primary" [nzSize]="size" nzTooltipTitle="Delete" nzTooltipPlacement="right" nz-popconfirm nzPopconfirmTitle="Are you sure?" nzOkText="Delete Instruction"
+                                    nzCancelText="cancel" (nzOnConfirm)="deleteInstruction(data.instructionId)" nz-button nz-tooltip><i nz-icon nzType="close"></i></button>
+                                <!-- <button style="background-color: mediumturquoise; border-color: mediumturquoise;" nz-button nzType="primary" [nzSize]="size" nzTooltipTitle="Add Suspense Account" nzTooltipPlacement="right" nz-button nz-tooltip (click)="addSus(list)"><i nz-icon nzType="plus-circle"></i></button> -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-spin>
+            <!-- table-responsive -->
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- Drawer For Create Instruction-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="830" [nzVisible]="drawerOpen" nzTitle="Create Instruction" (nzOnClose)="close()">
+    <form nz-form *nzDrawerContent [formGroup]="instructionForm">
+        <div class="col-md-12 col-lg-12 pl-0 pr-0">
+
+            <div class="" *ngIf="firstInstPage">
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter account no without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Account No</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="accountNumber" nz-input placeholder="Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate" (click)="validateAccount(this.instructionForm.value.accountNumber, 'fill')"><i nz-icon nzType="check"></i>Validate</button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                        </div>
+                        <div class="" *ngIf="accountInfoShow">
+                            <div class="row mt-4">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-12">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Account Name</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.account_name }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Account No</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.account_number }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Customer ID</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.customer_id }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Phone Number</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.phone_number }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Email</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.email }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Scheme Type</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.scheme_type }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Scheme Code</label>
+                                            <h6 class="forPreview ml-4">{{ accountInfo?.scheme_code }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <!-- <div class="">
+                                    <button nz-button nzType="primary" style="background-color: tomato; border: tomato; margin-top: 30px;"><i nz-icon nzType="check"></i>Previous</button>
+                                </div> -->
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="">
+                                            <button nz-button nzType="primary" (click)="showNextPage()" style="float: right; background-color: #4BA145; border: #4BA145; margin-top: 40px;"><i nz-icon nzType="check"></i>Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="" *ngIf="secondInstPage">
+                <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please select split type!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Amount Or Percentage</label>
+                                            <nz-select nzAllowClear (ngModelChange)="selectAmountSplit()" formControlName="amountOrPercentage" nzPlaceHolder="Choose">
+                                                <nz-option nzValue="P" nzLabel="Percentage Split"></nz-option>
+                                                <nz-option nzValue="A" nzLabel="Fixed Amount Split"></nz-option>
+                                                <nz-option nzValue="F" nzLabel="Fixed Amount Percentages Split"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please select No of Split!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Select No of Split</label>
+                                            <nz-select nzAllowClear formControlName="numberOfSplit" (ngModelChange)="selectSplitNo()" nzPlaceHolder="Choose">
+                                                <nz-option nzValue="1" nzLabel="1"></nz-option>
+                                                <nz-option nzValue="2" nzLabel="2"></nz-option>
+                                                <nz-option nzValue="3" nzLabel="3"></nz-option>
+                                                <nz-option nzValue="4" nzLabel="4"></nz-option>
+                                                <nz-option nzValue="5" nzLabel="5"></nz-option>
+                                                <nz-option nzValue="6" nzLabel="6"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Percentage Split For 1-->
+                        <div class="row row-xs mt-3" *ngIf="showSplitFill1">
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 1</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditAmount1" nz-input placeholder="Credit Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 1</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditPercentage1" nz-input placeholder="Credit Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 1</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="creditAccountNumber1" nz-input placeholder="Credit Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate1" (click)="validateAccount(this.instructionForm.value.creditAccountNumber1, 'fill1')"><i nz-icon nzType="check"></i></button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 1</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditNarration1" nz-input placeholder="Credit Narration" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+
+                            <!--Percentage View-->
+                            <div class="d-flex" *ngIf="showForPSelected">
+                                <div class="col-md-3 pl-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 1</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage1" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 1</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber1" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate1" (click)="validateAccount(this.instructionForm.value.creditAccountNumber1, 'fill1')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pr-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 1</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration1" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage Split For 1-->
+
+                        <!--Percentage Split for 2-->
+                        <div class="row row-xs mt-3" *ngIf="showSplitFill2">
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 2</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditAmount2" nz-input placeholder="Credit Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 2</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditPercentage2" nz-input placeholder="Credit Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 2</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="creditAccountNumber2" nz-input placeholder="Credit Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate2" (click)="validateAccount(this.instructionForm.value.creditAccountNumber2, 'fill2')"><i nz-icon nzType="check"></i></button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 2</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditNarration2" nz-input placeholder="Credit Narration" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+
+                            <!--Percentage View-->
+                            <div class="d-flex" *ngIf="showForPSelected">
+                                <div class="col-md-3 pl-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 2</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage2" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 2</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber2" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate2" (click)="validateAccount(this.instructionForm.value.creditAccountNumber2, 'fill2')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pr-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 2</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration2" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage Split for 2-->
+
+                        <!--Percentage Split for 3-->
+                        <div class="row row-xs mt-3" *ngIf="showSplitFill3">
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 3</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditAmount3" nz-input placeholder="Credit Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 3</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditPercentage3" nz-input placeholder="Credit Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 3</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="creditAccountNumber3" nz-input placeholder="Credit Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate3" (click)="validateAccount(this.instructionForm.value.creditAccountNumber3, 'fill3')"><i nz-icon nzType="check"></i></button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 3</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditNarration3" nz-input placeholder="Credit Narration" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+
+                            <!--Percentage View-->
+                            <div class="d-flex" *ngIf="showForPSelected">
+                                <div class="col-md-3 pl-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 3</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage3" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 3</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber3" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidat3" (click)="validateAccount(this.instructionForm.value.creditAccountNumber3, 'fill3')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pr-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 3</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration3" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage Split for 3-->
+
+                        <!--Percentage Split for 4-->
+                        <div class="row row-xs mt-3" *ngIf="showSplitFill4">
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 4</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditAmount4" nz-input placeholder="Credit Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 4</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditPercentage4" nz-input placeholder="Credit Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 4</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="creditAccountNumber4" nz-input placeholder="Credit Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate4" (click)="validateAccount(this.instructionForm.value.creditAccountNumber4, 'fill4')"><i nz-icon nzType="check"></i></button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 4</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditNarration4" nz-input placeholder="Credit Narration" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+
+                            <!--Percentage View-->
+                            <div class="d-flex" *ngIf="showForPSelected">
+                                <div class="col-md-3 pl-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 4</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage4" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 4</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber4" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate4" (click)="validateAccount(this.instructionForm.value.creditAccountNumber3, 'fill4')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pr-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 4</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration4" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage Split for 4-->
+
+                        <!--Percentage Split for 5-->
+                        <div class="row row-xs mt-3" *ngIf="showSplitFill5">
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 5</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditAmount5" nz-input placeholder="Credit Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 5</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditPercentage5" nz-input placeholder="Credit Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 5</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="creditAccountNumber5" nz-input placeholder="Credit Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate5" (click)="validateAccount(this.instructionForm.value.creditAccountNumber5, 'fill5')"><i nz-icon nzType="check"></i></button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 5</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditNarration5" nz-input placeholder="Credit Narration" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+
+                            <!--Percentage View-->
+                            <div class="d-flex" *ngIf="showForPSelected">
+                                <div class="col-md-3 pl-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 5</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage5" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 5</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber5" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate5" (click)="validateAccount(this.instructionForm.value.creditAccountNumber5, 'fill5')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pr-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 5</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration5" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage Split for 5-->
+
+                        <!--Percentage Split for 6-->
+                        <div class="row row-xs mt-3" *ngIf="showSplitFill6">
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 6</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditAmount6" nz-input placeholder="Credit Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 6</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditPercentage6" nz-input placeholder="Credit Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 6</label>
+                                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                <input type="text" maxlength="10" formControlName="creditAccountNumber6" nz-input placeholder="Credit Account No" />
+                                            </nz-input-group>
+                                            <ng-template #suffixIconButton>
+                                                <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate6" (click)="validateAccount(this.instructionForm.value.creditAccountNumber6, 'fill6')"><i nz-icon nzType="check"></i></button>
+                                            </ng-template>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 6</label>
+                                            <nz-input-group>
+                                                <input type="text" formControlName="creditNarration6" nz-input placeholder="Credit Narration" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+
+                            <!--Percentage View-->
+                            <div class="d-flex" *ngIf="showForPSelected">
+                                <div class="col-md-3 pl-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 6</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage6" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 6</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber6" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate6" (click)="validateAccount(this.instructionForm.value.creditAccountNumber6, 'fill6')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pr-0">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 6</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration6" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage Split for 6-->
+
+                        <!--Percentage and amount-->
+                        <div class="row row-xs mt-3" *ngIf="forPercentageAlone">
+                            <div class="col-md-12">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Total Percentage!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Total Percentage</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="totalPercentage" nz-input placeholder="Total Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3" *ngIf="forFixedAndSplit">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Total Percentage!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Total Percentage</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="totalPercentage" nz-input placeholder="Total Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Total Amount!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Total Amount</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="text" formControlName="totalAmount" nz-input placeholder="Total Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Percentage and amount-->
+
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group" style="padding: 20px 15px;">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Consolidated Debit</label>
+                                    <div class="" style="display: flex;">
+                                        <div class="col-md-6 pl-0">
+                                            <label class="rdiobox">
+                                  <input name="radioC" type="radio" (click)="consolidatedAction('Yes')">
+                                  <span style="margin-left: 10px;">Yes</span>
+                                </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="rdiobox">
+                                  <input name="radioC" checked type="radio" (click)="consolidatedAction('No')">
+                                  <span style="margin-left: 10px;">No</span>
+                                </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please select Frequency!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Frequency</label>
+                                            <nz-select nzAllowClear formControlName="frequency" nzPlaceHolder="Choose">
+                                                <nz-option nzValue="D" nzLabel="Daily"></nz-option>
+                                                <nz-option nzValue="W" nzLabel="Weekly"></nz-option>
+                                                <nz-option nzValue="M" nzLabel="Monthly"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter Start Date!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Start Date</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="date" formControlName="startDate" nz-input placeholder="Total Percentage" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please enter End Date!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">End Date</label>
+                                            <nz-input-group nzPrefixIcon="user">
+                                                <input type="date" formControlName="endDate" nz-input placeholder="Total Amount" />
+                                            </nz-input-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3">
+                            <div class="col-md-6">
+                                <div class="az-form-group" style="padding: 20px 15px;">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Skip Weekend</label>
+                                    <div class="" style="display: flex;">
+                                        <div class="col-md-6 pl-0">
+                                            <label class="rdiobox">
+                                <input name="radioW" checked type="radio" (click)="skipWeekendAction('Yes')">
+                                <span style="margin-left: 10px;">Yes</span>
+                              </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="rdiobox">
+                                <input name="radioW" type="radio" (click)="skipWeekendAction('No')">
+                                <span style="margin-left: 10px;">No</span>
+                              </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="az-form-group">
+                                    <nz-form-item style="margin-bottom: 9px !important;">
+                                        <nz-form-control nzErrorTip="Please select Transaction Sub Type!">
+                                            <label class="form-label" style="font-weight: 600; color: darkslategray;">Transaction Sub Type</label>
+                                            <nz-select nzAllowClear formControlName="transactionSubType" nzPlaceHolder="Choose">
+                                                <nz-option nzValue="CI" nzLabel="Customer Induced"></nz-option>
+                                                <nz-option nzValue="BI" nzLabel="Bank Induced"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-xs mt-3" *ngIf="showSweepBalance">
+                            <div class="col-md-12">
+                                <div class="az-form-group" style="padding: 20px 15px;">
+                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Sweep Balance</label>
+                                    <div class="" style="display: flex;">
+                                        <div class="col-md-6 pl-0">
+                                            <label class="rdiobox">
+                              <input name="radioS" type="radio" (click)="sweepBalAction('Yes')">
+                              <span style="margin-left: 10px;">Yes</span>
+                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="rdiobox">
+                              <input name="radioS" type="radio" checked (click)="sweepBalAction('No')">
+                              <span style="margin-left: 10px;">No</span>
+                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12 d-flex pl-0 pr-0">
+                                <div class="col-md-6">
+                                    <div class="">
+                                        <button nz-button nzType="primary" (click)="showPrevPage()" style="background-color: tomato; border: tomato; margin-top: 30px;"><i nz-icon nzType="check"></i>Previous</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-0">
+                                    <div class="">
+                                        <button nz-button nzType="primary" [nzLoading]="isLoadingSubmit" (click)="postInstruction()" style="float: right; background-color: #4BA145; border: #4BA145; margin-top: 40px;"><i nz-icon nzType="check"></i>Submit Instruction</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</nz-drawer>
+
+<!-- Drawer For View Instruction-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="830" [nzVisible]="drawerOpen2" nzTitle="View Instruction" (nzOnClose)="close2()">
+
+    <div class="col-md-12 col-lg-12 pl-0 pr-0">
+
+        <div class="">
+            <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                <nz-spin [nzSpinning]="isSpinning">
+                    <div class="pl-0 pr-0 col-md-12">
+                        <div class="">
+                            <div class="row mt-4">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-12">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Account Name</label>
+                                            <h6 class="forPreview ml-4">{{ instructionDetails?.accountName }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Account No</label>
+                                            <h6 class="forPreview ml-4">{{ instructionDetails?.accountNumber }}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Customer ID</label>
+                                            <h6 class="forPreview ml-4">{{ instructionDetails?.customerId }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Amount Or Percentage</label>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.amountOrPercentage === 'P'">Percentage Split</h6>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.amountOrPercentage === 'A'">Fixed Amount Split</h6>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.amountOrPercentage === 'F'">Fixed Amount Percentage Split</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Status</label>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.status === 'A'">Approved</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-12">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Credited Account No</label>
+                                            <h6 class="forPreview ml-4">{{ instructionDetails?.creditAccountNumber1 }}&nbsp;&nbsp;&nbsp;&nbsp; {{ instructionDetails?.creditAccountNumber2 }}&nbsp;&nbsp;&nbsp;&nbsp; {{ instructionDetails?.creditAccountNumber3 }}&nbsp;&nbsp;&nbsp;&nbsp;
+                                                {{ instructionDetails?.creditAccountNumber4 }}&nbsp;&nbsp;&nbsp;&nbsp; {{ instructionDetails?.creditAccountNumber5 }}&nbsp;&nbsp;&nbsp;&nbsp; {{ instructionDetails?.creditAccountNumber6 }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-user mr-2 forPreviewicon"></i>Skip Weekend</label>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.skipWeekends === 'Y'">Yes</h6>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.skipWeekends === 'N'">No</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="az-form-group" style="padding: 8px 15px !important;">
+                                            <label class="forPreviewLabel"><i class="typcn typcn-mail mr-2 forPreviewicon"></i>Consolidated Debit</label>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.consolidatedDebit === 'Y'">Yes</h6>
+                                            <h6 class="forPreview ml-4" *ngIf="instructionDetails?.consolidatedDebit === 'N'">No</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nz-spin>
+            </div>
+        </div>
+    </div>
+
+</nz-drawer>
+
+<!-- Drawer For Update Instruction-->
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="830" [nzVisible]="drawerOpen3" nzTitle="Update Instruction" (nzOnClose)="close3()">
+
+    <form nz-form *nzDrawerContent [formGroup]="instructionForm">
+
+        <div class="col-md-12 col-lg-12 pl-0 pr-0">
+            <nz-spin [nzSpinning]="isSpinning3">
+                <div class="">
+                    <div class="col-md-12 col-lg-12" style="padding-bottom: 20px;">
+                        <div class="pl-0 pr-0 col-md-12">
+                            <div class="row row-xs mt-3">
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please select split type!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Amount Or Percentage</label>
+                                                <nz-select nzAllowClear (ngModelChange)="selectAmountSplit()" formControlName="amountOrPercentage" nzPlaceHolder="Choose">
+                                                    <nz-option nzValue="P" nzLabel="Percentage Split"></nz-option>
+                                                    <nz-option nzValue="A" nzLabel="Fixed Amount Split"></nz-option>
+                                                    <nz-option nzValue="F" nzLabel="Fixed Amount Percentages Split"></nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please select No of Split!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Select No of Split</label>
+                                                <nz-select nzAllowClear formControlName="numberOfSplit" (ngModelChange)="selectSplitNo()" nzPlaceHolder="Choose">
+                                                    <nz-option nzValue="1" nzLabel="1"></nz-option>
+                                                    <nz-option nzValue="2" nzLabel="2"></nz-option>
+                                                    <nz-option nzValue="3" nzLabel="3"></nz-option>
+                                                    <nz-option nzValue="4" nzLabel="4"></nz-option>
+                                                    <nz-option nzValue="5" nzLabel="5"></nz-option>
+                                                    <nz-option nzValue="6" nzLabel="6"></nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Percentage Split For 1-->
+                            <div class="row row-xs mt-3" *ngIf="showSplitFill1">
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 1</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditAmount1" nz-input placeholder="Credit Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 1</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage1" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 1</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber1" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate1" (click)="validateAccount(this.instructionForm.value.creditAccountNumber1, 'fill1')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 1</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration1" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <!--Percentage View-->
+                                <div class="d-flex" *ngIf="showForPSelected">
+                                    <div class="col-md-3 pl-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 1</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditPercentage1" nz-input placeholder="Credit Percentage" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 1</label>
+                                                    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                        <input type="text" maxlength="10" formControlName="creditAccountNumber1" nz-input placeholder="Credit Account No" />
+                                                    </nz-input-group>
+                                                    <ng-template #suffixIconButton>
+                                                        <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate1" (click)="validateAccount(this.instructionForm.value.creditAccountNumber1, 'fill1')"><i nz-icon nzType="check"></i></button>
+                                                    </ng-template>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 pr-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 1</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditNarration1" nz-input placeholder="Credit Narration" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage Split For 1-->
+
+                            <!--Percentage Split for 2-->
+                            <div class="row row-xs mt-3" *ngIf="showSplitFill2">
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 2</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditAmount2" nz-input placeholder="Credit Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 2</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage2" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 2</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber2" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate2" (click)="validateAccount(this.instructionForm.value.creditAccountNumber2, 'fill2')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 2</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration2" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <!--Percentage View-->
+                                <div class="d-flex" *ngIf="showForPSelected">
+                                    <div class="col-md-3 pl-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 2</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditPercentage2" nz-input placeholder="Credit Percentage" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 2</label>
+                                                    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                        <input type="text" maxlength="10" formControlName="creditAccountNumber2" nz-input placeholder="Credit Account No" />
+                                                    </nz-input-group>
+                                                    <ng-template #suffixIconButton>
+                                                        <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate2" (click)="validateAccount(this.instructionForm.value.creditAccountNumber2, 'fill2')"><i nz-icon nzType="check"></i></button>
+                                                    </ng-template>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 pr-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 2</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditNarration2" nz-input placeholder="Credit Narration" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage Split for 2-->
+
+                            <!--Percentage Split for 3-->
+                            <div class="row row-xs mt-3" *ngIf="showSplitFill3">
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 3</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditAmount3" nz-input placeholder="Credit Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 3</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage3" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 3</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber3" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate3" (click)="validateAccount(this.instructionForm.value.creditAccountNumber3, 'fill3')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 3</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration3" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <!--Percentage View-->
+                                <div class="d-flex" *ngIf="showForPSelected">
+                                    <div class="col-md-3 pl-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 3</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditPercentage3" nz-input placeholder="Credit Percentage" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 3</label>
+                                                    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                        <input type="text" maxlength="10" formControlName="creditAccountNumber3" nz-input placeholder="Credit Account No" />
+                                                    </nz-input-group>
+                                                    <ng-template #suffixIconButton>
+                                                        <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidat3" (click)="validateAccount(this.instructionForm.value.creditAccountNumber3, 'fill3')"><i nz-icon nzType="check"></i></button>
+                                                    </ng-template>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 pr-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 3</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditNarration3" nz-input placeholder="Credit Narration" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage Split for 3-->
+
+                            <!--Percentage Split for 4-->
+                            <div class="row row-xs mt-3" *ngIf="showSplitFill4">
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 4</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditAmount4" nz-input placeholder="Credit Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 4</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage4" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 4</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber4" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate4" (click)="validateAccount(this.instructionForm.value.creditAccountNumber4, 'fill4')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 4</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration4" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <!--Percentage View-->
+                                <div class="d-flex" *ngIf="showForPSelected">
+                                    <div class="col-md-3 pl-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 4</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditPercentage4" nz-input placeholder="Credit Percentage" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 4</label>
+                                                    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                        <input type="text" maxlength="10" formControlName="creditAccountNumber4" nz-input placeholder="Credit Account No" />
+                                                    </nz-input-group>
+                                                    <ng-template #suffixIconButton>
+                                                        <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate4" (click)="validateAccount(this.instructionForm.value.creditAccountNumber3, 'fill4')"><i nz-icon nzType="check"></i></button>
+                                                    </ng-template>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 pr-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 4</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditNarration4" nz-input placeholder="Credit Narration" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage Split for 4-->
+
+                            <!--Percentage Split for 5-->
+                            <div class="row row-xs mt-3" *ngIf="showSplitFill5">
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 5</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditAmount5" nz-input placeholder="Credit Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 5</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage5" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 5</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber5" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate5" (click)="validateAccount(this.instructionForm.value.creditAccountNumber5, 'fill5')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 5</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration5" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <!--Percentage View-->
+                                <div class="d-flex" *ngIf="showForPSelected">
+                                    <div class="col-md-3 pl-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 5</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditPercentage5" nz-input placeholder="Credit Percentage" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 5</label>
+                                                    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                        <input type="text" maxlength="10" formControlName="creditAccountNumber5" nz-input placeholder="Credit Account No" />
+                                                    </nz-input-group>
+                                                    <ng-template #suffixIconButton>
+                                                        <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate5" (click)="validateAccount(this.instructionForm.value.creditAccountNumber5, 'fill5')"><i nz-icon nzType="check"></i></button>
+                                                    </ng-template>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 pr-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 5</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditNarration5" nz-input placeholder="Credit Narration" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage Split for 5-->
+
+                            <!--Percentage Split for 6-->
+                            <div class="row row-xs mt-3" *ngIf="showSplitFill6">
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Amount without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Amount 6</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditAmount6" nz-input placeholder="Credit Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 6</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditPercentage6" nz-input placeholder="Credit Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 6</label>
+                                                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                    <input type="text" maxlength="10" formControlName="creditAccountNumber6" nz-input placeholder="Credit Account No" />
+                                                </nz-input-group>
+                                                <ng-template #suffixIconButton>
+                                                    <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate6" (click)="validateAccount(this.instructionForm.value.creditAccountNumber6, 'fill6')"><i nz-icon nzType="check"></i></button>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showIfNotForPercentage">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 6</label>
+                                                <nz-input-group>
+                                                    <input type="text" formControlName="creditNarration6" nz-input placeholder="Credit Narration" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <!--Percentage View-->
+                                <div class="d-flex" *ngIf="showForPSelected">
+                                    <div class="col-md-3 pl-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Percentage without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Percentage 6</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditPercentage6" nz-input placeholder="Credit Percentage" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Account No without an alphabet!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Account No 6</label>
+                                                    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                                                        <input type="text" maxlength="10" formControlName="creditAccountNumber6" nz-input placeholder="Credit Account No" />
+                                                    </nz-input-group>
+                                                    <ng-template #suffixIconButton>
+                                                        <button nz-button nzType="primary" nzSearch [nzLoading]="isLoadingValidate6" (click)="validateAccount(this.instructionForm.value.creditAccountNumber6, 'fill6')"><i nz-icon nzType="check"></i></button>
+                                                    </ng-template>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 pr-0">
+                                        <div class="az-form-group">
+                                            <nz-form-item style="margin-bottom: 9px !important;">
+                                                <nz-form-control nzErrorTip="Please enter Credit Narration!">
+                                                    <label class="form-label" style="font-weight: 600; color: darkslategray;">Credit Narration 6</label>
+                                                    <nz-input-group>
+                                                        <input type="text" formControlName="creditNarration6" nz-input placeholder="Credit Narration" />
+                                                    </nz-input-group>
+                                                </nz-form-control>
+                                            </nz-form-item>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage Split for 6-->
+
+                            <!--Percentage and amount-->
+                            <div class="row row-xs mt-3" *ngIf="forPercentageAlone">
+                                <div class="col-md-12">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Total Percentage!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Total Percentage</label>
+                                                <nz-input-group nzPrefixIcon="user">
+                                                    <input type="text" formControlName="totalPercentage" nz-input placeholder="Total Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-xs mt-3" *ngIf="forFixedAndSplit">
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Total Percentage!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Total Percentage</label>
+                                                <nz-input-group nzPrefixIcon="user">
+                                                    <input type="text" formControlName="totalPercentage" nz-input placeholder="Total Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Total Amount!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Total Amount</label>
+                                                <nz-input-group nzPrefixIcon="user">
+                                                    <input type="text" formControlName="totalAmount" nz-input placeholder="Total Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Percentage and amount-->
+
+                            <div class="row row-xs mt-3">
+                                <div class="col-md-6">
+                                    <div class="az-form-group" style="padding: 20px 15px;">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Consolidated Debit</label>
+                                        <div class="" style="display: flex;">
+                                            <div class="col-md-6 pl-0">
+                                                <label class="rdiobox">
+                            <input name="radioC" type="radio" (click)="consolidatedAction('Yes')">
+                            <span style="margin-left: 10px;">Yes</span>
+                          </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="rdiobox">
+                            <input name="radioC" checked type="radio" (click)="consolidatedAction('No')">
+                            <span style="margin-left: 10px;">No</span>
+                          </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please select Frequency!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Frequency</label>
+                                                <nz-select nzAllowClear formControlName="frequency" nzPlaceHolder="Choose">
+                                                    <nz-option nzValue="D" nzLabel="Daily"></nz-option>
+                                                    <nz-option nzValue="W" nzLabel="Weekly"></nz-option>
+                                                    <nz-option nzValue="M" nzLabel="Monthly"></nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-xs mt-3">
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter Start Date!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Start Date</label>
+                                                <nz-input-group nzPrefixIcon="user">
+                                                    <input type="date" formControlName="startDate" nz-input placeholder="Total Percentage" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please enter End Date!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">End Date</label>
+                                                <nz-input-group nzPrefixIcon="user">
+                                                    <input type="date" formControlName="endDate" nz-input placeholder="Total Amount" />
+                                                </nz-input-group>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-xs mt-3">
+                                <div class="col-md-6">
+                                    <div class="az-form-group" style="padding: 20px 15px;">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Skip Weekend</label>
+                                        <div class="" style="display: flex;">
+                                            <div class="col-md-6 pl-0">
+                                                <label class="rdiobox">
+                          <input name="radioW" checked type="radio" (click)="skipWeekendAction('Yes')">
+                          <span style="margin-left: 10px;">Yes</span>
+                        </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="rdiobox">
+                          <input name="radioW" type="radio" (click)="skipWeekendAction('No')">
+                          <span style="margin-left: 10px;">No</span>
+                        </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="az-form-group">
+                                        <nz-form-item style="margin-bottom: 9px !important;">
+                                            <nz-form-control nzErrorTip="Please select Transaction Sub Type!">
+                                                <label class="form-label" style="font-weight: 600; color: darkslategray;">Transaction Sub Type</label>
+                                                <nz-select nzAllowClear formControlName="transactionSubType" nzPlaceHolder="Choose">
+                                                    <nz-option nzValue="CI" nzLabel="Customer Induced"></nz-option>
+                                                    <nz-option nzValue="BI" nzLabel="Bank Induced"></nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-xs mt-3">
+                                <div class="col-md-12">
+                                    <div class="az-form-group" style="padding: 20px 15px;">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Status</label>
+                                        <div class="" style="display: flex;">
+                                            <div class="col-md-6 pl-0">
+                                                <label class="rdiobox">
+                                                  <input name="radioW" checked type="radio" (click)="checkStatus('A')">
+                                                  <span style="margin-left: 10px;">Active</span>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="rdiobox">
+                                                  <input name="radioW" type="radio" (click)="checkStatus('I')">
+                                                  <span style="margin-left: 10px;">Inactive</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-xs mt-3" *ngIf="showSweepBalance">
+                                <div class="col-md-12">
+                                    <div class="az-form-group" style="padding: 20px 15px;">
+                                        <label class="form-label" style="font-weight: 600; color: darkslategray;">Sweep Balance</label>
+                                        <div class="" style="display: flex;">
+                                            <div class="col-md-6 pl-0">
+                                                <label class="rdiobox">
+                        <input name="radioS" type="radio" (click)="sweepBalAction('Yes')">
+                        <span style="margin-left: 10px;">Yes</span>
+                      </label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="rdiobox">
+                        <input name="radioS" type="radio" checked (click)="sweepBalAction('No')">
+                        <span style="margin-left: 10px;">No</span>
+                      </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 d-flex pl-0 pr-0">
+                                    <div class="col-md-6">
+                                        <div class="">
+                                            <!-- <button nz-button nzType="primary" (click)="showPrevPage()" style="background-color: tomato; border: tomato; margin-top: 30px;"><i nz-icon nzType="check"></i>Previous</button> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 pl-0">
+                                        <div class="">
+                                            <button nz-button nzType="primary" [nzLoading]="isLoadingSubmit" (click)="updateInstruction()" style="float: right; background-color: #4BA145; border: #4BA145; margin-top: 40px;"><i nz-icon nzType="check"></i>Update Instruction</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nz-spin>
+
+        </div>
+    </form>
+
+</nz-drawer>

@@ -1,0 +1,280 @@
+<nz-steps [nzCurrent]="current">
+    <nz-step nzTitle="Validation"></nz-step>
+    <nz-step nzTitle="Official"></nz-step>
+    <!-- <nz-step nzTitle="Signature"></nz-step> -->
+    <!-- <nz-step nzTitle="Finish"></nz-step> -->
+</nz-steps>
+
+<div class="steps-content" style="padding-bottom: 80px" *ngIf="index == 'First-content'">
+    <h5 class="az-content-title" style="margin-top: -5%;">Customer ID Verification</h5>
+    <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0"></label>
+            </div>
+            <!-- col -->
+            <div class="col-md-4 mg-t-5 mg-md-t-0">
+
+                <div class="alert alert-danger" [hidden]="!error">
+                    {{error}}
+                </div>
+                <div class="alert alert-success" [hidden]="!success">
+                    {{success}}
+                </div>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+
+        <div class="row row-xs align-items-center mg-b-20">
+            <div class="col-md-4">
+                <label class="form-label mg-b-0">Customer ID</label>
+            </div>
+            <!-- col -->
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="CifId" (change)="onCheckValidation()" [(ngModel)]="form.CifId" placeholder="E.g R3365621">
+            </div>
+            <!-- col -->
+            <div class="col-md-2">
+                <button nz-button nzType="primary" (click)="onGo()" *ngIf="!disabled && current == 0">
+          <span>Validate</span>
+        </button>
+                <button *ngIf="disabled && current == 0" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+            </div>
+            <!-- col -->
+        </div>
+        <!-- row -->
+    </div>
+</div>
+
+<div class="steps-content" *ngIf="index == 'Second-content'">
+
+    <h5 class="az-content-title" style="margin-top: -5%;">Account Information</h5>
+
+    <form [formGroup]="normalForm">
+        <div class="pd-30 pd-sm-40 bg-gray-100 wd-xl-100p">
+            <!--      <h6 class="az-content-title" style="margin-top: 1%;">Official</h6>-->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Relationship Manager</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-4 mg-t-5 mg-md-t-0">
+                    <input type="text" name="Manager" (change)="onCheckValidation()" formControlName="Manager" required class="form-control" placeholder="Enter a valid RM code">
+                </div>
+                <!-- col -->
+                <div class="col-md-2 mg-t-5 mg-md-t-0">
+                    <nz-tag *ngIf="!showsDetails3" nzColor="#cd201f"><span>Not Verified</span></nz-tag> &nbsp;
+                    <nz-tag *ngIf="showsDetails3" nzColor="#87d068"><span>verified</span></nz-tag> &nbsp;
+                    <i nz-icon nzType="file-search" (click)="onGoParentCif()" *ngIf="!disabled2" nzTheme="outline" class="dynamic-delete-button" nzTooltipTitle="Verify Customer" nzTooltipPlacement="top" nz-tooltip></i> &nbsp;
+                    <i nz-icon class="dynamic-delete-button" nzType="loading" *ngIf="disabled2" nzTheme="outline"></i> &nbsp;
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Sol ID</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <!--          <select class="form-control select2-no-search" name="SolId" [(ngModel)]="form.SolId" required>-->
+                    <!--            &lt;!&ndash; [(ngModel)]="form.two_factor" &ndash;&gt;-->
+                    <!--            <option label="Choose one" value="">Select Scheme Type</option>-->
+                    <!--            <option *ngFor="let list of sols" value="{{ list.glsubheadcode }}">{{ list.description }}</option>-->
+                    <!--          </select>-->
+
+                    <!-- <nz-select nzPlaceHolder="Select Sol" nzShowSearch nzServerSearch class="selectsol" name="SolId" (change)="onCheckValidation()" [(ngModel)]="form.SolId" required>
+                        <nz-option *ngFor="let list2 of sols" nzLabel="{{ list2.solid }} - {{ list2.description }}" nzValue="{{ list2.solid }}"></nz-option>
+                    </nz-select> -->
+
+                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Sol" class="selectsol" name="SolId" formControlName="SolId">
+                        <nz-option *ngFor="let list2 of sols" nzLabel="{{ list2.solid }} - {{ list2.description }}" nzValue="{{ list2.solid }}"></nz-option>
+                    </nz-select>
+
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Scheme Type</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <select class="form-control select2-no-search" (change)="onSelectSchemeTypes($event)" name="SchemeType" formControlName="SchemeType" required>
+            <!-- [(ngModel)]="form.two_factor" -->
+            <option label="Choose one" value="">Select Scheme Type</option>
+            <option *ngFor="let list of shemeTypes" value="{{ list.schemeType }}">{{ list.description }}</option>
+          </select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Scheme Code</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Scheme Code" (ngModelChange)="onSelectSchemeCode()" class="selectsol" name="SchemeCode" formControlName="SchemeCode">
+                        <nz-option *ngFor="let list of shemecodes" nzLabel="{{ list.schemecode }} - {{ list.description }}" nzValue="{{ list.schemecode }}"></nz-option>
+                    </nz-select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Gl SubHead Code</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <select class="form-control select2-no-search" (change)="onCheckValidation()" name="GlSubHeadCode" formControlName="GlSubHeadCode" required>
+            <!-- [(ngModel)]="form.two_factor" -->
+            <option label="Choose one" value="">Select Scheme Type</option>
+            <option *ngFor="let list of glheadcodes" value="{{ list.glsubheadcode }}">{{ list.glsubheadcode }}</option>
+            <option *ngIf="!glheadcodes">
+              <span class="sr-only">Loading...</span>
+          </option>
+          </select>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Introducer Code</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input style="width: 80%;" formControlName="IntroducerCode" type="text" name="IntroducerCode" required class="form-control" placeholder="Enter Introducer Code">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <!--      <h6 class="az-content-title" style="margin-top: 1%;">Upload File</h6>-->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0" value="">Image File</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile" name="ImageFile" accept="image/x-png,image/gif,image/jpeg" (change)="onFileSelect($event)" #UploadFileInput>
+                        <label class="custom-file-label" for="customFile">{{fileInputLabel || 'Choose File'}}</label>
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0" value="">Signature File</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-6 mg-t-5 mg-md-t-0">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile2" name="SignatureFile" accept="image/x-png,image/gif,image/jpeg" (change)="onFileSelect2($event)" #UploadFileInput>
+                        <label class="custom-file-label" for="customFile">{{fileInputLabel2 || 'Choose File'}}</label>
+                    </div>
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+            <div class="row row-xs align-items-center mg-b-20">
+                <div class="col-md-4">
+                    <label class="form-label mg-b-0">Initial Deposit</label>
+                </div>
+                <!-- col -->
+                <div class="col-md-8 mg-t-5 mg-md-t-0">
+                    <input style="width: 80%;" type="text" formControlName="InitialDeposit" name="InitialDeposit" class="form-control" placeholder="Enter Initial Deposit">
+                </div>
+                <!-- col -->
+            </div>
+            <!-- row -->
+
+        </div>
+    </form>
+</div>
+
+<!-- <div class="steps-content" *ngIf="index == 'third-content'">
+    <nz-result *ngIf="errorResponse === true" nzStatus="success" nzTitle="New Account Creation Request Submitted Successfully!" nzSubTitle="">
+        <div nz-result-extra>
+            <button nz-button nzType="primary" [routerLink]="['/account-opening-authorization']">View Queue</button>
+            <button nz-button (click)="again()">Close</button>
+        </div>
+    </nz-result>
+
+    <nz-result *ngIf="responsecode !== 3 &&    errorResponse !== true" nzStatus="warning" nzTitle="Operation not successfull" nzSubTitle="something on-usual went wrong.">
+        <div nz-result-extra>
+            <button nz-button nzType="default" (click)="pre()" *ngIf="current >= 1">
+        <span>Go Back</span>
+      </button>
+            <button nz-button (click)="again()">Close</button>
+        </div>
+    </nz-result>
+
+    <nz-result *ngIf="responsecode === 3" nzStatus="warning" nzTitle="Operation not successfull" nzSubTitle="{{resMessage}}.">
+        <div nz-result-extra>
+            <button nz-button nzType="default" (click)="pre()" *ngIf="current >= 1">
+        <span>Go Back</span>
+      </button>
+            <button nz-button (click)="again()">Close</button>
+        </div>
+    </nz-result>
+</div> -->
+<!--
+<nz-affix [nzOffsetBottom]="nzOffsetBottom" (click)="setOffsetBottom()"> -->
+<div class="steps-action" style="float: right">
+    <!-- <button nz-button style="margin-right: 8px;" (click)="close()" *ngIf="current != 0"><span>Close</span></button>
+
+    <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active">
+        <span>Continue</span>
+      </button>
+
+    <button nz-button nzType="default" (click)="pre()" *ngIf="current >= 2 || current == 1">
+        <span>Previous</span>
+      </button> -->
+
+    <!-- <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active" *ngIf="current == 1">
+        <span>Next</span>
+      </button> -->
+
+    <!-- <button nz-button nzType="primary" (click)="onSubmitAccountForm()" routerLinkActive="router-link-active" *ngIf="!disabled && current == 1 && !disableSubmitBotton">
+        <span>Submit</span>
+      </button>
+
+    <button *ngIf="disabled && current == 1" nz-button nzType="primary" nzLoading><i nz-icon nzType="poweroff"></i>Loading</button>
+
+    <button nz-button nzType="primary" (click)="notValidForm()" routerLinkActive="router-link-active" *ngIf="disableSubmitBotton && current == 1">
+        <span>Not Ready</span>
+      </button> -->
+
+    <!-- <button nz-button nzType="primary" (click)="next()" routerLinkActive="router-link-active" *ngIf="current == 2">
+        <span>Next</span>
+      </button> -->
+
+
+    <button class="mr-2" nz-button nzType="primary" (click)="pre()" *ngIf="current > 0">
+        <span>Previous</span>
+      </button>
+    <button class="mr-2" nz-button nzType="default" style="background-color: #4BA145; border-color: #4BA145; color: white;" [disabled]="!form.CifId" (click)="next()" *ngIf="current < 1">
+        <span>Next</span>
+      </button>
+    <button class="mr-2" style="background-color: #4BA145; border-color: #4BA145; color: white;" nz-button nzType="primary" (click)="onSubmitAccountForm()" *ngIf="current === 1">
+        <span>Submit</span>
+      </button>
+</div>
+<!-- </nz-affix> -->
